@@ -1,20 +1,4 @@
-# BrewBOSS
-
-Brew controller for ESP8266 / ESP32 / ESP32-C3.
-
-**License:** personal / non-commercial use only.
-
-- Documentation / help: [`help/`](help/) - [full page](https://rampanelli.github.io/BrewBOSS/help/)
-- Firmware & LittleFS binaries: [`binaries/`](binaries/)
-
-Version `v2.2.22i`.
-
-<br>
-
-<details>
-<summary><b>License &amp; Terms of Use</b></summary>
-
-# BrewBOSS License Agreement
+﻿# BrewBOSS License Agreement
 Version 1.0
 
 Copyright (c) 2026 LR
@@ -32,6 +16,7 @@ Subject to the terms of this license, you are permitted to:
 ## 2. Prohibited Uses
 
 The following actions are expressly forbidden without prior written permission from the copyright holder:
+
 - selling, reselling, sublicensing, or commercializing this software;
 - using this software, in whole or in part, in any commercial, industrial, corporate, or revenue-generating activity;
 - embedding this software into any product, service, machine, appliance, system, or solution intended for sale, lease, rental, or third-party use;
@@ -44,9 +29,10 @@ Any use outside personal, non-commercial use is prohibited.
 
 ## 3. No Warranty
 
-THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+THIS SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
 
 TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE COPYRIGHT HOLDER, AUTHORS, AND CONTRIBUTORS MAKE NO REPRESENTATIONS OR WARRANTIES OF ANY KIND, INCLUDING BUT NOT LIMITED TO:
+
 - ANY WARRANTY OF MERCHANTABILITY;
 - ANY WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE;
 - ANY WARRANTY OF NON-INFRINGEMENT;
@@ -110,4 +96,19 @@ By downloading, installing, copying, modifying, accessing, or using BrewBOSS, yo
 
 If you do not agree with these terms, you must not use the software.
 
-</details>
+---
+
+## Optional Short Notice for Source Files
+
+You may place the following header in source files:
+
+```text
+BrewBOSS
+Free for personal, non-commercial use only.
+
+No warranty of any kind.
+No guarantee of function, safety, compatibility, or suitability.
+Commercial, industrial, and resale use are prohibited.
+
+See LICENSE.md for full terms.
+```
