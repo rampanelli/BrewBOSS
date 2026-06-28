@@ -13,17 +13,6 @@ Brew controller for **ESP8266 / ESP32 / ESP32-C3** — control via web UI, 20×4
 
 BrewBOSS is a lightweight brewing automation controller. It runs the mash, boil and post-boil stages with PID heating, pump recirculation and timed hop additions, and recovers automatically after a power loss. Operate it from the built-in web interface, the 20×4 LCD or the 4 physical buttons.
 
-## The system
-
-| | | |
-|:---:|:---:|:---:|
-| ![](images/1.jpeg) | ![](images/1b.jpeg) | ![](images/2.jpeg) |
-| The brewing controller | System overview | Web interface — real-time dashboard |
-| ![](images/3.jpeg) | ![](images/4.jpeg) | ![](images/5.jpeg) |
-| Brew control — start/pause/resume/stop | Mash — programmable step sequence | Boil & additions |
-| ![](images/6.jpeg) | ![](images/7.jpeg) | ![](images/8.jpeg) |
-| Recipes — save, list, activate | Setup — network, NTP, parameters | 20×4 LCD and physical buttons |
-
 ## Files and offsets
 
 Firmware (LittleFS shipped separately) for the 3 supported controllers. Filesystem images are in **LittleFS** format (not SPIFFS).
@@ -107,17 +96,6 @@ Controlador de brassagem para **ESP8266 / ESP32 / ESP32-C3** — controle pela i
 ## Visão geral
 
 O BrewBOSS é um controlador leve de automação de brassagem. Executa as etapas de mostura, fervura e pós-fervura com aquecimento PID, recirculação por bomba e adições de lúpulo por tempo, e se recupera automaticamente após queda de energia. Opere pela interface web embutida, pelo LCD 20×4 ou pelos 4 botões físicos.
-
-## O sistema
-
-| | | |
-|:---:|:---:|:---:|
-| ![](images/1.jpeg) | ![](images/1b.jpeg) | ![](images/2.jpeg) |
-| O controlador de brassagem | Visão geral do sistema | Interface web — painel em tempo real |
-| ![](images/3.jpeg) | ![](images/4.jpeg) | ![](images/5.jpeg) |
-| Controle do brew — iniciar/pausar/retomar/parar | Mostura — sequência de passos | Fervura e adições |
-| ![](images/6.jpeg) | ![](images/7.jpeg) | ![](images/8.jpeg) |
-| Receitas — salvar, listar, ativar | Configuração — rede, NTP, parâmetros | LCD 20×4 e botões físicos |
 
 ## Arquivos e offsets
 

@@ -103,23 +103,7 @@
   </div>
 
   <div class="card">
-    <h2><span class="n">2</span> <span data-i18n="gal_title">The system</span></h2>
-    <p class="gal-intro" data-i18n="gal_intro">A visual tour following the user manual.</p>
-    <div class="gallery">
-      <figure><a href="images/1.jpeg" target="_blank" rel="noopener"><img src="images/1.jpeg" alt="" loading="lazy"></a><figcaption data-i18n="g1">BrewBOSS — the brewing controller.</figcaption></figure>
-      <figure><a href="images/1b.jpeg" target="_blank" rel="noopener"><img src="images/1b.jpeg" alt="" loading="lazy"></a><figcaption data-i18n="g2">BrewBOSS — system overview.</figcaption></figure>
-      <figure><a href="images/2.jpeg" target="_blank" rel="noopener"><img src="images/2.jpeg" alt="" loading="lazy"></a><figcaption data-i18n="g3">Web interface — real-time dashboard.</figcaption></figure>
-      <figure><a href="images/3.jpeg" target="_blank" rel="noopener"><img src="images/3.jpeg" alt="" loading="lazy"></a><figcaption data-i18n="g4">Brew control — start, pause, resume and stop.</figcaption></figure>
-      <figure><a href="images/4.jpeg" target="_blank" rel="noopener"><img src="images/4.jpeg" alt="" loading="lazy"></a><figcaption data-i18n="g5">Mash — programmable step sequence.</figcaption></figure>
-      <figure><a href="images/5.jpeg" target="_blank" rel="noopener"><img src="images/5.jpeg" alt="" loading="lazy"></a><figcaption data-i18n="g6">Boil &amp; additions.</figcaption></figure>
-      <figure><a href="images/6.jpeg" target="_blank" rel="noopener"><img src="images/6.jpeg" alt="" loading="lazy"></a><figcaption data-i18n="g7">Recipes — save, list and activate.</figcaption></figure>
-      <figure><a href="images/7.jpeg" target="_blank" rel="noopener"><img src="images/7.jpeg" alt="" loading="lazy"></a><figcaption data-i18n="g8">Setup — network, NTP and parameters.</figcaption></figure>
-      <figure><a href="images/8.jpeg" target="_blank" rel="noopener"><img src="images/8.jpeg" alt="" loading="lazy"></a><figcaption data-i18n="g9">20×4 LCD and physical buttons.</figcaption></figure>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2><span class="n">3</span> <span data-i18n="s1">Files and offsets</span></h2>
+    <h2><span class="n">2</span> <span data-i18n="s1">Files and offsets</span></h2>
     <p class="sub" data-i18n="subtitle">Firmware (LittleFS shipped separately) for the 3 supported controllers. Filesystem images are in <b>LittleFS</b> format.</p>
     <table>
       <thead>
@@ -176,7 +160,7 @@
   </div>
 
   <div class="card">
-    <h2><span class="n">4</span> <span data-i18n="s2">Prerequisites</span></h2>
+    <h2><span class="n">3</span> <span data-i18n="s2">Prerequisites</span></h2>
     <ul>
       <li data-i18n="pre1">Install esptool: <code class="inl">pip install esptool</code></li>
       <li data-i18n="pre2">Connect the controller via USB and find its serial port (e.g. <code class="inl">COM5</code> on Windows, <code class="inl">/dev/ttyUSB0</code> on Linux).</li>
@@ -186,7 +170,7 @@
   </div>
 
   <div class="card">
-    <h2><span class="n">5</span> <span data-i18n="s3">Flashing (update)</span></h2>
+    <h2><span class="n">4</span> <span data-i18n="s3">Flashing (update)</span></h2>
     <p style="font-size:13.5px;color:var(--dim);" data-i18n="s3intro">For an already-provisioned controller, flash firmware + LittleFS in one go:</p>
 
     <div class="step-title">Wemos / ESP8266</div>
@@ -202,7 +186,7 @@
   </div>
 
   <div class="card">
-    <h2><span class="n">6</span> <span data-i18n="s4">Blank chip (ESP32 / ESP32-C3)</span></h2>
+    <h2><span class="n">5</span> <span data-i18n="s4">Blank chip (ESP32 / ESP32-C3)</span></h2>
     <p style="font-size:13.5px;color:var(--dim);" data-i18n="s4intro">On a new/erased chip you must also flash the bootloader, partition table and boot_app0 (found in <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).</p>
 
     <div class="step-title" data-i18n="s4_esp32">ESP32 — bootloader at 0x1000</div>
@@ -215,7 +199,7 @@
   </div>
 
   <div class="card">
-    <h2><span class="n">7</span> <span data-i18n="s5">Notes</span></h2>
+    <h2><span class="n">6</span> <span data-i18n="s5">Notes</span></h2>
     <ul>
       <li data-i18n="n1">Offsets are valid for the current partition table (4&nbsp;MB flash). If the table changes, the offsets change.</li>
       <li data-i18n="n2">Images are <b>LittleFS</b> (not SPIFFS) — the firmware mounts the filesystem as LittleFS.</li>
