@@ -35,21 +35,33 @@ Firmware (LittleFS shipped separately) for the 3 supported controllers. Filesyst
 
 ## Flashing (update)
 
-For an already-provisioned controller, flash firmware + LittleFS in one go:
+For an already-provisioned controller, flash the firmware first, then the filesystem — two separate steps (more reliable):
 
-**Wemos / ESP8266**
+**Wemos / ESP8266 — firmware**
 ```bash
-esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-wemos_v2.2.22i.bin 0x300000 littlefs-wemos_v2.2.22i.bin
+esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 fw-wemos_v2.2.22i.bin
+```
+**Wemos / ESP8266 — filesystem**
+```bash
+esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x300000 littlefs-wemos_v2.2.22i.bin
 ```
 
-**ESP32 (esp32dev)**
+**ESP32 (esp32dev) — firmware**
 ```bash
-esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.22i.bin 0x290000 littlefs-esp32_v2.2.22i.bin
+esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 fw-esp32_v2.2.22i.bin
+```
+**ESP32 (esp32dev) — filesystem**
+```bash
+esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32_v2.2.22i.bin
 ```
 
-**ESP32-C3**
+**ESP32-C3 — firmware**
 ```bash
-esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.22i.bin 0x290000 littlefs-esp32c3_v2.2.22i.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 fw-esp32c3_v2.2.22i.bin
+```
+**ESP32-C3 — filesystem**
+```bash
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32c3_v2.2.22i.bin
 ```
 
 > **ESP8266:** the firmware already includes the bootloader (eboot), so it is written at `0x0`. The 2 files are enough.
@@ -119,21 +131,33 @@ Firmware (LittleFS fornecido à parte) para os 3 controladores suportados. As im
 
 ## Gravação (atualização)
 
-Para um controlador já provisionado, grave firmware + LittleFS de uma vez:
+Para um controlador já provisionado, grave o firmware e depois o filesystem — em duas etapas separadas (mais confiável):
 
-**Wemos / ESP8266**
+**Wemos / ESP8266 — firmware**
 ```bash
-esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-wemos_v2.2.22i.bin 0x300000 littlefs-wemos_v2.2.22i.bin
+esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 fw-wemos_v2.2.22i.bin
+```
+**Wemos / ESP8266 — filesystem**
+```bash
+esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x300000 littlefs-wemos_v2.2.22i.bin
 ```
 
-**ESP32 (esp32dev)**
+**ESP32 (esp32dev) — firmware**
 ```bash
-esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.22i.bin 0x290000 littlefs-esp32_v2.2.22i.bin
+esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 fw-esp32_v2.2.22i.bin
+```
+**ESP32 (esp32dev) — filesystem**
+```bash
+esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32_v2.2.22i.bin
 ```
 
-**ESP32-C3**
+**ESP32-C3 — firmware**
 ```bash
-esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.22i.bin 0x290000 littlefs-esp32c3_v2.2.22i.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 fw-esp32c3_v2.2.22i.bin
+```
+**ESP32-C3 — filesystem**
+```bash
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32c3_v2.2.22i.bin
 ```
 
 > **ESP8266:** o firmware já inclui o bootloader (eboot), por isso é gravado em `0x0`. Os 2 arquivos bastam.
