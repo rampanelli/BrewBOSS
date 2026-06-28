@@ -171,16 +171,19 @@
 
   <div class="card">
     <h2><span class="n">4</span> <span data-i18n="s3">Flashing (update)</span></h2>
-    <p style="font-size:13.5px;color:var(--dim);" data-i18n="s3intro">For an already-provisioned controller, flash firmware + LittleFS in one go:</p>
+    <p style="font-size:13.5px;color:var(--dim);" data-i18n="s3intro">For an already-provisioned controller, flash the firmware first, then the filesystem — two separate steps (more reliable):</p>
 
     <div class="step-title">Wemos / ESP8266</div>
-    <div class="cmd"><code class="cmdtext">esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-wemos_v2.2.22i.bin 0x300000 littlefs-wemos_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 fw-wemos_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x300000 littlefs-wemos_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
 
     <div class="step-title">ESP32 (esp32dev)</div>
-    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.22i.bin 0x290000 littlefs-esp32_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 fw-esp32_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
 
     <div class="step-title">ESP32-C3</div>
-    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.22i.bin 0x290000 littlefs-esp32c3_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 fw-esp32c3_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32c3_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
 
     <div class="note" data-i18n="note_esp8266"><b>ESP8266:</b> the firmware already includes the bootloader (eboot), so it is written at <code class="inl">0x0</code>. The 2 files are enough.</div>
   </div>
@@ -238,7 +241,7 @@ var I18N = {
     pre3:`Run the commands below from the <code class="inl">binaries/</code> folder (where the <code class="inl">.bin</code> files are).`,
     pre4:`Replace <code class="inl">COMx</code> with the correct port. You can speed it up with <code class="inl">--baud 460800</code>.`,
     s3:`Flashing (update)`,
-    s3intro:`For an already-provisioned controller, flash firmware + LittleFS in one go:`,
+    s3intro:`For an already-provisioned controller, flash the firmware first, then the filesystem — two separate steps (more reliable):`,
     note_esp8266:`<b>ESP8266:</b> the firmware already includes the bootloader (eboot), so it is written at <code class="inl">0x0</code>. The 2 files are enough.`,
     s4:`Blank chip (ESP32 / ESP32-C3)`,
     s4intro:`On a new/erased chip you must also flash the bootloader, partition table and boot_app0 (found in <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
@@ -278,7 +281,7 @@ var I18N = {
     pre3:`Execute os comandos abaixo na pasta <code class="inl">binaries/</code> (onde estão os arquivos <code class="inl">.bin</code>).`,
     pre4:`Substitua <code class="inl">COMx</code> pela porta correta. Você pode acelerar com <code class="inl">--baud 460800</code>.`,
     s3:`Gravação (atualização)`,
-    s3intro:`Para um controlador já provisionado, grave firmware + LittleFS de uma vez:`,
+    s3intro:`Para um controlador já provisionado, grave o firmware e depois o filesystem — em duas etapas separadas (mais confiável):`,
     note_esp8266:`<b>ESP8266:</b> o firmware já inclui o bootloader (eboot), por isso é gravado em <code class="inl">0x0</code>. Os 2 arquivos bastam.`,
     s4:`Chip zerado (ESP32 / ESP32-C3)`,
     s4intro:`Em um chip novo/apagado também é preciso gravar o bootloader, a tabela de partições e o boot_app0 (em <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
@@ -318,7 +321,7 @@ var I18N = {
     pre3:`Ejecuta los comandos siguientes desde la carpeta <code class="inl">binaries/</code> (donde están los archivos <code class="inl">.bin</code>).`,
     pre4:`Sustituye <code class="inl">COMx</code> por el puerto correcto. Puedes acelerarlo con <code class="inl">--baud 460800</code>.`,
     s3:`Grabación (actualización)`,
-    s3intro:`Para un controlador ya aprovisionado, graba firmware + LittleFS de una sola vez:`,
+    s3intro:`Para un controlador ya aprovisionado, graba el firmware y luego el filesystem — en dos pasos separados (más fiable):`,
     note_esp8266:`<b>ESP8266:</b> el firmware ya incluye el bootloader (eboot), por lo que se graba en <code class="inl">0x0</code>. Bastan los 2 archivos.`,
     s4:`Chip en blanco (ESP32 / ESP32-C3)`,
     s4intro:`En un chip nuevo/borrado también hay que grabar el bootloader, la tabla de particiones y boot_app0 (en <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
@@ -358,7 +361,7 @@ var I18N = {
     pre3:`Esegui i comandi seguenti dalla cartella <code class="inl">binaries/</code> (dove si trovano i file <code class="inl">.bin</code>).`,
     pre4:`Sostituisci <code class="inl">COMx</code> con la porta corretta. Puoi velocizzare con <code class="inl">--baud 460800</code>.`,
     s3:`Flashing (aggiornamento)`,
-    s3intro:`Per un controller già predisposto, scrivi firmware + LittleFS in un'unica operazione:`,
+    s3intro:`Per un controller già predisposto, scrivi il firmware e poi il filesystem — in due passaggi separati (più affidabile):`,
     note_esp8266:`<b>ESP8266:</b> il firmware include già il bootloader (eboot), quindi viene scritto in <code class="inl">0x0</code>. I 2 file sono sufficienti.`,
     s4:`Chip vuoto (ESP32 / ESP32-C3)`,
     s4intro:`Su un chip nuovo/cancellato occorre scrivere anche bootloader, tabella delle partizioni e boot_app0 (in <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
@@ -398,7 +401,7 @@ var I18N = {
     pre3:`Führe die folgenden Befehle im Ordner <code class="inl">binaries/</code> aus (dort liegen die <code class="inl">.bin</code>-Dateien).`,
     pre4:`Ersetze <code class="inl">COMx</code> durch den richtigen Port. Mit <code class="inl">--baud 460800</code> geht es schneller.`,
     s3:`Flashen (Update)`,
-    s3intro:`Bei einem bereits eingerichteten Controller Firmware + LittleFS in einem Schritt flashen:`,
+    s3intro:`Bei einem bereits eingerichteten Controller die Firmware und dann das Dateisystem flashen — in zwei separaten Schritten (zuverlässiger):`,
     note_esp8266:`<b>ESP8266:</b> Die Firmware enthält bereits den Bootloader (eboot) und wird daher bei <code class="inl">0x0</code> geschrieben. Die 2 Dateien genügen.`,
     s4:`Leerer Chip (ESP32 / ESP32-C3)`,
     s4intro:`Bei einem neuen/gelöschten Chip müssen außerdem Bootloader, Partitionstabelle und boot_app0 geflasht werden (in <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
@@ -438,7 +441,7 @@ var I18N = {
     pre3:`在 <code class="inl">binaries/</code> 目录（存放 <code class="inl">.bin</code> 文件的位置）下运行以下命令。`,
     pre4:`将 <code class="inl">COMx</code> 替换为正确的串口。可使用 <code class="inl">--baud 460800</code> 加快速度。`,
     s3:`烧录（更新）`,
-    s3intro:`对于已配置好的控制器，一次性烧录固件 + LittleFS：`,
+    s3intro:`对于已配置好的控制器，先烧录固件，再烧录文件系统——分两步进行（更可靠）：`,
     note_esp8266:`<b>ESP8266：</b>固件已包含引导程序（eboot），因此写入到 <code class="inl">0x0</code>。这 2 个文件即可。`,
     s4:`空白芯片（ESP32 / ESP32-C3）`,
     s4intro:`对于全新/已擦除的芯片，还需烧录引导程序、分区表和 boot_app0（位于 <code class="inl">.pio/build/&lt;env&gt;/</code>：<code class="inl">bootloader.bin</code>、<code class="inl">partitions.bin</code>、<code class="inl">boot_app0.bin</code>）。`,
@@ -478,7 +481,7 @@ var I18N = {
     pre3:`Выполняйте приведённые ниже команды из папки <code class="inl">binaries/</code> (где находятся файлы <code class="inl">.bin</code>).`,
     pre4:`Замените <code class="inl">COMx</code> на нужный порт. Можно ускорить с помощью <code class="inl">--baud 460800</code>.`,
     s3:`Прошивка (обновление)`,
-    s3intro:`Для уже настроенного контроллера прошейте прошивку + LittleFS за один раз:`,
+    s3intro:`Для уже настроенного контроллера прошейте сначала прошивку, затем файловую систему — в два отдельных шага (надёжнее):`,
     note_esp8266:`<b>ESP8266:</b> прошивка уже включает загрузчик (eboot), поэтому записывается по адресу <code class="inl">0x0</code>. Достаточно 2 файлов.`,
     s4:`Чистый чип (ESP32 / ESP32-C3)`,
     s4intro:`На новом/стёртом чипе нужно также прошить загрузчик, таблицу разделов и boot_app0 (в <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
@@ -518,7 +521,7 @@ var I18N = {
     pre3:`Exécutez les commandes ci-dessous depuis le dossier <code class="inl">binaries/</code> (où se trouvent les fichiers <code class="inl">.bin</code>).`,
     pre4:`Remplacez <code class="inl">COMx</code> par le bon port. Vous pouvez accélérer avec <code class="inl">--baud 460800</code>.`,
     s3:`Flashage (mise à jour)`,
-    s3intro:`Pour un contrôleur déjà provisionné, flashez firmware + LittleFS en une fois :`,
+    s3intro:`Pour un contrôleur déjà provisionné, flashez le firmware puis le système de fichiers — en deux étapes distinctes (plus fiable) :`,
     note_esp8266:`<b>ESP8266 :</b> le firmware inclut déjà le bootloader (eboot), il est donc écrit à <code class="inl">0x0</code>. Les 2 fichiers suffisent.`,
     s4:`Puce vierge (ESP32 / ESP32-C3)`,
     s4intro:`Sur une puce neuve/effacée, il faut aussi flasher le bootloader, la table de partitions et boot_app0 (dans <code class="inl">.pio/build/&lt;env&gt;/</code> : <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
@@ -558,7 +561,7 @@ var I18N = {
     pre3:`<code class="inl">.bin</code> ファイルがある <code class="inl">binaries/</code> フォルダで、以下のコマンドを実行します。`,
     pre4:`<code class="inl">COMx</code> を正しいポートに置き換えてください。<code class="inl">--baud 460800</code> で高速化できます。`,
     s3:`書き込み（更新）`,
-    s3intro:`すでに構成済みのコントローラには、ファームウェア + LittleFS を一度に書き込みます：`,
+    s3intro:`すでに構成済みのコントローラには、ファームウェアを書き込んでから、ファイルシステムを書き込みます——2 つの別々のステップで（より確実です）：`,
     note_esp8266:`<b>ESP8266：</b>ファームウェアにはブートローダ（eboot）が含まれているため、<code class="inl">0x0</code> に書き込みます。2 つのファイルで十分です。`,
     s4:`空のチップ（ESP32 / ESP32-C3）`,
     s4intro:`新品/消去済みのチップでは、ブートローダ、パーティションテーブル、boot_app0 も書き込む必要があります（<code class="inl">.pio/build/&lt;env&gt;/</code> 内：<code class="inl">bootloader.bin</code>、<code class="inl">partitions.bin</code>、<code class="inl">boot_app0.bin</code>）。`,
@@ -598,7 +601,7 @@ var I18N = {
     pre3:`<code class="inl">.bin</code> 파일이 있는 <code class="inl">binaries/</code> 폴더에서 아래 명령을 실행합니다.`,
     pre4:`<code class="inl">COMx</code>를 올바른 포트로 바꾸세요. <code class="inl">--baud 460800</code>으로 속도를 높일 수 있습니다.`,
     s3:`플래싱(업데이트)`,
-    s3intro:`이미 구성된 컨트롤러에는 펌웨어 + LittleFS를 한 번에 기록합니다:`,
+    s3intro:`이미 구성된 컨트롤러에는 펌웨어를 먼저, 그다음 파일시스템을 기록합니다 — 두 단계로 나누어 (더 안정적):`,
     note_esp8266:`<b>ESP8266:</b> 펌웨어에 부트로더(eboot)가 이미 포함되어 있어 <code class="inl">0x0</code>에 기록됩니다. 두 파일이면 충분합니다.`,
     s4:`빈 칩 (ESP32 / ESP32-C3)`,
     s4intro:`새/지워진 칩에서는 부트로더, 파티션 테이블, boot_app0도 함께 기록해야 합니다(<code class="inl">.pio/build/&lt;env&gt;/</code> 안: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
