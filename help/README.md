@@ -2,7 +2,7 @@
 
 Brew controller for **ESP8266 / ESP32 / ESP32-C3** — control via web UI, 20×4 LCD or physical buttons.
 
-**License:** personal / non-commercial use only, until the next version is released.
+**License:** personal / non-commercial use only.
 
 > 🌐 **Full interactive page (10 languages, styled):** https://rampanelli.github.io/BrewBOSS/help/
 > 📦 **Binaries for download:** [`../binaries/`](../binaries/)
@@ -99,7 +99,7 @@ esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x0 bootloader.b
 
 Controlador de brassagem para **ESP8266 / ESP32 / ESP32-C3** — controle pela interface web, LCD 20×4 ou botões físicos.
 
-**Licença:** uso pessoal/não comercial apenas, até o lançamento da próxima versão.
+**Licença:** uso pessoal/não comercial apenas.
 
 > 🌐 **Página completa interativa (10 idiomas, estilizada):** https://rampanelli.github.io/BrewBOSS/help/
 > 📦 **Binários para download:** [`../binaries/`](../binaries/)
