@@ -1,6 +1,8 @@
 # BrewBOSS — Brew Controller `v2.2.22i`
 
-Open-source brew controller for **ESP8266 / ESP32 / ESP32-C3** — control via web UI, 20×4 LCD or physical buttons.
+Brew controller for **ESP8266 / ESP32 / ESP32-C3** — control via web UI, 20×4 LCD or physical buttons.
+
+**License:** personal / non-commercial use only, until the next version is released.
 
 > 🌐 **Full interactive page (10 languages, styled):** https://rampanelli.github.io/BrewBOSS/help/
 > 📦 **Binaries for download:** [`../binaries/`](../binaries/)
@@ -28,12 +30,12 @@ Firmware (LittleFS shipped separately) for the 3 supported controllers. Filesyst
 
 | Controller | File | Type | Offset | Size |
 |---|---|---|---|---|
-| **Wemos** (ESP8266) | `fw-wemos_v2.2.22i.bin` | Firmware | `0x00000000` | 408,880 B |
-| | `littlefs-wemos_v2.2.22i.bin` | LittleFS | `0x00300000` | 1,024,000 B |
-| **ESP32** (esp32dev) | `fw-esp32_v2.2.22i.bin` | Firmware | `0x00010000` | 984,608 B |
-| | `littlefs-esp32_v2.2.22i.bin` | LittleFS | `0x00290000` | 1,441,792 B |
-| **ESP32-C3** | `fw-esp32c3_v2.2.22i.bin` | Firmware | `0x00010000` | 995,744 B |
-| | `littlefs-esp32c3_v2.2.22i.bin` | LittleFS | `0x00290000` | 1,441,792 B |
+| **Wemos** (ESP8266) | [`fw-wemos_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/fw-wemos_v2.2.22i.bin) | Firmware | `0x00000000` | 408,880 B |
+| | [`littlefs-wemos_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/littlefs-wemos_v2.2.22i.bin) | LittleFS | `0x00300000` | 1,024,000 B |
+| **ESP32** (esp32dev) | [`fw-esp32_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/fw-esp32_v2.2.22i.bin) | Firmware | `0x00010000` | 984,608 B |
+| | [`littlefs-esp32_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/littlefs-esp32_v2.2.22i.bin) | LittleFS | `0x00290000` | 1,441,792 B |
+| **ESP32-C3** | [`fw-esp32c3_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/fw-esp32c3_v2.2.22i.bin) | Firmware | `0x00010000` | 995,744 B |
+| | [`littlefs-esp32c3_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/littlefs-esp32c3_v2.2.22i.bin) | LittleFS | `0x00290000` | 1,441,792 B |
 
 ## Prerequisites
 
@@ -95,7 +97,9 @@ esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x0 bootloader.b
 
 # BrewBOSS — Controlador de Brassagem `v2.2.22i`
 
-Controlador de brassagem open-source para **ESP8266 / ESP32 / ESP32-C3** — controle pela interface web, LCD 20×4 ou botões físicos.
+Controlador de brassagem para **ESP8266 / ESP32 / ESP32-C3** — controle pela interface web, LCD 20×4 ou botões físicos.
+
+**Licença:** uso pessoal/não comercial apenas, até o lançamento da próxima versão.
 
 > 🌐 **Página completa interativa (10 idiomas, estilizada):** https://rampanelli.github.io/BrewBOSS/help/
 > 📦 **Binários para download:** [`../binaries/`](../binaries/)
@@ -121,12 +125,12 @@ Firmware (LittleFS fornecido à parte) para os 3 controladores suportados. As im
 
 | Controlador | Arquivo | Tipo | Offset | Tamanho |
 |---|---|---|---|---|
-| **Wemos** (ESP8266) | `fw-wemos_v2.2.22i.bin` | Firmware | `0x00000000` | 408.880 B |
-| | `littlefs-wemos_v2.2.22i.bin` | LittleFS | `0x00300000` | 1.024.000 B |
-| **ESP32** (esp32dev) | `fw-esp32_v2.2.22i.bin` | Firmware | `0x00010000` | 984.608 B |
-| | `littlefs-esp32_v2.2.22i.bin` | LittleFS | `0x00290000` | 1.441.792 B |
-| **ESP32-C3** | `fw-esp32c3_v2.2.22i.bin` | Firmware | `0x00010000` | 995.744 B |
-| | `littlefs-esp32c3_v2.2.22i.bin` | LittleFS | `0x00290000` | 1.441.792 B |
+| **Wemos** (ESP8266) | [`fw-wemos_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/fw-wemos_v2.2.22i.bin) | Firmware | `0x00000000` | 408.880 B |
+| | [`littlefs-wemos_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/littlefs-wemos_v2.2.22i.bin) | LittleFS | `0x00300000` | 1.024.000 B |
+| **ESP32** (esp32dev) | [`fw-esp32_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/fw-esp32_v2.2.22i.bin) | Firmware | `0x00010000` | 984.608 B |
+| | [`littlefs-esp32_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/littlefs-esp32_v2.2.22i.bin) | LittleFS | `0x00290000` | 1.441.792 B |
+| **ESP32-C3** | [`fw-esp32c3_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/fw-esp32c3_v2.2.22i.bin) | Firmware | `0x00010000` | 995.744 B |
+| | [`littlefs-esp32c3_v2.2.22i.bin`](https://github.com/rampanelli/BrewBOSS/raw/main/binaries/littlefs-esp32c3_v2.2.22i.bin) | LittleFS | `0x00290000` | 1.441.792 B |
 
 ## Pré-requisitos
 
