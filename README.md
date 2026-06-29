@@ -2,8 +2,9 @@
 
 Brew controller for **ESP8266 / ESP32 / ESP32-C3** — control via web UI, 20×4 LCD or physical buttons.
 
-> 🌐 **Full 9‑language interactive manual:** https://rampanelli.github.io/BrewBOSS/
-> 📦 **Binaries for download:** [`binaries/`](binaries/)
+<br>
+<div align="center"><b>🌐 <a href="https://rampanelli.github.io/BrewBOSS/">Open the full 9‑language interactive manual</a> &nbsp;│&nbsp; 📦 <a href="binaries/">Download firmware &amp; LittleFS binaries</a></b></div>
+<br>
 
 ---
 
