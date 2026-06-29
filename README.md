@@ -51,19 +51,21 @@ Change or disable the password in **Setup → System → Security**. Re‑flashi
 
 ## Navigating the interface
 
-The interface has a **side menu** and a **status bar**.
+<table><tr><td style="vertical-align:top;padding-right:16px;">
 
-| Menu | Description |
-|---|---|
-| **Dashboard** | Main screen — live temperatures, gauges, timer and control buttons |
-| **Recipes** | Recipe library and mash/boil step editors |
-| **Setup** | Settings, System (network, security, time, backup) and About |
-| **Mode** | Switches the color theme |
-| **About** | Version and hardware information |
+The interface has a **side menu** and a **status bar** at the top.
+
+- **Dashboard** — live temperatures, gauges, timer and control buttons.
+- **Recipes** — recipe library and mash/boil step editors.
+- **Setup** — Settings, System (network, security, time, backup) and About.
+- **Mode** — switches the color theme.
+- **About** — version and hardware information.
 
 **Status bar:** Wi‑Fi indicator (signal or AP name), NTP dot, HEAP dot, UPTIME.
 
-![Side navigation menu](images/4.1_menu.jpeg)
+Tap the status bar to collapse/expand the menu (useful on phones).
+
+</td><td width="260"><img src="images/4.1_menu.jpeg" width="260" alt="Side navigation menu"></td></tr></table>
 
 ---
 
@@ -85,49 +87,76 @@ The interface has a **side menu** and a **status bar**.
 ## The screens
 
 ### Dashboard (Main)
-![Dashboard](images/1.0_main.jpeg)
+
+<table><tr><td style="vertical-align:top;padding-right:16px;">
 
 The home screen with three round gauges (main temperature, sparge temperature, power/PWM) and the brew timer with the current step name. **Use the control buttons below the gauges** to run the brew (Start, Pause/Resume, Stop, Skip). During manual mode you can tap a gauge to set the target temperature or power.
 
+</td><td width="260"><img src="images/1.0_main.jpeg" width="260" alt="Dashboard"></td></tr></table>
+
 ### Step view & Steps history
-![Steps history](images/1.1_step.jpeg)
+
+<table><tr><td style="vertical-align:top;padding-right:16px;">
 
 A running timeline of every milestone: start, target reached, step changes, hop additions, completion — all time‑stamped and color‑coded.
 
+</td><td width="260"><img src="images/1.1_step.jpeg" width="260" alt="Steps history"></td></tr></table>
+
 ### Recipes
-![Recipes](images/2.0_recipes.jpeg)
+
+<table><tr><td style="vertical-align:top;padding-right:16px;">
 
 Your recipe library with search, sort and Import. Activate a recipe to load it for brewing; import recipes saved elsewhere; save, edit and delete your own.
 
+</td><td width="260"><img src="images/2.0_recipes.jpeg" width="260" alt="Recipes"></td></tr></table>
+
 ### Mash steps editor
-![Mash editor](images/2.1_mash.jpeg)
+
+<table><tr><td style="vertical-align:top;padding-right:16px;">
 
 Define your mash profile step by step. Each step has a name, target temperature, duration (minutes) and flags: **Recirculate** (run pump), **Heater on**, **Full power**, **Step‑lock** (pause for manual action).
 
+</td><td width="260"><img src="images/2.1_mash.jpeg" width="260" alt="Mash editor"></td></tr></table>
+
 ### Boil steps & additions editor
-![Boil editor](images/2.2_boil.jpeg)
+
+<table><tr><td style="vertical-align:top;padding-right:16px;">
 
 Schedule hop additions during and after the boil. Trigger types: timed addition (during boil), post‑boil addition (by temperature), or final cooling.
 
+</td><td width="260"><img src="images/2.2_boil.jpeg" width="260" alt="Boil editor"></td></tr></table>
+
 ### Settings
-![Settings](images/3.0_settings.jpeg)
+
+<table><tr><td style="vertical-align:top;padding-right:16px;">
 
 Brew parameters: unit (°C/°F), delay, power percentages, boil temperature/time, sparge, PID band, pump timing, sensor assignments and checkboxes. **Use sensor offsets** to calibrate against a reference thermometer.
 
+</td><td width="260"><img src="images/3.0_settings.jpeg" width="260" alt="Settings"></td></tr></table>
+
 ### System (network, security, time, backup)
-![System](images/3.1_system.jpeg)
+
+<table><tr><td style="vertical-align:top;padding-right:16px;">
 
 Wi‑Fi mode and credentials, Security (login on/off and password), NTP server and GMT offset, and Backup (export/import your configuration).
 
+</td><td width="260"><img src="images/3.1_system.jpeg" width="260" alt="System"></td></tr></table>
+
 ### About
-![About](images/3.2_about.jpeg)
+
+<table><tr><td style="vertical-align:top;padding-right:16px;">
 
 Firmware version, hardware info, network status, time/NTP and system info — the data to include when asking for help.
 
-### Color themes (Mode)
-![Themes](images/4.0_themes.jpeg)
+</td><td width="260"><img src="images/3.2_about.jpeg" width="260" alt="About"></td></tr></table>
 
-Tap **Mode** in the side menu to cycle through the available color schemes.
+### Color themes (Mode)
+
+<table><tr><td style="vertical-align:top;padding-right:16px;">
+
+Tap **Mode** in the side menu to cycle through the available color schemes — for example a dark theme for a dim brew room.
+
+</td><td width="260"><img src="images/4.0_themes.jpeg" width="260" alt="Themes"></td></tr></table>
 
 ---
 
