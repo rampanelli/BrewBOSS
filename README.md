@@ -51,7 +51,7 @@ Change or disable the password in **Setup → System → Security**. Re‑flashi
 
 ## Navigating the interface
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 The interface has a **side menu** and a **status bar** at the top.
 
@@ -88,7 +88,7 @@ Tap the status bar to collapse/expand the menu (useful on phones).
 
 ### Dashboard (Main)
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 The home screen with three round gauges (main temperature, sparge temperature, power/PWM) and the brew timer with the current step name. **Use the control buttons below the gauges** to run the brew (Start, Pause/Resume, Stop, Skip). During manual mode you can tap a gauge to set the target temperature or power.
 
@@ -96,7 +96,7 @@ The home screen with three round gauges (main temperature, sparge temperature, p
 
 ### Step view & Steps history
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 A running timeline of every milestone: start, target reached, step changes, hop additions, completion — all time‑stamped and color‑coded.
 
@@ -104,7 +104,7 @@ A running timeline of every milestone: start, target reached, step changes, hop 
 
 ### Recipes
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 Your recipe library with search, sort and Import. Activate a recipe to load it for brewing; import recipes saved elsewhere; save, edit and delete your own.
 
@@ -112,7 +112,7 @@ Your recipe library with search, sort and Import. Activate a recipe to load it f
 
 ### Mash steps editor
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 Define your mash profile step by step. Each step has a name, target temperature, duration (minutes) and flags: **Recirculate** (run pump), **Heater on**, **Full power**, **Step‑lock** (pause for manual action).
 
@@ -120,7 +120,7 @@ Define your mash profile step by step. Each step has a name, target temperature,
 
 ### Boil steps & additions editor
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 Schedule hop additions during and after the boil. Trigger types: timed addition (during boil), post‑boil addition (by temperature), or final cooling.
 
@@ -128,7 +128,7 @@ Schedule hop additions during and after the boil. Trigger types: timed addition 
 
 ### Settings
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 Brew parameters: unit (°C/°F), delay, power percentages, boil temperature/time, sparge, PID band, pump timing, sensor assignments and checkboxes. **Use sensor offsets** to calibrate against a reference thermometer.
 
@@ -136,7 +136,7 @@ Brew parameters: unit (°C/°F), delay, power percentages, boil temperature/time
 
 ### System (network, security, time, backup)
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 Wi‑Fi mode and credentials, Security (login on/off and password), NTP server and GMT offset, and Backup (export/import your configuration).
 
@@ -144,7 +144,7 @@ Wi‑Fi mode and credentials, Security (login on/off and password), NTP server a
 
 ### About
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 Firmware version, hardware info, network status, time/NTP and system info — the data to include when asking for help.
 
@@ -152,7 +152,7 @@ Firmware version, hardware info, network status, time/NTP and system info — th
 
 ### Color themes (Mode)
 
-<table><tr><td style="vertical-align:top;padding-right:16px;">
+<table border="0"><tr><td style="vertical-align:top;padding-right:16px;">
 
 Tap **Mode** in the side menu to cycle through the available color schemes — for example a dark theme for a dim brew room.
 
