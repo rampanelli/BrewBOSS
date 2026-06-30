@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrewBOSS v2.2.22i</title>
+<style>
+  :root{
+    --accent:#4318FF; --accent2:#2B3674; --bg:#f4f7fe; --card:#ffffff;
+    --text:#2B3674; --dim:#707eae; --border:#e0e5f2; --code-bg:#0b1437; --code-fg:#e6ebff;
+    --warn-bg:#fff7e6; --warn-bd:#ffd591; --warn-tx:#7a4f01;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;}
+  body{background:var(--bg);color:var(--text);line-height:1.55;padding:24px 14px 60px;}
+  .wrap{max-width:980px;margin:0 auto;}
+  header{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);color:#fff;
+    border-radius:20px;padding:26px 28px;margin-bottom:22px;box-shadow:0 10px 30px rgba(67,24,255,.25);
+    display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+  header .htext{min-width:0;}
+  header h1{font-size:26px;font-weight:800;letter-spacing:-.5px;}
+  header h1 b{font-weight:800;}
+  header .ver{display:inline-block;margin-left:8px;padding:2px 12px;border-radius:999px;
+    background:rgba(255,255,255,.18);font-size:14px;font-weight:700;vertical-align:middle;white-space:nowrap;}
+  header p{opacity:.9;margin-top:8px;font-size:14px;max-width:640px;}
+  .lang{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);
+    border-radius:10px;padding:8px 12px;font-size:14px;font-weight:700;cursor:pointer;flex:none;}
+  .lang option{color:#2B3674;background:#fff;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px;
+    padding:20px 22px;margin-bottom:18px;box-shadow:0 6px 20px rgba(0,0,0,.04);}
+  h2{font-size:18px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  h2 .n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    border-radius:8px;background:var(--accent);color:#fff;font-size:14px;flex:none;}
+  .ov-body{font-size:14.5px;color:var(--text);line-height:1.65;}
+  .gal-intro{font-size:13.5px;color:var(--dim);margin-bottom:14px;}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;}
+  figure{margin:0;}
+  figure a{display:block;}
+  figure img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;border:1px solid var(--border);
+    display:block;background:#0b1437;cursor:zoom-in;transition:.15s;}
+  figure img:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(43,54,116,.18);}
+  figcaption{font-size:12.5px;color:var(--text);margin-top:8px;font-weight:600;line-height:1.4;}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--dim);font-weight:700;}
+  tbody tr:hover{background:#f7f9ff;}
+  .sub{font-size:13.5px;color:var(--dim);margin-bottom:12px;}
+  .plat{font-weight:800;}
+  .chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;
+    background:rgba(67,24,255,.1);color:var(--accent);margin-left:6px;}
+  .file{font-family:'Cascadia Code',Consolas,monospace;font-size:13px;}
+  .type-fw{color:#e65100;font-weight:700;}
+  .type-fs{color:#0891b2;font-weight:700;}
+  .off{font-family:'Cascadia Code',Consolas,monospace;font-weight:700;color:var(--accent2);background:#eef1fb;
+    padding:2px 8px;border-radius:6px;white-space:nowrap;}
+  .sz{color:var(--dim);font-family:'Cascadia Code',Consolas,monospace;font-size:13px;white-space:nowrap;}
+  .cmd{position:relative;background:var(--code-bg);color:var(--code-fg);border-radius:12px;
+    padding:14px 56px 14px 16px;font-family:'Cascadia Code',Consolas,monospace;font-size:13px;
+    white-space:pre-wrap;word-break:break-word;margin:10px 0 0;line-height:1.6;}
+  .cmd .cmdtext{font-family:inherit;background:none;color:inherit;}
+  .cmd .copy{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);color:#fff;
+    border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;}
+  .cmd .copy:hover{background:rgba(255,255,255,.25);}
+  .cmd .copy.ok{background:#05cd99;}
+  .step-title{font-weight:800;font-size:14px;margin:16px 0 2px;color:var(--accent2);}
+  .step-title:first-of-type{margin-top:0;}
+  ul{margin:6px 0 0 18px;font-size:14px;}
+  li{margin-bottom:6px;}
+  code.inl{font-family:'Cascadia Code',Consolas,monospace;background:#eef1fb;color:var(--accent2);
+    padding:1px 6px;border-radius:5px;font-size:13px;}
+  .note{background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-tx);
+    border-radius:12px;padding:12px 14px;font-size:13.5px;margin-top:12px;}
+  .note b{color:var(--warn-tx);}
+  .foot{text-align:center;color:var(--dim);font-size:12px;margin-top:24px;}
+  .foot b{font-weight:800;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="htext">
+      <h1>Brew<b>BOSS</b> — <span data-i18n="h1">Brew Controller</span> <span class="ver">v2.2.22i</span></h1>
+      <p data-i18n="tagline">Brew controller for ESP8266 / ESP32 / ESP32-C3 — control via web UI, 20×4 LCD or physical buttons.</p>
+      <p data-i18n="license" style="opacity:.85;margin-top:6px;font-size:13px;">Personal / non-commercial use only.</p>
+    </div>
+    <select id="lang" class="lang" aria-label="Select language" onchange="setLang(this.value)">
+      <option value="en">English</option>
+      <option value="pt-BR">Português (BR)</option>
+      <option value="es">Español</option>
+      <option value="it">Italiano</option>
+      <option value="de">Deutsch</option>
+      <option value="zh">中文</option>
+      <option value="ru">Русский</option>
+      <option value="fr">Français</option>
+      <option value="ja">日本語</option>
+      <option value="ko">한국어</option>
+    </select>
+  </header>
+
+  <div class="card">
+    <h2><span class="n">1</span> <span data-i18n="ov_title">Overview</span></h2>
+    <p class="ov-body" data-i18n="ov_body">BrewBOSS is a lightweight brewing automation controller.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">2</span> <span data-i18n="s1">Files and offsets</span></h2>
+    <p class="sub" data-i18n="subtitle">Firmware (LittleFS shipped separately) for the 3 supported controllers. Filesystem images are in <b>LittleFS</b> format.</p>
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_controller">Controller</th>
+          <th data-i18n="th_file">File</th>
+          <th data-i18n="th_type">Type</th>
+          <th data-i18n="th_offset">Offset</th>
+          <th data-i18n="th_size">Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="plat" rowspan="2">Wemos <span class="chip">ESP8266</span></td>
+          <td class="file"><a href="../binaries/fw-wemos_v2.2.22i.bin" download>fw-wemos_v2.2.22i.bin</a></td>
+          <td class="type-fw">Firmware</td>
+          <td><span class="off">0x00000000</span></td>
+          <td class="sz">407,984 B</td>
+        </tr>
+        <tr>
+          <td class="file"><a href="../binaries/littlefs-wemos_v2.2.22i.bin" download>littlefs-wemos_v2.2.22i.bin</a></td>
+          <td class="type-fs">LittleFS</td>
+          <td><span class="off">0x00300000</span></td>
+          <td class="sz">1,024,000 B</td>
+        </tr>
+        <tr>
+          <td class="plat" rowspan="2">ESP32 <span class="chip">esp32dev</span></td>
+          <td class="file"><a href="../binaries/fw-esp32_v2.2.22i.bin" download>fw-esp32_v2.2.22i.bin</a></td>
+          <td class="type-fw">Firmware</td>
+          <td><span class="off">0x00010000</span></td>
+          <td class="sz">983,488 B</td>
+        </tr>
+        <tr>
+          <td class="file"><a href="../binaries/littlefs-esp32_v2.2.22i.bin" download>littlefs-esp32_v2.2.22i.bin</a></td>
+          <td class="type-fs">LittleFS</td>
+          <td><span class="off">0x00290000</span></td>
+          <td class="sz">1,441,792 B</td>
+        </tr>
+        <tr>
+          <td class="plat" rowspan="2">ESP32-C3 <span class="chip">devkitm-1</span></td>
+          <td class="file"><a href="../binaries/fw-esp32c3_v2.2.22i.bin" download>fw-esp32c3_v2.2.22i.bin</a></td>
+          <td class="type-fw">Firmware</td>
+          <td><span class="off">0x00010000</span></td>
+          <td class="sz">994,560 B</td>
+        </tr>
+        <tr>
+          <td class="file"><a href="../binaries/littlefs-esp32c3_v2.2.22i.bin" download>littlefs-esp32c3_v2.2.22i.bin</a></td>
+          <td class="type-fs">LittleFS</td>
+          <td><span class="off">0x00290000</span></td>
+          <td class="sz">1,441,792 B</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">3</span> <span data-i18n="s2">Prerequisites</span></h2>
+    <ul>
+      <li data-i18n="pre1">Install esptool: <code class="inl">pip install esptool</code></li>
+      <li data-i18n="pre2">Connect the controller via USB and find its serial port (e.g. <code class="inl">COM5</code> on Windows, <code class="inl">/dev/ttyUSB0</code> on Linux).</li>
+      <li data-i18n="pre3">Run the commands below from the <code class="inl">binaries/</code> folder (where the <code class="inl">.bin</code> files are).</li>
+      <li data-i18n="pre4">Replace <code class="inl">COMx</code> with the correct port. You can speed it up with <code class="inl">--baud 460800</code>.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">4</span> <span data-i18n="s3">Flashing (update)</span></h2>
+    <p style="font-size:13.5px;color:var(--dim);" data-i18n="s3intro">For an already-provisioned controller, flash the firmware first, then the filesystem — two separate steps (more reliable):</p>
+
+    <div class="step-title">Wemos / ESP8266</div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 fw-wemos_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x300000 littlefs-wemos_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+
+    <div class="step-title">ESP32 (esp32dev)</div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 fw-esp32_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+
+    <div class="step-title">ESP32-C3</div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 fw-esp32c3_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32c3_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+
+    <div class="note" data-i18n="note_esp8266"><b>ESP8266:</b> the firmware already includes the bootloader (eboot), so it is written at <code class="inl">0x0</code>. The 2 files are enough.</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">5</span> <span data-i18n="s4">Blank chip (ESP32 / ESP32-C3)</span></h2>
+    <p style="font-size:13.5px;color:var(--dim);" data-i18n="s4intro">On a new/erased chip you must also flash the bootloader, partition table and boot_app0 (found in <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).</p>
+
+    <div class="step-title" data-i18n="s4_esp32">ESP32 — bootloader at 0x1000</div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x1000 bootloader.bin 0x8000 partitions.bin 0xe000 boot_app0.bin 0x10000 fw-esp32_v2.2.22i.bin 0x290000 littlefs-esp32_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+
+    <div class="step-title" data-i18n="s4_esp32c3">ESP32-C3 — bootloader at 0x0</div>
+    <div class="cmd"><code class="cmdtext">esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x0 bootloader.bin 0x8000 partitions.bin 0xe000 boot_app0.bin 0x10000 fw-esp32c3_v2.2.22i.bin 0x290000 littlefs-esp32c3_v2.2.22i.bin</code><button class="copy" data-i18n="copy" onclick="cp(this)">Copy</button></div>
+
+    <div class="note" data-i18n="note_erase"><b>Erase everything first (optional):</b> <code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. This also wipes the WiFi/recipes config stored in LittleFS.</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">6</span> <span data-i18n="s5">Notes</span></h2>
+    <ul>
+      <li data-i18n="n1">Offsets are valid for the current partition table (4&nbsp;MB flash). If the table changes, the offsets change.</li>
+      <li data-i18n="n2">Images are <b>LittleFS</b> (not SPIFFS) — the firmware mounts the filesystem as LittleFS.</li>
+      <li data-i18n="n3">After flashing, the controller starts the web server; access it via the network IP or the AP. In the UI, the <b>Mode</b> button cycles through the 14 color schemes.</li>
+      <li data-i18n="n4">ESP32-C3 with native USB: the port appears as an Espressif serial device (VID <code class="inl">303A</code>); reset/boot for flashing is automatic.</li>
+    </ul>
+  </div>
+
+  <div class="foot">Brew<b>BOSS</b> v2.2.22i — <span data-i18n="foot">generated for the <code class="inl">binaries/</code> folder</span></div>
+  <div class="card" style="margin-top:18px;">
+    <div class="panel-title" style="display:block;">License &amp; Terms of Use</div>
+    <div style="font-size:0.72rem;line-height:1.55;color:var(--dim);">
+      <p><b>BrewBOSS License Agreement — Version 1.0</b><br>Copyright &copy; 2026 LR</p>
+      <p><b>1. Grant of Use.</b> This software, named <b>BrewBOSS</b>, is made available <b>free of charge</b> strictly for <b>personal, private, and non-commercial use only</b>. Subject to the terms of this license, you are permitted to:</p>
+      <ul><li>download and use the software for your own personal use;</li><li>inspect the source code;</li><li>modify the software for personal use only;</li><li>make private copies for backup or archival purposes, provided they are not used commercially and are not redistributed in violation of this license.</li></ul>
+      <p><b>2. Prohibited Uses.</b> The following actions are expressly forbidden without prior written permission from the copyright holder:</p>
+      <ul><li>selling, reselling, sublicensing, or commercializing this software;</li><li>using this software, in whole or in part, in any commercial, industrial, corporate, or revenue-generating activity;</li><li>embedding this software into any product, service, machine, appliance, system, or solution intended for sale, lease, rental, or third-party use;</li><li>distributing modified or unmodified versions for commercial purposes;</li><li>using this software in production, business, laboratory, factory, brewery, or industrial environments of any kind;</li><li>using this software as part of any service offered to third parties, whether paid or unpaid, if such use supports business, operational, or commercial activity;</li><li>removing or altering this license notice.</li></ul>
+      <p>Any use outside personal, non-commercial use is prohibited.</p>
+      <p><b>3. No Warranty.</b> THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE COPYRIGHT HOLDER, AUTHORS, AND CONTRIBUTORS MAKE NO REPRESENTATIONS OR WARRANTIES OF ANY KIND, INCLUDING BUT NOT LIMITED TO:</p>
+      <ul><li>ANY WARRANTY OF MERCHANTABILITY;</li><li>ANY WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE;</li><li>ANY WARRANTY OF NON-INFRINGEMENT;</li><li>ANY WARRANTY OF ACCURACY;</li><li>ANY WARRANTY OF RELIABILITY;</li><li>ANY WARRANTY OF COMPATIBILITY;</li><li>ANY WARRANTY OF CONTINUOUS OR UNINTERRUPTED OPERATION;</li><li>ANY WARRANTY THAT THE SOFTWARE IS ERROR-FREE, BUG-FREE, SAFE, OR SUITABLE FOR ANY PARTICULAR USE.</li></ul>
+      <p><b>4. Safety and Operational Risk.</b> The user acknowledges and agrees that:</p>
+      <ul><li>the software may contain defects, errors, omissions, vulnerabilities, or failures;</li><li>the software may stop working at any time;</li><li>the software may behave unpredictably;</li><li>the software may interact with hardware in an unsafe or unintended way;</li><li>the software is not certified, validated, or guaranteed for any use involving safety, critical operations, industrial control, or protected systems.</li></ul>
+      <p>The user assumes all risks associated with installation, execution, modification, integration, and use of the software.</p>
+      <p><b>5. Limitation of Liability.</b> IN NO EVENT SHALL THE COPYRIGHT HOLDER, AUTHORS, OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM, LOSS, DAMAGE, COST, EXPENSE, OR LIABILITY OF ANY KIND, WHETHER DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR OTHERWISE, ARISING OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. THIS INCLUDES, WITHOUT LIMITATION:</p>
+      <ul><li>loss of data;</li><li>corruption of files;</li><li>equipment malfunction;</li><li>hardware damage;</li><li>electrical damage;</li><li>overheating;</li><li>fire;</li><li>personal injury;</li><li>loss of profits;</li><li>business interruption;</li><li>production loss;</li><li>any other damages or losses.</li></ul>
+      <p><b>6. No Support.</b> There is no obligation to provide:</p>
+      <ul><li>technical support;</li><li>updates;</li><li>bug fixes;</li><li>maintenance;</li><li>security patches;</li><li>compatibility changes;</li><li>documentation updates.</li></ul>
+      <p>Any support, if ever provided, is entirely voluntary and does not create any continuing obligation.</p>
+      <p><b>7. Termination.</b> Any violation of the terms of this license automatically terminates your right to use, copy, modify, or distribute the software. Upon termination, you must immediately stop using the software and delete all copies in your possession or control, except where retention is required by law.</p>
+      <p><b>8. Acceptance.</b> By downloading, installing, copying, modifying, accessing, or using BrewBOSS, you acknowledge that you have read, understood, and agreed to be bound by this license. If you do not agree with these terms, you must not use the software.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+var I18N = {
+  "en": {
+    title:"BrewBOSS v2.2.22i", h1:`Brew Controller`,
+    tagline:`Brew controller for ESP8266 / ESP32 / ESP32-C3 — control via web UI, 20×4 LCD or physical buttons.`,
+    license:`Personal / non-commercial use only.`,
+    ov_title:`Overview`,
+    ov_body:`BrewBOSS is a lightweight brewing automation controller. It runs the mash, boil and post-boil stages with PID heating, pump recirculation and timed hop additions, and recovers automatically after a power loss. Operate it from the built-in web interface, the 20×4 LCD or the 4 physical buttons. Below: a tour of the system, then the firmware downloads and flashing instructions.`,
+    gal_title:`The system`, gal_intro:`A visual tour following the user manual.`,
+    g1:`BrewBOSS — the brewing controller.`,
+    g2:`BrewBOSS — system overview.`,
+    g3:`Web interface — real-time dashboard (temperatures, PWM, pump, timer).`,
+    g4:`Brew control — start, pause, resume and stop.`,
+    g5:`Mash — programmable step sequence.`,
+    g6:`Boil & additions — boil timer and timed hop additions.`,
+    g7:`Recipes — save, list and activate.`,
+    g8:`Setup — network, NTP and brew parameters.`,
+    g9:`20×4 LCD and 4 physical buttons for standalone use.`,
+    subtitle:`Firmware (LittleFS shipped separately) for the 3 supported controllers. Filesystem images are in <b>LittleFS</b> format.`,
+    s1:`Files and offsets`,
+    th_controller:`Controller`, th_file:`File`, th_type:`Type`, th_offset:`Offset`, th_size:`Size`,
+    s2:`Prerequisites`,
+    pre1:`Install esptool: <code class="inl">pip install esptool</code>`,
+    pre2:`Connect the controller via USB and find its serial port (e.g. <code class="inl">COM5</code> on Windows, <code class="inl">/dev/ttyUSB0</code> on Linux).`,
+    pre3:`Run the commands below from the <code class="inl">binaries/</code> folder (where the <code class="inl">.bin</code> files are).`,
+    pre4:`Replace <code class="inl">COMx</code> with the correct port. You can speed it up with <code class="inl">--baud 460800</code>.`,
+    s3:`Flashing (update)`,
+    s3intro:`For an already-provisioned controller, flash the firmware first, then the filesystem — two separate steps (more reliable):`,
+    note_esp8266:`<b>ESP8266:</b> the firmware already includes the bootloader (eboot), so it is written at <code class="inl">0x0</code>. The 2 files are enough.`,
+    s4:`Blank chip (ESP32 / ESP32-C3)`,
+    s4intro:`On a new/erased chip you must also flash the bootloader, partition table and boot_app0 (found in <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
+    s4_esp32:`ESP32 — bootloader at 0x1000`,
+    s4_esp32c3:`ESP32-C3 — bootloader at 0x0`,
+    note_erase:`<b>Erase everything first (optional):</b> <code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. This also wipes the WiFi/recipes config stored in LittleFS.`,
+    s5:`Notes`,
+    n1:`Offsets are valid for the current partition table (4&nbsp;MB flash). If the table changes, the offsets change.`,
+    n2:`Images are <b>LittleFS</b> (not SPIFFS) — the firmware mounts the filesystem as LittleFS.`,
+    n3:`After flashing, the controller starts the web server; access it via the network IP or the AP. In the UI, the <b>Mode</b> button cycles through the 14 color schemes.`,
+    n4:`ESP32-C3 with native USB: the port appears as an Espressif serial device (VID <code class="inl">303A</code>); reset/boot for flashing is automatic.`,
+    foot:`generated for the <code class="inl">binaries/</code> folder`,
+    copy:`Copy`, copied:`Copied!`
+  },
+  "pt-BR": {
+    title:"BrewBOSS v2.2.22i", h1:`Controlador de Brassagem`,
+    tagline:`Controlador de brassagem para ESP8266 / ESP32 / ESP32-C3 — controle pela interface web, LCD 20×4 ou botões físicos.`,
+    license:`Uso pessoal/não comercial apenas.`,
+    ov_title:`Visão geral`,
+    ov_body:`O BrewBOSS é um controlador leve de automação de brassagem. Executa as etapas de mostura, fervura e pós-fervura com aquecimento PID, recirculação por bomba e adições de lúpulo por tempo, e se recupera automaticamente após queda de energia. Opere pela interface web embutida, pelo LCD 20×4 ou pelos 4 botões físicos. Abaixo: um tour pelo sistema e, em seguida, os downloads de firmware e as instruções de gravação.`,
+    gal_title:`O sistema`, gal_intro:`Um tour visual seguindo o manual de uso.`,
+    g1:`BrewBOSS — o controlador de brassagem.`,
+    g2:`BrewBOSS — visão geral do sistema.`,
+    g3:`Interface web — painel em tempo real (temperaturas, PWM, bomba, cronômetro).`,
+    g4:`Controle do brew — iniciar, pausar, retomar e parar.`,
+    g5:`Mostura — sequência de passos programável.`,
+    g6:`Fervura e adições — cronômetro de fervura e adições por tempo.`,
+    g7:`Receitas — salvar, listar e ativar.`,
+    g8:`Configuração — rede, NTP e parâmetros do brew.`,
+    g9:`LCD 20×4 e 4 botões físicos para uso autônomo.`,
+    subtitle:`Firmware (LittleFS fornecido à parte) para os 3 controladores suportados. As imagens de filesystem estão no formato <b>LittleFS</b>.`,
+    s1:`Arquivos e offsets`,
+    th_controller:`Controlador`, th_file:`Arquivo`, th_type:`Tipo`, th_offset:`Offset`, th_size:`Tamanho`,
+    s2:`Pré-requisitos`,
+    pre1:`Instale o esptool: <code class="inl">pip install esptool</code>`,
+    pre2:`Conecte o controlador via USB e descubra a porta serial (ex.: <code class="inl">COM5</code> no Windows, <code class="inl">/dev/ttyUSB0</code> no Linux).`,
+    pre3:`Execute os comandos abaixo na pasta <code class="inl">binaries/</code> (onde estão os arquivos <code class="inl">.bin</code>).`,
+    pre4:`Substitua <code class="inl">COMx</code> pela porta correta. Você pode acelerar com <code class="inl">--baud 460800</code>.`,
+    s3:`Gravação (atualização)`,
+    s3intro:`Para um controlador já provisionado, grave o firmware e depois o filesystem — em duas etapas separadas (mais confiável):`,
+    note_esp8266:`<b>ESP8266:</b> o firmware já inclui o bootloader (eboot), por isso é gravado em <code class="inl">0x0</code>. Os 2 arquivos bastam.`,
+    s4:`Chip zerado (ESP32 / ESP32-C3)`,
+    s4intro:`Em um chip novo/apagado também é preciso gravar o bootloader, a tabela de partições e o boot_app0 (em <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
+    s4_esp32:`ESP32 — bootloader em 0x1000`,
+    s4_esp32c3:`ESP32-C3 — bootloader em 0x0`,
+    note_erase:`<b>Apagar tudo antes (opcional):</b> <code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. Isso também apaga a configuração de WiFi/receitas salva no LittleFS.`,
+    s5:`Notas`,
+    n1:`Offsets válidos para a tabela de partições atual (flash de 4&nbsp;MB). Se a tabela mudar, os offsets mudam.`,
+    n2:`As imagens são <b>LittleFS</b> (não SPIFFS) — o firmware monta o filesystem como LittleFS.`,
+    n3:`Após a gravação, o controlador inicia o servidor web; acesse pelo IP da rede ou pelo AP. Na interface, o botão <b>Mode</b> percorre os 14 esquemas de cor.`,
+    n4:`ESP32-C3 com USB nativo: a porta aparece como dispositivo serial Espressif (VID <code class="inl">303A</code>); o reset/boot para gravação é automático.`,
+    foot:`gerado para a pasta <code class="inl">binaries/</code>`,
+    copy:`Copiar`, copied:`Copiado!`
+  },
+  "es": {
+    title:"BrewBOSS v2.2.22i", h1:`Controlador de Elaboración`,
+    tagline:`Controlador de elaboración de cerveza para ESP8266 / ESP32 / ESP32-C3 — control por interfaz web, LCD 20×4 o botones físicos.`,
+    license:`Solo uso personal/no comercial.`,
+    ov_title:`Resumen`,
+    ov_body:`BrewBOSS es un controlador ligero de automatización para elaborar cerveza. Ejecuta las etapas de maceración, hervido y post-hervido con calentamiento PID, recirculación por bomba y adiciones de lúpulo por tiempo, y se recupera automáticamente tras un corte de energía. Contrólalo desde la interfaz web integrada, el LCD 20×4 o los 4 botones físicos. A continuación: un recorrido por el sistema y luego las descargas de firmware y las instrucciones de grabación.`,
+    gal_title:`El sistema`, gal_intro:`Un recorrido visual siguiendo el manual de uso.`,
+    g1:`BrewBOSS — el controlador de elaboración.`,
+    g2:`BrewBOSS — vista general del sistema.`,
+    g3:`Interfaz web — panel en tiempo real (temperaturas, PWM, bomba, cronómetro).`,
+    g4:`Control del proceso — iniciar, pausar, reanudar y detener.`,
+    g5:`Maceración — secuencia de pasos programable.`,
+    g6:`Hervido y adiciones — temporizador de hervido y adiciones por tiempo.`,
+    g7:`Recetas — guardar, listar y activar.`,
+    g8:`Configuración — red, NTP y parámetros del proceso.`,
+    g9:`LCD 20×4 y 4 botones físicos para uso autónomo.`,
+    subtitle:`Firmware (LittleFS suministrado por separado) para los 3 controladores compatibles. Las imágenes de filesystem están en formato <b>LittleFS</b>.`,
+    s1:`Archivos y offsets`,
+    th_controller:`Controlador`, th_file:`Archivo`, th_type:`Tipo`, th_offset:`Offset`, th_size:`Tamaño`,
+    s2:`Requisitos previos`,
+    pre1:`Instala esptool: <code class="inl">pip install esptool</code>`,
+    pre2:`Conecta el controlador por USB y averigua su puerto serie (p. ej. <code class="inl">COM5</code> en Windows, <code class="inl">/dev/ttyUSB0</code> en Linux).`,
+    pre3:`Ejecuta los comandos siguientes desde la carpeta <code class="inl">binaries/</code> (donde están los archivos <code class="inl">.bin</code>).`,
+    pre4:`Sustituye <code class="inl">COMx</code> por el puerto correcto. Puedes acelerarlo con <code class="inl">--baud 460800</code>.`,
+    s3:`Grabación (actualización)`,
+    s3intro:`Para un controlador ya aprovisionado, graba el firmware y luego el filesystem — en dos pasos separados (más fiable):`,
+    note_esp8266:`<b>ESP8266:</b> el firmware ya incluye el bootloader (eboot), por lo que se graba en <code class="inl">0x0</code>. Bastan los 2 archivos.`,
+    s4:`Chip en blanco (ESP32 / ESP32-C3)`,
+    s4intro:`En un chip nuevo/borrado también hay que grabar el bootloader, la tabla de particiones y boot_app0 (en <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
+    s4_esp32:`ESP32 — bootloader en 0x1000`,
+    s4_esp32c3:`ESP32-C3 — bootloader en 0x0`,
+    note_erase:`<b>Borrar todo antes (opcional):</b> <code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. Esto también borra la configuración de WiFi/recetas guardada en LittleFS.`,
+    s5:`Notas`,
+    n1:`Offsets válidos para la tabla de particiones actual (flash de 4&nbsp;MB). Si la tabla cambia, los offsets cambian.`,
+    n2:`Las imágenes son <b>LittleFS</b> (no SPIFFS): el firmware monta el filesystem como LittleFS.`,
+    n3:`Tras la grabación, el controlador inicia el servidor web; accede por la IP de la red o por el AP. En la interfaz, el botón <b>Mode</b> recorre los 14 esquemas de color.`,
+    n4:`ESP32-C3 con USB nativo: el puerto aparece como dispositivo serie Espressif (VID <code class="inl">303A</code>); el reset/arranque para grabar es automático.`,
+    foot:`generado para la carpeta <code class="inl">binaries/</code>`,
+    copy:`Copiar`, copied:`¡Copiado!`
+  },
+  "it": {
+    title:"BrewBOSS v2.2.22i", h1:`Controllore di Cotta`,
+    tagline:`Controllore per la produzione di birra per ESP8266 / ESP32 / ESP32-C3 — controllo da interfaccia web, LCD 20×4 o pulsanti fisici.`,
+    license:`Solo uso personale/non commerciale.`,
+    ov_title:`Panoramica`,
+    ov_body:`BrewBOSS è un controllore leggero per l'automazione della cotta. Gestisce le fasi di mash, bollitura e post-bollitura con riscaldamento PID, ricircolo con pompa e aggiunte di luppolo a tempo, e si ripristina automaticamente dopo un'interruzione di corrente. Controllalo dall'interfaccia web integrata, dal LCD 20×4 o dai 4 pulsanti fisici. Di seguito: un tour del sistema e poi i download del firmware e le istruzioni di flashing.`,
+    gal_title:`Il sistema`, gal_intro:`Un tour visivo che segue il manuale d'uso.`,
+    g1:`BrewBOSS — il controllore di cotta.`,
+    g2:`BrewBOSS — panoramica del sistema.`,
+    g3:`Interfaccia web — dashboard in tempo reale (temperature, PWM, pompa, timer).`,
+    g4:`Controllo cotta — avvia, pausa, riprendi e ferma.`,
+    g5:`Mash — sequenza di passi programmabile.`,
+    g6:`Bollitura e aggiunte — timer di bollitura e aggiunte a tempo.`,
+    g7:`Ricette — salva, elenca e attiva.`,
+    g8:`Impostazioni — rete, NTP e parametri della cotta.`,
+    g9:`LCD 20×4 e 4 pulsanti fisici per l'uso autonomo.`,
+    subtitle:`Firmware (LittleFS fornito separatamente) per i 3 controller supportati. Le immagini del filesystem sono in formato <b>LittleFS</b>.`,
+    s1:`File e offset`,
+    th_controller:`Controller`, th_file:`File`, th_type:`Tipo`, th_offset:`Offset`, th_size:`Dimensione`,
+    s2:`Prerequisiti`,
+    pre1:`Installa esptool: <code class="inl">pip install esptool</code>`,
+    pre2:`Collega il controller via USB e individua la porta seriale (es. <code class="inl">COM5</code> su Windows, <code class="inl">/dev/ttyUSB0</code> su Linux).`,
+    pre3:`Esegui i comandi seguenti dalla cartella <code class="inl">binaries/</code> (dove si trovano i file <code class="inl">.bin</code>).`,
+    pre4:`Sostituisci <code class="inl">COMx</code> con la porta corretta. Puoi velocizzare con <code class="inl">--baud 460800</code>.`,
+    s3:`Flashing (aggiornamento)`,
+    s3intro:`Per un controller già predisposto, scrivi il firmware e poi il filesystem — in due passaggi separati (più affidabile):`,
+    note_esp8266:`<b>ESP8266:</b> il firmware include già il bootloader (eboot), quindi viene scritto in <code class="inl">0x0</code>. I 2 file sono sufficienti.`,
+    s4:`Chip vuoto (ESP32 / ESP32-C3)`,
+    s4intro:`Su un chip nuovo/cancellato occorre scrivere anche bootloader, tabella delle partizioni e boot_app0 (in <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
+    s4_esp32:`ESP32 — bootloader a 0x1000`,
+    s4_esp32c3:`ESP32-C3 — bootloader a 0x0`,
+    note_erase:`<b>Cancella tutto prima (opzionale):</b> <code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. Questo cancella anche la configurazione WiFi/ricette salvata nel LittleFS.`,
+    s5:`Note`,
+    n1:`Offset validi per l'attuale tabella delle partizioni (flash da 4&nbsp;MB). Se la tabella cambia, gli offset cambiano.`,
+    n2:`Le immagini sono <b>LittleFS</b> (non SPIFFS) — il firmware monta il filesystem come LittleFS.`,
+    n3:`Dopo il flashing, il controller avvia il server web; accedi tramite l'IP di rete o l'AP. Nell'interfaccia, il pulsante <b>Mode</b> scorre i 14 schemi di colore.`,
+    n4:`ESP32-C3 con USB nativo: la porta appare come dispositivo seriale Espressif (VID <code class="inl">303A</code>); il reset/boot per il flashing è automatico.`,
+    foot:`generato per la cartella <code class="inl">binaries/</code>`,
+    copy:`Copia`, copied:`Copiato!`
+  },
+  "de": {
+    title:"BrewBOSS v2.2.22i", h1:`Brausteuerung`,
+    tagline:`Brausteuerung für ESP8266 / ESP32 / ESP32-C3 — Bedienung über Weboberfläche, 20×4-LCD oder physische Tasten.`,
+    license:`Nur private/nicht-kommerzielle Nutzung.`,
+    ov_title:`Überblick`,
+    ov_body:`BrewBOSS ist eine leichtgewichtige Steuerung zur Brauautomatisierung. Sie führt Maischen, Kochen und Nachkochen mit PID-Heizung, Pumpenumwälzung und zeitgesteuerten Hopfengaben durch und stellt sich nach einem Stromausfall automatisch wieder her. Bedienung über die integrierte Weboberfläche, das 20×4-LCD oder die 4 physischen Tasten. Unten: eine Tour durch das System, danach die Firmware-Downloads und die Flash-Anleitung.`,
+    gal_title:`Das System`, gal_intro:`Ein visueller Rundgang gemäß dem Benutzerhandbuch.`,
+    g1:`BrewBOSS — die Brausteuerung.`,
+    g2:`BrewBOSS — Systemüberblick.`,
+    g3:`Weboberfläche — Echtzeit-Dashboard (Temperaturen, PWM, Pumpe, Timer).`,
+    g4:`Brausteuerung — Start, Pause, Fortsetzen und Stopp.`,
+    g5:`Maischen — programmierbare Schrittfolge.`,
+    g6:`Kochen & Gaben — Kochtimer und zeitgesteuerte Gaben.`,
+    g7:`Rezepte — speichern, auflisten und aktivieren.`,
+    g8:`Einrichtung — Netzwerk, NTP und Brauparameter.`,
+    g9:`20×4-LCD und 4 physische Tasten für den autonomen Betrieb.`,
+    subtitle:`Firmware (LittleFS separat) für die 3 unterstützten Controller. Die Dateisystem-Images liegen im <b>LittleFS</b>-Format vor.`,
+    s1:`Dateien und Offsets`,
+    th_controller:`Controller`, th_file:`Datei`, th_type:`Typ`, th_offset:`Offset`, th_size:`Größe`,
+    s2:`Voraussetzungen`,
+    pre1:`esptool installieren: <code class="inl">pip install esptool</code>`,
+    pre2:`Controller per USB anschließen und den seriellen Port ermitteln (z. B. <code class="inl">COM5</code> unter Windows, <code class="inl">/dev/ttyUSB0</code> unter Linux).`,
+    pre3:`Führe die folgenden Befehle im Ordner <code class="inl">binaries/</code> aus (dort liegen die <code class="inl">.bin</code>-Dateien).`,
+    pre4:`Ersetze <code class="inl">COMx</code> durch den richtigen Port. Mit <code class="inl">--baud 460800</code> geht es schneller.`,
+    s3:`Flashen (Update)`,
+    s3intro:`Bei einem bereits eingerichteten Controller die Firmware und dann das Dateisystem flashen — in zwei separaten Schritten (zuverlässiger):`,
+    note_esp8266:`<b>ESP8266:</b> Die Firmware enthält bereits den Bootloader (eboot) und wird daher bei <code class="inl">0x0</code> geschrieben. Die 2 Dateien genügen.`,
+    s4:`Leerer Chip (ESP32 / ESP32-C3)`,
+    s4intro:`Bei einem neuen/gelöschten Chip müssen außerdem Bootloader, Partitionstabelle und boot_app0 geflasht werden (in <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
+    s4_esp32:`ESP32 — Bootloader bei 0x1000`,
+    s4_esp32c3:`ESP32-C3 — Bootloader bei 0x0`,
+    note_erase:`<b>Vorher alles löschen (optional):</b> <code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. Das löscht auch die im LittleFS gespeicherte WLAN-/Rezepte-Konfiguration.`,
+    s5:`Hinweise`,
+    n1:`Offsets gelten für die aktuelle Partitionstabelle (4&nbsp;MB Flash). Ändert sich die Tabelle, ändern sich die Offsets.`,
+    n2:`Die Images sind <b>LittleFS</b> (nicht SPIFFS) — die Firmware bindet das Dateisystem als LittleFS ein.`,
+    n3:`Nach dem Flashen startet der Controller den Webserver; Zugriff über die Netzwerk-IP oder den AP. In der Oberfläche durchläuft die Schaltfläche <b>Mode</b> die 14 Farbschemata.`,
+    n4:`ESP32-C3 mit nativem USB: Der Port erscheint als Espressif-Serial-Gerät (VID <code class="inl">303A</code>); Reset/Boot zum Flashen erfolgt automatisch.`,
+    foot:`erzeugt für den Ordner <code class="inl">binaries/</code>`,
+    copy:`Kopieren`, copied:`Kopiert!`
+  },
+  "zh": {
+    title:"BrewBOSS v2.2.22i", h1:`酿酒控制器`,
+    tagline:`面向 ESP8266 / ESP32 / ESP32-C3 的酿酒控制器——可通过 Web 界面、20×4 LCD 或物理按键操作。`,
+    license:`仅限个人/非商业用途。`,
+    ov_title:`概述`,
+    ov_body:`BrewBOSS 是一款轻量级酿造自动化控制器。它通过 PID 加热、水泵循环和定时投酒花完成糖化、煮沸和煮后阶段，并能在断电后自动恢复。可通过内置 Web 界面、20×4 LCD 或 4 个物理按键进行操作。下面：先是系统概览，然后是固件下载与烧录说明。`,
+    gal_title:`系统一览`, gal_intro:`按照用户手册顺序的图示导览。`,
+    g1:`BrewBOSS — 酿酒控制器。`,
+    g2:`BrewBOSS — 系统总览。`,
+    g3:`Web 界面 — 实时仪表盘（温度、PWM、水泵、计时器）。`,
+    g4:`酿造控制 — 启动、暂停、继续和停止。`,
+    g5:`糖化 — 可编程步骤序列。`,
+    g6:`煮沸与投放 — 煮沸计时与定时投放。`,
+    g7:`配方 — 保存、列表与启用。`,
+    g8:`设置 — 网络、NTP 与酿造参数。`,
+    g9:`20×4 LCD 与 4 个物理按键，支持独立使用。`,
+    subtitle:`面向 3 款受支持控制器的固件（LittleFS 单独提供）。文件系统镜像为 <b>LittleFS</b> 格式。`,
+    s1:`文件与偏移地址`,
+    th_controller:`控制器`, th_file:`文件`, th_type:`类型`, th_offset:`偏移地址`, th_size:`大小`,
+    s2:`前置条件`,
+    pre1:`安装 esptool：<code class="inl">pip install esptool</code>`,
+    pre2:`通过 USB 连接控制器并确认其串口（例如 Windows 上的 <code class="inl">COM5</code>，Linux 上的 <code class="inl">/dev/ttyUSB0</code>）。`,
+    pre3:`在 <code class="inl">binaries/</code> 目录（存放 <code class="inl">.bin</code> 文件的位置）下运行以下命令。`,
+    pre4:`将 <code class="inl">COMx</code> 替换为正确的串口。可使用 <code class="inl">--baud 460800</code> 加快速度。`,
+    s3:`烧录（更新）`,
+    s3intro:`对于已配置好的控制器，先烧录固件，再烧录文件系统——分两步进行（更可靠）：`,
+    note_esp8266:`<b>ESP8266：</b>固件已包含引导程序（eboot），因此写入到 <code class="inl">0x0</code>。这 2 个文件即可。`,
+    s4:`空白芯片（ESP32 / ESP32-C3）`,
+    s4intro:`对于全新/已擦除的芯片，还需烧录引导程序、分区表和 boot_app0（位于 <code class="inl">.pio/build/&lt;env&gt;/</code>：<code class="inl">bootloader.bin</code>、<code class="inl">partitions.bin</code>、<code class="inl">boot_app0.bin</code>）。`,
+    s4_esp32:`ESP32 — 引导程序位于 0x1000`,
+    s4_esp32c3:`ESP32-C3 — 引导程序位于 0x0`,
+    note_erase:`<b>先擦除全部（可选）：</b><code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>。这会同时清除保存在 LittleFS 中的 WiFi/配方配置。`,
+    s5:`注意事项`,
+    n1:`偏移地址适用于当前分区表（4&nbsp;MB 闪存）。若分区表改变，偏移地址也会改变。`,
+    n2:`镜像为 <b>LittleFS</b>（非 SPIFFS）——固件以 LittleFS 方式挂载文件系统。`,
+    n3:`烧录后，控制器启动 Web 服务器；可通过网络 IP 或 AP 访问。在界面中，<b>Mode</b> 按钮可循环切换 14 种配色方案。`,
+    n4:`采用原生 USB 的 ESP32-C3：端口显示为 Espressif 串口设备（VID <code class="inl">303A</code>）；烧录所需的复位/进入引导为自动完成。`,
+    foot:`为 <code class="inl">binaries/</code> 文件夹生成`,
+    copy:`复制`, copied:`已复制！`
+  },
+  "ru": {
+    title:"BrewBOSS v2.2.22i", h1:`Контроллер пивоварения`,
+    tagline:`Контроллер пивоварения для ESP8266 / ESP32 / ESP32-C3 — управление через веб-интерфейс, LCD 20×4 или физические кнопки.`,
+    license:`Только для личного/некоммерческого использования.`,
+    ov_title:`Обзор`,
+    ov_body:`BrewBOSS — это лёгкий контроллер автоматизации пивоварения. Он выполняет затирание, кипячение и пост-кипячение с ПИД-нагревом, рециркуляцией насосом и внесением хмеля по времени, а также автоматически восстанавливается после отключения питания. Управление — через встроенный веб-интерфейс, LCD 20×4 или 4 физические кнопки. Ниже: обзор системы, затем загрузки прошивки и инструкции по прошивке.`,
+    gal_title:`Система`, gal_intro:`Наглядный обзор по руководству пользователя.`,
+    g1:`BrewBOSS — контроллер пивоварения.`,
+    g2:`BrewBOSS — общий вид системы.`,
+    g3:`Веб-интерфейс — панель в реальном времени (температуры, PWM, насос, таймер).`,
+    g4:`Управление варкой — старт, пауза, продолжение и стоп.`,
+    g5:`Затирание — программируемая последовательность шагов.`,
+    g6:`Кипячение и внесения — таймер кипячения и внесения по времени.`,
+    g7:`Рецепты — сохранение, список и активация.`,
+    g8:`Настройка — сеть, NTP и параметры варки.`,
+    g9:`LCD 20×4 и 4 физические кнопки для автономной работы.`,
+    subtitle:`Прошивка (LittleFS поставляется отдельно) для 3 поддерживаемых контроллеров. Образы файловой системы — в формате <b>LittleFS</b>.`,
+    s1:`Файлы и смещения`,
+    th_controller:`Контроллер`, th_file:`Файл`, th_type:`Тип`, th_offset:`Смещение`, th_size:`Размер`,
+    s2:`Требования`,
+    pre1:`Установите esptool: <code class="inl">pip install esptool</code>`,
+    pre2:`Подключите контроллер по USB и определите его последовательный порт (например, <code class="inl">COM5</code> в Windows, <code class="inl">/dev/ttyUSB0</code> в Linux).`,
+    pre3:`Выполняйте приведённые ниже команды из папки <code class="inl">binaries/</code> (где находятся файлы <code class="inl">.bin</code>).`,
+    pre4:`Замените <code class="inl">COMx</code> на нужный порт. Можно ускорить с помощью <code class="inl">--baud 460800</code>.`,
+    s3:`Прошивка (обновление)`,
+    s3intro:`Для уже настроенного контроллера прошейте сначала прошивку, затем файловую систему — в два отдельных шага (надёжнее):`,
+    note_esp8266:`<b>ESP8266:</b> прошивка уже включает загрузчик (eboot), поэтому записывается по адресу <code class="inl">0x0</code>. Достаточно 2 файлов.`,
+    s4:`Чистый чип (ESP32 / ESP32-C3)`,
+    s4intro:`На новом/стёртом чипе нужно также прошить загрузчик, таблицу разделов и boot_app0 (в <code class="inl">.pio/build/&lt;env&gt;/</code>: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
+    s4_esp32:`ESP32 — загрузчик по адресу 0x1000`,
+    s4_esp32c3:`ESP32-C3 — загрузчик по адресу 0x0`,
+    note_erase:`<b>Сначала стереть всё (необязательно):</b> <code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. Это также удалит сохранённую в LittleFS конфигурацию WiFi/рецептов.`,
+    s5:`Примечания`,
+    n1:`Смещения действительны для текущей таблицы разделов (флеш 4&nbsp;МБ). При изменении таблицы смещения меняются.`,
+    n2:`Образы — <b>LittleFS</b> (не SPIFFS): прошивка монтирует файловую систему как LittleFS.`,
+    n3:`После прошивки контроллер запускает веб-сервер; доступ по IP в сети или через AP. В интерфейсе кнопка <b>Mode</b> переключает 14 цветовых схем.`,
+    n4:`ESP32-C3 с нативным USB: порт отображается как последовательное устройство Espressif (VID <code class="inl">303A</code>); сброс/вход в загрузчик для прошивки выполняется автоматически.`,
+    foot:`создано для папки <code class="inl">binaries/</code>`,
+    copy:`Копировать`, copied:`Скопировано!`
+  },
+  "fr": {
+    title:"BrewBOSS v2.2.22i", h1:`Contrôleur de Brassage`,
+    tagline:`Contrôleur de brassage pour ESP8266 / ESP32 / ESP32-C3 — pilotage via l'interface web, l'écran LCD 20×4 ou les boutons physiques.`,
+    license:`Usage personnel/non commercial uniquement.`,
+    ov_title:`Aperçu`,
+    ov_body:`BrewBOSS est un contrôleur léger d'automatisation du brassage. Il gère l'empâtage, l'ébullition et la post-ébullition avec chauffage PID, recirculation par pompe et ajouts de houblon minutés, et se rétablit automatiquement après une coupure de courant. Pilotez-le depuis l'interface web intégrée, l'écran LCD 20×4 ou les 4 boutons physiques. Ci-dessous : une visite du système, puis les téléchargements du firmware et les instructions de flashage.`,
+    gal_title:`Le système`, gal_intro:`Une visite visuelle suivant le manuel d'utilisation.`,
+    g1:`BrewBOSS — le contrôleur de brassage.`,
+    g2:`BrewBOSS — vue d'ensemble du système.`,
+    g3:`Interface web — tableau de bord en temps réel (températures, PWM, pompe, minuterie).`,
+    g4:`Contrôle du brassage — démarrer, mettre en pause, reprendre et arrêter.`,
+    g5:`Empâtage — séquence de paliers programmable.`,
+    g6:`Ébullition & ajouts — minuterie d'ébullition et ajouts minutés.`,
+    g7:`Recettes — enregistrer, lister et activer.`,
+    g8:`Configuration — réseau, NTP et paramètres de brassage.`,
+    g9:`LCD 20×4 et 4 boutons physiques pour une utilisation autonome.`,
+    subtitle:`Firmware (LittleFS fourni séparément) pour les 3 contrôleurs pris en charge. Les images du système de fichiers sont au format <b>LittleFS</b>.`,
+    s1:`Fichiers et offsets`,
+    th_controller:`Contrôleur`, th_file:`Fichier`, th_type:`Type`, th_offset:`Offset`, th_size:`Taille`,
+    s2:`Prérequis`,
+    pre1:`Installez esptool : <code class="inl">pip install esptool</code>`,
+    pre2:`Branchez le contrôleur en USB et repérez son port série (par ex. <code class="inl">COM5</code> sous Windows, <code class="inl">/dev/ttyUSB0</code> sous Linux).`,
+    pre3:`Exécutez les commandes ci-dessous depuis le dossier <code class="inl">binaries/</code> (où se trouvent les fichiers <code class="inl">.bin</code>).`,
+    pre4:`Remplacez <code class="inl">COMx</code> par le bon port. Vous pouvez accélérer avec <code class="inl">--baud 460800</code>.`,
+    s3:`Flashage (mise à jour)`,
+    s3intro:`Pour un contrôleur déjà provisionné, flashez le firmware puis le système de fichiers — en deux étapes distinctes (plus fiable) :`,
+    note_esp8266:`<b>ESP8266 :</b> le firmware inclut déjà le bootloader (eboot), il est donc écrit à <code class="inl">0x0</code>. Les 2 fichiers suffisent.`,
+    s4:`Puce vierge (ESP32 / ESP32-C3)`,
+    s4intro:`Sur une puce neuve/effacée, il faut aussi flasher le bootloader, la table de partitions et boot_app0 (dans <code class="inl">.pio/build/&lt;env&gt;/</code> : <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
+    s4_esp32:`ESP32 — bootloader à 0x1000`,
+    s4_esp32c3:`ESP32-C3 — bootloader à 0x0`,
+    note_erase:`<b>Tout effacer d'abord (optionnel) :</b> <code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. Cela efface aussi la configuration WiFi/recettes stockée dans le LittleFS.`,
+    s5:`Notes`,
+    n1:`Offsets valables pour la table de partitions actuelle (flash 4&nbsp;Mo). Si la table change, les offsets changent.`,
+    n2:`Les images sont en <b>LittleFS</b> (pas SPIFFS) — le firmware monte le système de fichiers en LittleFS.`,
+    n3:`Après le flashage, le contrôleur démarre le serveur web ; accédez-y via l'IP du réseau ou l'AP. Dans l'interface, le bouton <b>Mode</b> fait défiler les 14 thèmes de couleurs.`,
+    n4:`ESP32-C3 avec USB natif : le port apparaît comme périphérique série Espressif (VID <code class="inl">303A</code>) ; le reset/boot pour le flashage est automatique.`,
+    foot:`généré pour le dossier <code class="inl">binaries/</code>`,
+    copy:`Copier`, copied:`Copié !`
+  },
+  "ja": {
+    title:"BrewBOSS v2.2.22i", h1:`醸造コントローラ`,
+    tagline:`ESP8266 / ESP32 / ESP32-C3 向けの醸造コントローラ — Web インターフェース、20×4 LCD、物理ボタンで操作。`,
+    license:`個人/非商用利用のみ。`,
+    ov_title:`概要`,
+    ov_body:`BrewBOSS は軽量な醸造自動化コントローラです。PID 加熱、ポンプ循環、時間指定のホップ投入により、マッシュ・煮沸・煮沸後の各工程を実行し、停電後も自動的に復帰します。内蔵の Web インターフェース、20×4 LCD、または 4 つの物理ボタンで操作できます。以下では、システムのツアーに続いてファームウェアのダウンロードと書き込み手順を示します。`,
+    gal_title:`システム`, gal_intro:`ユーザーマニュアルに沿ったビジュアルツアー。`,
+    g1:`BrewBOSS — 醸造コントローラ。`,
+    g2:`BrewBOSS — システム全体像。`,
+    g3:`Web インターフェース — リアルタイムダッシュボード（温度、PWM、ポンプ、タイマー）。`,
+    g4:`醸造の操作 — 開始・一時停止・再開・停止。`,
+    g5:`マッシュ — プログラム可能なステップ列。`,
+    g6:`煮沸と投入 — 煮沸タイマーと時間指定の投入。`,
+    g7:`レシピ — 保存・一覧・有効化。`,
+    g8:`設定 — ネットワーク、NTP、醸造パラメータ。`,
+    g9:`20×4 LCD と 4 つの物理ボタンで単体動作。`,
+    subtitle:`対応する 3 種類のコントローラ向けのファームウェア（LittleFS は別提供）。ファイルシステムイメージは <b>LittleFS</b> 形式です。`,
+    s1:`ファイルとオフセット`,
+    th_controller:`コントローラ`, th_file:`ファイル`, th_type:`種類`, th_offset:`オフセット`, th_size:`サイズ`,
+    s2:`前提条件`,
+    pre1:`esptool をインストール：<code class="inl">pip install esptool</code>`,
+    pre2:`コントローラを USB で接続し、シリアルポートを確認します（例：Windows では <code class="inl">COM5</code>、Linux では <code class="inl">/dev/ttyUSB0</code>）。`,
+    pre3:`<code class="inl">.bin</code> ファイルがある <code class="inl">binaries/</code> フォルダで、以下のコマンドを実行します。`,
+    pre4:`<code class="inl">COMx</code> を正しいポートに置き換えてください。<code class="inl">--baud 460800</code> で高速化できます。`,
+    s3:`書き込み（更新）`,
+    s3intro:`すでに構成済みのコントローラには、ファームウェアを書き込んでから、ファイルシステムを書き込みます——2 つの別々のステップで（より確実です）：`,
+    note_esp8266:`<b>ESP8266：</b>ファームウェアにはブートローダ（eboot）が含まれているため、<code class="inl">0x0</code> に書き込みます。2 つのファイルで十分です。`,
+    s4:`空のチップ（ESP32 / ESP32-C3）`,
+    s4intro:`新品/消去済みのチップでは、ブートローダ、パーティションテーブル、boot_app0 も書き込む必要があります（<code class="inl">.pio/build/&lt;env&gt;/</code> 内：<code class="inl">bootloader.bin</code>、<code class="inl">partitions.bin</code>、<code class="inl">boot_app0.bin</code>）。`,
+    s4_esp32:`ESP32 — ブートローダは 0x1000`,
+    s4_esp32c3:`ESP32-C3 — ブートローダは 0x0`,
+    note_erase:`<b>先に全消去（任意）：</b><code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>。これにより LittleFS に保存された WiFi/レシピ設定も消去されます。`,
+    s5:`注意事項`,
+    n1:`オフセットは現在のパーティションテーブル（4&nbsp;MB フラッシュ）向けです。テーブルが変わるとオフセットも変わります。`,
+    n2:`イメージは <b>LittleFS</b>（SPIFFS ではありません）— ファームウェアはファイルシステムを LittleFS としてマウントします。`,
+    n3:`書き込み後、コントローラは Web サーバを起動します。ネットワーク IP または AP からアクセスしてください。UI の <b>Mode</b> ボタンで 14 種類のカラースキームを切り替えられます。`,
+    n4:`ネイティブ USB の ESP32-C3：ポートは Espressif のシリアルデバイス（VID <code class="inl">303A</code>）として表示されます。書き込み用のリセット/ブートは自動です。`,
+    foot:`<code class="inl">binaries/</code> フォルダ用に生成`,
+    copy:`コピー`, copied:`コピーしました！`
+  },
+  "ko": {
+    title:"BrewBOSS v2.2.22i", h1:`양조 컨트롤러`,
+    tagline:`ESP8266 / ESP32 / ESP32-C3용 양조 컨트롤러 — 웹 인터페이스, 20×4 LCD 또는 물리 버튼으로 제어.`,
+    license:`개인/비상업적 용도로만.`,
+    ov_title:`개요`,
+    ov_body:`BrewBOSS는 가벼운 양조 자동화 컨트롤러입니다. PID 가열, 펌프 순환, 시간 기반 홉 투입으로 매시·끓임·끓임 후 단계를 수행하며, 정전 후 자동으로 복구됩니다. 내장 웹 인터페이스, 20×4 LCD 또는 4개의 물리 버튼으로 조작할 수 있습니다. 아래에는 시스템 둘러보기에 이어 펌웨어 다운로드와 플래싱 방법이 있습니다.`,
+    gal_title:`시스템`, gal_intro:`사용 설명서를 따라가는 시각적 둘러보기.`,
+    g1:`BrewBOSS — 양조 컨트롤러.`,
+    g2:`BrewBOSS — 시스템 전체 모습.`,
+    g3:`웹 인터페이스 — 실시간 대시보드(온도, PWM, 펌프, 타이머).`,
+    g4:`양조 제어 — 시작, 일시정지, 재개, 정지.`,
+    g5:`매시 — 프로그래밍 가능한 단계 시퀀스.`,
+    g6:`끓임과 투입 — 끓임 타이머와 시간 기반 투입.`,
+    g7:`레시피 — 저장, 목록, 활성화.`,
+    g8:`설정 — 네트워크, NTP, 양조 파라미터.`,
+    g9:`20×4 LCD와 4개의 물리 버튼으로 독립 사용.`,
+    subtitle:`지원되는 3종 컨트롤러용 펌웨어(LittleFS는 별도 제공). 파일시스템 이미지는 <b>LittleFS</b> 형식입니다.`,
+    s1:`파일 및 오프셋`,
+    th_controller:`컨트롤러`, th_file:`파일`, th_type:`유형`, th_offset:`오프셋`, th_size:`크기`,
+    s2:`사전 준비`,
+    pre1:`esptool 설치: <code class="inl">pip install esptool</code>`,
+    pre2:`컨트롤러를 USB로 연결하고 시리얼 포트를 확인합니다(예: Windows에서는 <code class="inl">COM5</code>, Linux에서는 <code class="inl">/dev/ttyUSB0</code>).`,
+    pre3:`<code class="inl">.bin</code> 파일이 있는 <code class="inl">binaries/</code> 폴더에서 아래 명령을 실행합니다.`,
+    pre4:`<code class="inl">COMx</code>를 올바른 포트로 바꾸세요. <code class="inl">--baud 460800</code>으로 속도를 높일 수 있습니다.`,
+    s3:`플래싱(업데이트)`,
+    s3intro:`이미 구성된 컨트롤러에는 펌웨어를 먼저, 그다음 파일시스템을 기록합니다 — 두 단계로 나누어 (더 안정적):`,
+    note_esp8266:`<b>ESP8266:</b> 펌웨어에 부트로더(eboot)가 이미 포함되어 있어 <code class="inl">0x0</code>에 기록됩니다. 두 파일이면 충분합니다.`,
+    s4:`빈 칩 (ESP32 / ESP32-C3)`,
+    s4intro:`새/지워진 칩에서는 부트로더, 파티션 테이블, boot_app0도 함께 기록해야 합니다(<code class="inl">.pio/build/&lt;env&gt;/</code> 안: <code class="inl">bootloader.bin</code>, <code class="inl">partitions.bin</code>, <code class="inl">boot_app0.bin</code>).`,
+    s4_esp32:`ESP32 — 부트로더 0x1000`,
+    s4_esp32c3:`ESP32-C3 — 부트로더 0x0`,
+    note_erase:`<b>먼저 전체 지우기(선택):</b> <code class="inl">esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. 이 작업은 LittleFS에 저장된 WiFi/레시피 설정도 함께 지웁니다.`,
+    s5:`참고`,
+    n1:`오프셋은 현재 파티션 테이블(4&nbsp;MB 플래시) 기준입니다. 테이블이 바뀌면 오프셋도 바뀝니다.`,
+    n2:`이미지는 <b>LittleFS</b>입니다(SPIFFS 아님) — 펌웨어가 파일시스템을 LittleFS로 마운트합니다.`,
+    n3:`플래싱 후 컨트롤러가 웹 서버를 시작합니다. 네트워크 IP 또는 AP로 접속하세요. UI의 <b>Mode</b> 버튼으로 14가지 색상 테마를 순환할 수 있습니다.`,
+    n4:`네이티브 USB를 사용하는 ESP32-C3: 포트가 Espressif 시리얼 장치(VID <code class="inl">303A</code>)로 표시됩니다. 플래싱용 리셋/부팅은 자동입니다.`,
+    foot:`<code class="inl">binaries/</code> 폴더용으로 생성됨`,
+    copy:`복사`, copied:`복사됨!`
+  }
+};
+
+var curLang = "en";
+
+function setLang(l){
+  if(!I18N[l]) l = "en";
+  curLang = l;
+  var d = I18N[l];
+  document.documentElement.setAttribute("lang", l);
+  document.title = d.title;
+  document.querySelectorAll("[data-i18n]").forEach(function(el){
+    var k = el.getAttribute("data-i18n");
+    if(d[k] != null) el.innerHTML = d[k];
+  });
+  var sel = document.getElementById("lang");
+  if(sel) sel.value = l;
+  try{ localStorage.setItem("bb_lang", l); }catch(e){}
+}
+
+function cp(btn){
+  var code = btn.parentNode.querySelector(".cmdtext");
+  var txt = code ? code.textContent : "";
+  navigator.clipboard.writeText(txt).then(function(){
+    var d = I18N[curLang] || I18N.en;
+    btn.textContent = d.copied;
+    btn.classList.add("ok");
+    setTimeout(function(){ btn.textContent = d.copy; btn.classList.remove("ok"); }, 1400);
+  });
+}
+
+(function(){
+  var saved = null;
+  try{ saved = localStorage.getItem("bb_lang"); }catch(e){}
+  setLang(saved && I18N[saved] ? saved : "en");
+})();
+</script>
+</body>
+</html>
