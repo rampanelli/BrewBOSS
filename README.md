@@ -1,4 +1,4 @@
-# BrewBOSS v2.2.22r
+# BrewBOSS v2.2.22i
 
 *User Operation Manual · Manual de Operação do Usuário*
 
@@ -120,8 +120,8 @@ If power is lost during a brew, on restart the device pauses and shows "RECOVERE
 
 | Controller | File | Type | Offset | Size |
 |------------|------|------|--------|------|
-| **Wemos** ESP8266 | `fw-wemos_v2.2.22r.bin` | Firmware | `0x0` | 436,936 B |
-| | `littlefs-wemos_v2.2.22r.bin` | LittleFS | `0x200000` | 2,072,576 B |
+| **Wemos** ESP8266 | `fw-wemos_v2.2.22i.bin` | Firmware | `0x0` | 408,880 B |
+| | `littlefs-wemos_v2.2.22i.bin` | LittleFS | `0x300000` | 1,024,000 B |
 | **ESP32** | `fw-esp32_v2.2.22i.bin` | Firmware | `0x10000` | 984,608 B |
 | | `littlefs-esp32_v2.2.22i.bin` | LittleFS | `0x290000` | 1,441,792 B |
 | **ESP32-C3** | `fw-esp32c3_v2.2.22i.bin` | Firmware | `0x10000` | 995,744 B |
@@ -129,7 +129,7 @@ If power is lost during a brew, on restart the device pauses and shows "RECOVERE
 
 ```bash
 # Wemos / ESP8266
-esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-wemos_v2.2.22r.bin 0x200000 littlefs-wemos_v2.2.22r.bin
+esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-wemos_v2.2.22i.bin 0x300000 littlefs-wemos_v2.2.22i.bin
 
 # ESP32
 esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.22i.bin 0x290000 littlefs-esp32_v2.2.22i.bin
@@ -137,17 +137,6 @@ esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.22i.bin 0x
 # ESP32-C3
 esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.22i.bin 0x290000 littlefs-esp32c3_v2.2.22i.bin
 ```
-
-### What's New in v2.2.22r
-
-- **Web page embedded in firmware** (PROGMEM) — no longer depends on LittleFS for the UI.
-  Only firmware OTA is needed to update the interface.
-- **Keypad configuration panel** — remap physical buttons (PUMP/MANUAL/BOIL/START) to any
-  BTN1–BTN4 position via Setup → Settings. Default / Personal / Save buttons.
-- **Boot heater glitch fix** — GPIO output register cleared before `pinMode()` on ESP8266,
-  preventing a brief HIGH pulse on heater pins at power-on.
-- **Custom confirm modals** — all confirmation dialogs (Start brew, Stop, etc.) now use a
-  styled modal instead of the browser's native `confirm()`.
 
 ### Troubleshooting
 
