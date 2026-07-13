@@ -79,7 +79,7 @@
   <header class="site">
     <div class="htext">
       <div class="brand" data-i18n="h_brand">User Operation Manual</div>
-      <h1>Brew<b>BOSS</b> <span class="ver">v2.2.22i</span></h1>
+      <h1>Brew<b>BOSS</b> <span class="ver">v2.2.24z</span></h1>
       <p data-i18n="h_tagline">A brewing automation controller with a web interface and standalone operation by LCD and keypad. This guide explains, step by step, how to operate the system safely.</p>
     </div>
     <select id="lang" class="lang" aria-label="Language" onchange="setLang(this.value)">
@@ -400,13 +400,17 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     <div class="tablewrap"><table>
       <thead><tr><th data-i18n="fw_th_ctrl">Controller</th><th data-i18n="fw_th_file">File</th><th data-i18n="fw_th_type">Type</th><th data-i18n="fw_th_off">Offset</th><th data-i18n="fw_th_size">Size</th></tr></thead>
       <tbody>
-        <tr><td rowspan="4"><b>Wemos</b> ESP8266</td><td><code>fw-wemos_v2.2.22i.bin</code></td><td>Firmware</td><td><code>0x00000000</code></td><td>408,880 B</td></tr>
+        <tr><td rowspan="2"><b>Wemos</b> ESP8266 (ESP12E) <span style="opacity:.7">v2.2.24z</span></td><td><code>fw-esp12e_v2.2.24z.bin</code></td><td>Firmware</td><td><code>0x00000000</code></td><td>446,944 B</td></tr>
+        <tr><td><code>littlefs-esp12e_v2.2.24z.bin</code></td><td>LittleFS</td><td><code>0x00200000</code></td><td>2,072,576 B</td></tr>
+        <tr><td rowspan="2"><b>ESP32</b> esp32dev <span style="opacity:.7">v2.2.24z</span></td><td><code>fw-esp32_v2.2.24z.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>1,025,968 B</td></tr>
+        <tr><td><code>littlefs-esp32_v2.2.24z.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>1,441,792 B</td></tr>
+        <tr><td rowspan="2"><b>ESP32-C3</b> <span style="opacity:.7">v2.2.24z</span></td><td><code>fw-esp32c3_v2.2.24z.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>1,035,056 B</td></tr>
+        <tr><td><code>littlefs-esp32c3_v2.2.24z.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>1,441,792 B</td></tr>
+        <tr><td rowspan="2"><b>Wemos</b> ESP8266 <span style="opacity:.7">v2.2.22i</span></td><td><code>fw-wemos_v2.2.22i.bin</code></td><td>Firmware</td><td><code>0x00000000</code></td><td>408,880 B</td></tr>
         <tr><td><code>littlefs-wemos_v2.2.22i.bin</code></td><td>LittleFS</td><td><code>0x00300000</code></td><td>1,024,000 B</td></tr>
-        <tr><td><code>fw-wemos_v2.2.22o.bin</code></td><td>Firmware</td><td><code>0x00000000</code></td><td>414,848 B</td></tr>
-        <tr><td><code>littlefs-wemos_v2.2.22o.bin</code></td><td>LittleFS</td><td><code>0x00200000</code></td><td>2,072,576 B</td></tr>
-        <tr><td rowspan="2"><b>ESP32</b> esp32dev</td><td><code>fw-esp32_v2.2.22i.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>984,608 B</td></tr>
+        <tr><td rowspan="2"><b>ESP32</b> esp32dev <span style="opacity:.7">v2.2.22i</span></td><td><code>fw-esp32_v2.2.22i.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>984,608 B</td></tr>
         <tr><td><code>littlefs-esp32_v2.2.22i.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>1,441,792 B</td></tr>
-        <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>fw-esp32c3_v2.2.22i.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>995,744 B</td></tr>
+        <tr><td rowspan="2"><b>ESP32-C3</b> <span style="opacity:.7">v2.2.22i</span></td><td><code>fw-esp32c3_v2.2.22i.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>995,744 B</td></tr>
         <tr><td><code>littlefs-esp32c3_v2.2.22i.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>1,441,792 B</td></tr>
       </tbody>
     </table></div>
@@ -445,14 +449,22 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
       <li data-i18n="fw_pre4">Replace <code>COMx</code> with the correct port. Add <code>--baud 460800</code> for faster flashing.</li>
     </ul>
 
-    <h3 data-i18n="fw_flash">Flashing (update)</h3>
+    <h3 data-i18n="fw_flash">Flashing — v2.2.24z (update)</h3>
     <p data-i18n="fw_flash_i">For an already-provisioned controller, flash the firmware first, then the filesystem — two separate steps (more reliable):</p>
-    <p><b data-i18n="fw_wemos">Wemos / ESP8266 — firmware</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 fw-wemos_v2.2.22i.bin</code></pre>
-    <p><b data-i18n="fw_wemos_fs">Wemos / ESP8266 — filesystem</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x300000 littlefs-wemos_v2.2.22i.bin</code></pre>
-    <p><b data-i18n="fw_esp32">ESP32 (esp32dev) — firmware</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 fw-esp32_v2.2.22i.bin</code></pre>
-    <p><b data-i18n="fw_esp32_fs">ESP32 (esp32dev) — filesystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32_v2.2.22i.bin</code></pre>
-    <p><b data-i18n="fw_c3">ESP32-C3 — firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 fw-esp32c3_v2.2.22i.bin</code></pre>
-    <p><b data-i18n="fw_c3_fs">ESP32-C3 — filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32c3_v2.2.22i.bin</code></pre>
+    <p><b data-i18n="fw_wemos">Wemos / ESP8266 — firmware</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 fw-esp12e_v2.2.24z.bin</code></pre>
+    <p><b data-i18n="fw_wemos_fs">Wemos / ESP8266 — filesystem</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x200000 littlefs-esp12e_v2.2.24z.bin</code></pre>
+    <p><b data-i18n="fw_esp32">ESP32 (esp32dev) — firmware</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 fw-esp32_v2.2.24z.bin</code></pre>
+    <p><b data-i18n="fw_esp32_fs">ESP32 (esp32dev) — filesystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32_v2.2.24z.bin</code></pre>
+    <p><b data-i18n="fw_c3">ESP32-C3 — firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 fw-esp32c3_v2.2.24z.bin</code></pre>
+    <p><b data-i18n="fw_c3_fs">ESP32-C3 — filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32c3_v2.2.24z.bin</code></pre>
+
+    <h3 data-i18n="fw_flash_old" style="opacity:.8">Flashing — v2.2.22i (previous)</h3>
+    <p><b>Wemos / ESP8266 — firmware</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 fw-wemos_v2.2.22i.bin</code></pre>
+    <p><b>Wemos / ESP8266 — filesystem</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x300000 littlefs-wemos_v2.2.22i.bin</code></pre>
+    <p><b>ESP32 (esp32dev) — firmware</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 fw-esp32_v2.2.22i.bin</code></pre>
+    <p><b>ESP32 (esp32dev) — filesystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32_v2.2.22i.bin</code></pre>
+    <p><b>ESP32-C3 — firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 fw-esp32c3_v2.2.22i.bin</code></pre>
+    <p><b>ESP32-C3 — filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32c3_v2.2.22i.bin</code></pre>
 
     <div class="callout note"><b data-i18n="fw_note_title">ESP8266</b> <span data-i18n="fw_note">the firmware already includes the bootloader (eboot), so it is written at <code>0x0</code>. The 2 files are enough.</span></div>
 
@@ -494,7 +506,7 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     </section>
   </main>
 
-  <footer><b>BrewBOSS</b> v2.2.22i — <span data-i18n="footer">User Operation Manual</span></footer>
+  <footer><b>BrewBOSS</b> v2.2.24z — <span data-i18n="footer">User Operation Manual</span></footer>
 </div>
 
 <script src="manual-i18n.js"></script>

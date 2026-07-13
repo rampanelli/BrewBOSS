@@ -1,4 +1,4 @@
-# BrewBOSS v2.2.22i
+# BrewBOSS v2.2.24z
 
 *User Operation Manual · Manual de Operação do Usuário*
 
@@ -117,6 +117,30 @@ If power is lost during a brew, on restart the device pauses and shows "RECOVERE
 - Manual mode is **not** recovered.
 
 ### Firmware & Flashing
+
+**Latest — v2.2.24z**
+
+| Controller | File | Type | Offset | Size |
+|------------|------|------|--------|------|
+| **Wemos** ESP8266 (ESP12E) | `fw-esp12e_v2.2.24z.bin` | Firmware | `0x0` | 446,944 B |
+| | `littlefs-esp12e_v2.2.24z.bin` | LittleFS | `0x200000` | 2,072,576 B |
+| **ESP32** | `fw-esp32_v2.2.24z.bin` | Firmware | `0x10000` | 1,025,968 B |
+| | `littlefs-esp32_v2.2.24z.bin` | LittleFS | `0x290000` | 1,441,792 B |
+| **ESP32-C3** | `fw-esp32c3_v2.2.24z.bin` | Firmware | `0x10000` | 1,035,056 B |
+| | `littlefs-esp32c3_v2.2.24z.bin` | LittleFS | `0x290000` | 1,441,792 B |
+
+```bash
+# Wemos / ESP8266 (ESP12E)
+esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-esp12e_v2.2.24z.bin 0x200000 littlefs-esp12e_v2.2.24z.bin
+
+# ESP32
+esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.24z.bin 0x290000 littlefs-esp32_v2.2.24z.bin
+
+# ESP32-C3
+esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.24z.bin 0x290000 littlefs-esp32c3_v2.2.24z.bin
+```
+
+**Previous — v2.2.22i**
 
 | Controller | File | Type | Offset | Size |
 |------------|------|------|--------|------|
@@ -275,6 +299,30 @@ Ao reiniciar após queda, o dispositivo pausa e mostra "RECOVERED! RESUME?" no L
 - Modo manual **não** é recuperado.
 
 ### Firmware e Gravação
+
+**Mais recente — v2.2.24z**
+
+| Controlador | Arquivo | Tipo | Offset | Tamanho |
+|-------------|---------|------|--------|---------|
+| **Wemos** ESP8266 (ESP12E) | `fw-esp12e_v2.2.24z.bin` | Firmware | `0x0` | 446.944 B |
+| | `littlefs-esp12e_v2.2.24z.bin` | LittleFS | `0x200000` | 2.072.576 B |
+| **ESP32** | `fw-esp32_v2.2.24z.bin` | Firmware | `0x10000` | 1.025.968 B |
+| | `littlefs-esp32_v2.2.24z.bin` | LittleFS | `0x290000` | 1.441.792 B |
+| **ESP32-C3** | `fw-esp32c3_v2.2.24z.bin` | Firmware | `0x10000` | 1.035.056 B |
+| | `littlefs-esp32c3_v2.2.24z.bin` | LittleFS | `0x290000` | 1.441.792 B |
+
+```bash
+# Wemos / ESP8266 (ESP12E)
+esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-esp12e_v2.2.24z.bin 0x200000 littlefs-esp12e_v2.2.24z.bin
+
+# ESP32
+esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.24z.bin 0x290000 littlefs-esp32_v2.2.24z.bin
+
+# ESP32-C3
+esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.24z.bin 0x290000 littlefs-esp32c3_v2.2.24z.bin
+```
+
+**Anterior — v2.2.22i**
 
 | Controlador | Arquivo | Tipo | Offset | Tamanho |
 |-------------|---------|------|--------|---------|
