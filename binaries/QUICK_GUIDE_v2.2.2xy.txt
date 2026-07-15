@@ -1,0 +1,296 @@
+================================================================================
+                     BREWBOSS v2.2.22s — QUICK GUIDE
+================================================================================
+                     Personal use only · Non-commercial
+================================================================================
+
+
+TABLE OF CONTENTS
+  1. FLASHING THE FIRMWARE
+     1.1. Recommended method: PlatformIO
+     1.2. Manual method: esptool.py (Windows / Linux / Mac)
+     1.3. Files and offsets table
+     1.4. What is firmware and what is filesystem?
+
+  2. SYSTEM OPERATION
+     2.1. First access
+     2.2. Import a recipe (XML / JSON)
+     2.3. Load a recipe
+     2.4. Edit an existing recipe
+     2.5. Save changes
+     2.6. Select sensors
+     2.7. Set the boil temperature
+     2.8. Start the brew
+
+  3. REFERENCES
+
+
+================================================================================
+1. FLASHING THE FIRMWARE
+================================================================----------------
+
+First things first: the firmware is the program that runs on the
+microcontroller. The filesystem (LittleFS) holds the web interface (HTML pages)
+and the configuration files. BOTH must be flashed for the system to work.
+
+NEVER flash firmware and filesystem in the same command (e.g. -t upload
+-t uploadfs). Always flash in two steps: firmware first, filesystem second.
+
+
+1.1. Recommended method: PlatformIO (via PowerShell / Terminal)
+
+Requirements: Python 3.7+ installed, PlatformIO installed (pip install platformio)
+
+Commands for each platform:
+
+--- Wemos D1 Mini (ESP8266) on port COM4 ---
+  python -m platformio run -e esp12e -t upload
+  python -m platformio run -e esp12e -t uploadfs
+
+--- ESP32 WROOM-32 on port COM5 ---
+  python -m platformio run -e esp32 -t upload --upload-port COM5
+  python -m platformio run -e esp32 -t uploadfs --upload-port COM5
+
+--- ESP32-C3 Super Mini on port COM10 ---
+  python -m platformio run -e esp32c3 -t upload --upload-port COM10
+  python -m platformio run -e esp32c3 -t uploadfs --upload-port COM10
+
+NOTE: Replace COMx with the correct port. To find the port:
+  [System.IO.Ports.SerialPort]::GetPortNames()   (PowerShell)
+  Esptool or the Arduino IDE also list the available ports.
+
+IMPORTANT:
+- The ESP32-C3 with USB-CDC (mode ARDUINO_USB_CDC_ON_BOOT=1) shows up as
+  "USB Serial Device" (VID 303A / PID 1001) — NO need to hold boot.
+- The ESP8266 may require holding pin D3 (GPIO0) to GND during connection
+  if auto-reset does not work.
+
+
+1.2. Manual method: esptool.py
+
+Requirements: Python 3.7+, esptool installed (pip install esptool)
+
+Download the .bin files from the GitHub Releases section and run:
+
+--- Wemos / ESP8266 ---
+  esptool.py --chip esp8266 --port COM4 write_flash 0x0 fw-esp12e_v2.2.22s.bin
+  esptool.py --chip esp8266 --port COM4 write_flash 0x200000 littlefs-esp12e_v2.2.22s.bin
+
+--- ESP32 WROOM-32 ---
+  esptool.py --chip esp32 --port COM5 write_flash 0x10000 fw-esp32_v2.2.22s.bin
+  esptool.py --chip esp32 --port COM5 write_flash 0x290000 littlefs-esp32_v2.2.22s.bin
+
+--- ESP32-C3 Super Mini ---
+  esptool.py --chip esp32c3 --port COM10 write_flash 0x10000 fw-esp32c3_v2.2.22s.bin
+  esptool.py --chip esp32c3 --port COM10 write_flash 0x290000 littlefs-esp32c3_v2.2.22s.bin
+
+IMPORTANT: Always flash BOTH firmware AND filesystem — one without the other
+will not work.
+
+
+1.3. Files and offsets table
+
+Platform          File                       Type         Offset      Size
+---------------   ------------------------   ----------   --------   --------
+Wemos ESP8266     fw-esp12e_v2.2.22s.bin     Firmware     0x000000     431 KB
+                  littlefs-esp12e_v2.2.22s.bin LittleFS    0x200000    2024 KB
+
+ESP32             fw-esp32_v2.2.22s.bin       Firmware     0x010000     996 KB
+                  littlefs-esp32_v2.2.22s.bin LittleFS     0x290000    1408 KB
+
+ESP32-C3          fw-esp32c3_v2.2.22s.bin     Firmware     0x010000    1006 KB
+                  littlefs-esp32c3_v2.2.22s.bin LittleFS   0x290000    1408 KB
+
+WHY DIFFERENT OFFSETS?
+- ESP8266: the firmware includes the bootloader and starts at the beginning of
+  flash (0x0). With the eagle.flash.4m2m scheme (4MB flash, 2MB filesystem) the
+  filesystem sits at 0x200000, leaving the first 2MB for the firmware to grow
+  without needing to be relocated.
+- ESP32/C3: use the standard partition scheme (bootloader at 0x1000, firmware
+  at 0x10000). The LittleFS filesystem sits at 0x290000 (after the firmware,
+  NVS and OTA partitions). These offsets are defined by espressif32 and must
+  not be changed.
+
+
+1.4. What is firmware and what is filesystem?
+
+FIRMWARE (.bin ~400-1000 KB): This is the compiled BrewBOSS code. It contains
+all the control logic, sensors, PID, REST API and the brewing engine. Without
+it the chip does nothing. Update it only when there are new features or fixes.
+
+FILESYSTEM (littlefs.bin ~1400-2000 KB): This is the file system that contains:
+  - Web interface (index.html.gz) — the page you open in the browser
+  - Default configuration files (brew.json, mash.json, boil.json, etc.)
+  - Initial recipes (r_1.json, r_2.json)
+
+Why separate them? Because the web interface can be updated without having to
+recompile the whole firmware. You can even edit index.html directly on the
+filesystem via OTA, if you prefer.
+
+ALWAYS flash BOTH. If you flash only the firmware, the web interface disappears
+and the panel shows an error. If you flash only the filesystem, the old
+firmware may not recognize the new files.
+
+
+================================================================================
+2. SYSTEM OPERATION
+================================================================================
+
+2.1. First access
+
+  1. Power on the controller.
+  2. Connect to the Wi-Fi "BrewBOSS" (password: brewboss).
+  3. Open http://192.168.4.1 in your browser.
+  4. Log in with the default password: brewboss
+     (empty password = login disabled = full access)
+
+The status bar shows:
+  - NTP: green dot if the clock is synchronized
+  - HEAP: green dot = memory OK; blinking orange = warning;
+          blinking red = critical memory
+  - UPTIME: time powered on
+
+
+2.2. Import a recipe (XML or JSON)
+
+BrewBOSS accepts imports of:
+  - BeerXML (.xml) — standard brewing industry format
+  - Brewfather (.json) — Brewfather app format
+  - BeerSmith (.xml) — BeerSmith format
+  - BrewBOSS JSON — export from another BrewBOSS
+
+How to import:
+  1. Go to Recipes → "Import" button (or upload the file).
+  2. Select the .xml or .json file on your computer.
+  3. The system parses the file and extracts:
+       - Mash steps (MASH_STEP)
+       - Hop additions (HOP) that become boil steps
+       - Boil time (BOIL_TIME) — if present in the XML
+       - Boil temperature (BOIL_TEMP or 92 C default)
+  4. Confirm the import. The recipe appears in the list.
+
+NOTE: BrewBOSS uses 92 C as the default boil temperature (adjustable later in
+Setup > Settings). This avoids altitude issues — at 700 m water boils at
+~98 C, but wort boils at a higher temperature than water.
+
+
+2.3. Load a recipe
+
+Loading a recipe replaces the mash steps, boil steps AND the brew settings
+(boil temperature and time, sensors, PID power) with the values saved in the
+recipe.
+
+How to do it:
+  1. Go to Recipes.
+  2. Find the desired recipe in the list.
+  3. Click "LOAD".
+  4. Confirm the message. The system applies:
+       - Mash steps
+       - Boil steps
+       - Brew settings (if the recipe has a linked "CFG")
+
+If the recipe has no settings (the "CFG" button was never used), the current
+system settings are kept (boil temperature and time, sensors, etc.). To link
+the settings to the recipe, see section 2.5.
+
+
+2.4. Edit an existing recipe
+
+  1. In Recipes, click "EDIT" on the desired recipe.
+  2. Use the MASH and BOIL tabs to edit the steps.
+  3. In MASH: edit name, target temperature, time, options (recirculation,
+     heating, full power, lock).
+  4. In BOIL: edit name, time (minutes), amount (grams), mode
+     (BOIL / POST BOIL / COOLING) and trigger temperature.
+  5. The "SAVE TO RECIPE" buttons save the changes to the recipe.
+
+
+2.5. Save changes and link settings
+
+After editing the steps, you need to save in two ways:
+
+  a) Save steps LOCALLY (for immediate use):
+     - Use the "SAVE" button inside the MASH / BOIL editors.
+     - The steps go to /config/mash.json and /config/boil.json.
+     - Use "START" on the Dashboard to begin.
+
+  b) Link SETTINGS to the recipe ("CFG" button):
+     - In Recipes, click "CFG" on the recipe.
+     - This copies the CURRENT system settings into the recipe:
+       boil temperature, boil time, sensors, PID, etc.
+     - After that, loading the recipe restores EVERYTHING.
+
+Recommendation: always use CFG after configuring sensors and adjusting the
+boil temperature, so that LOAD restores everything correctly.
+
+
+2.6. Select sensors
+
+  1. Go to Setup → Settings.
+  2. Find the fields:
+       - Main Sensor: main sensor (mash tun)
+       - Sparge Sensor: sparge water kettle sensor
+       - Boil Sensor: boil kettle sensor (if using a separate kettle)
+  3. Each field shows the hex addresses of the detected DS18B20 sensors.
+  4. Select the correct sensor for each function.
+
+To calibrate, use the "Offset" fields next to each sensor. Example: if the
+sensor reads 1 C higher than a trusted thermometer, set the offset to -1.0.
+
+
+2.7. Set the boil temperature
+
+  1. Go to Setup → Settings.
+  2. Find "Boil Temp" (btemp) — the boil target temperature.
+     Default: 92 C (adjustable from 0 to 105 C).
+  3. Find "Boil Time" (bt) — the boil duration in minutes.
+     Default: 60 min (adjustable from 0 to 600 min).
+  4. Adjust to match your recipe and altitude.
+
+Why 92 C as default? Wort (water + sugars) boils at a higher temperature than
+pure water (~100 C at sea level). 92 C is a safe value that works on most
+altitudes and equipment. Adjust as needed for your situation.
+
+
+2.8. Start the brew
+
+  1. Check the settings (sections 2.6 and 2.7).
+  2. Load the desired recipe (LOAD) or make sure the MASH and BOIL steps are
+     filled in.
+  3. Go to the Dashboard.
+  4. Check the values: main temperature, target, pump off.
+  5. Click "START".
+  6. The system heats up to the first mash step.
+     - When the target temperature is reached: two long beeps.
+     - The step timer starts.
+  7. At the end of the mash, the system advances automatically to the boil.
+  8. During the boil, the hop additions are triggered at the programmed times.
+  9. After the boil, the system enters post-boil (heating off, monitors
+     cooling).
+  10. When the cooling temperature is reached, the brew is complete. The
+      buzzer sounds and the screen shows the total time.
+
+FUNCTIONS DURING THE BREW:
+  - PAUSE: pauses the process (heaters and pump turn off).
+  - RESUME: resumes from where it stopped.
+  - SKIP: skips to the next step (mash only).
+  - STOP: stops everything.
+  - +/- : adjusts heater power in real time.
+
+
+================================================================================
+3. REFERENCES
+================================================================================
+
+Binary downloads:
+  https://github.com/rampanelli/BrewBOSS/tree/main/binaries
+
+Full user manual:
+  https://rampanelli.github.io/BrewBOSS/manual.html
+
+GitHub repository:
+  https://github.com/rampanelli/BrewBOSS
+
+Usage license:
+  Personal and non-commercial use only. See LICENSE.md for the full terms.
+  BrewBOSS is not open-source.

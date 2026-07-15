@@ -1,0 +1,300 @@
+================================================================================
+                     BREWBOSS v2.2.22s — GUIA RÁPIDO
+================================================================================
+                   SOMENTE USO PESSOAL · NÃO COMERCIAL
+================================================================================
+
+
+ÍNDICE
+  1. GRAVAÇÃO DO FIRMWARE
+     1.1. Método recomendado: PlatformIO
+     1.2. Método manual: esptool.py (Windows / Linux / Mac)
+     1.3. Tabela de arquivos e offsets
+     1.4. O que é firmware e o que é filesystem?
+
+  2. OPERAÇÃO DO SISTEMA
+     2.1. Primeiro acesso
+     2.2. Importar uma receita (XML / JSON)
+     2.3. Carregar (LOAD) uma receita
+     2.4. Editar uma receita existente
+     2.5. Salvar alterações
+     2.6. Selecionar sensores
+     2.7. Configurar temperatura de fervura
+     2.8. Iniciar a brassagem
+
+  3. REFERÊNCIAS
+
+
+================================================================================
+1. GRAVAÇÃO DO FIRMWARE
+================================================================----------------
+
+Antes de tudo: firmware é o programa que roda no microcontrolador. O filesystem
+(LittleFS) contém a interface web (páginas HTML) e arquivos de configuração.
+AMBOS precisam ser gravados para o sistema funcionar.
+
+NUNCA grave firmware e filesystem no mesmo comando (ex: -t upload -t uploadfs).
+Sempre grave em duas etapas: firmware primeiro, filesystem depois.
+
+
+1.1. Método recomendado: PlatformIO (via PowerShell / Terminal)
+
+Requisitos: Python 3.7+ instalado, PlatformIO instalado (pip install platformio)
+
+Comandos para cada plataforma:
+
+--- Wemos D1 Mini (ESP8266) na porta COM4 ---
+  python -m platformio run -e esp12e -t upload
+  python -m platformio run -e esp12e -t uploadfs
+
+--- ESP32 WROOM-32 na porta COM5 ---
+  python -m platformio run -e esp32 -t upload --upload-port COM5
+  python -m platformio run -e esp32 -t uploadfs --upload-port COM5
+
+--- ESP32-C3 Super Mini na porta COM10 ---
+  python -m platformio run -e esp32c3 -t upload --upload-port COM10
+  python -m platformio run -e esp32c3 -t uploadfs --upload-port COM10
+
+OBS: Substitua COMx pela porta correta. Para descobrir a porta:
+  [System.IO.Ports.SerialPort]::GetPortNames()   (PowerShell)
+  Esptool ou Arduino IDE também mostram as portas disponíveis.
+
+IMPORTANTE:
+- O ESP32-C3 com USB-CDC (modo ARDUINO_USB_CDC_ON_BOOT=1) aparece como
+  "Dispositivo Serial USB" (VID 303A / PID 1001) — NÃO precisa segurar boot.
+- O ESP8266 pode exigir segurar o pino D3 (GPIO0) em GND durante a conexão
+  se o auto-reset não funcionar.
+
+
+1.2. Método manual: esptool.py
+
+Requisitos: Python 3.7+, esptool instalado (pip install esptool)
+
+Baixe os arquivos .bin da seção de Releases do GitHub e execute:
+
+--- Wemos / ESP8266 ---
+  esptool.py --chip esp8266 --port COM4 write_flash 0x0 fw-esp12e_v2.2.22s.bin
+  esptool.py --chip esp8266 --port COM4 write_flash 0x200000 littlefs-esp12e_v2.2.22s.bin
+
+--- ESP32 WROOM-32 ---
+  esptool.py --chip esp32 --port COM5 write_flash 0x10000 fw-esp32_v2.2.22s.bin
+  esptool.py --chip esp32 --port COM5 write_flash 0x290000 littlefs-esp32_v2.2.22s.bin
+
+--- ESP32-C3 Super Mini ---
+  esptool.py --chip esp32c3 --port COM10 write_flash 0x10000 fw-esp32c3_v2.2.22s.bin
+  esptool.py --chip esp32c3 --port COM10 write_flash 0x290000 littlefs-esp32c3_v2.2.22s.bin
+
+IMPORTANTE: Sempre grave firmware E filesystem — um sem o outro não funciona.
+
+
+1.3. Tabela de arquivos e offsets
+
+Plataforma        Arquivo                    Tipo         Offset      Tamanho
+---------------   ------------------------   ----------   --------   --------
+Wemos ESP8266     fw-esp12e_v2.2.22s.bin     Firmware     0x000000     431 KB
+                  littlefs-esp12e_v2.2.22s.bin LittleFS    0x200000    2024 KB
+
+ESP32             fw-esp32_v2.2.22s.bin       Firmware     0x010000     996 KB
+                  littlefs-esp32_v2.2.22s.bin LittleFS    0x290000    1408 KB
+
+ESP32-C3          fw-esp32c3_v2.2.22s.bin     Firmware     0x010000    1006 KB
+                  littlefs-esp32c3_v2.2.22s.bin LittleFS  0x290000    1408 KB
+
+POR QUE OFFSETS DIFERENTES?
+- ESP8266: o firmware inclui o bootloader e começa no início da flash (0x0).
+  Com o esquema eagle.flash.4m2m (flash 4MB, filesystem 2MB) o filesystem fica
+  em 0x200000, deixando os primeiros 2MB para o firmware crescer sem precisar
+  reposicionar.
+- ESP32/C3: usam partição padrão (bootloader em 0x1000, firmware em 0x10000).
+  O filesystem LittleFS fica em 0x290000 (após as partições de firmware, 
+  NVFS e OTA). Esses offsets são definidos pelo espressif32 e não devem
+  ser alterados.
+
+
+1.4. O que é firmware e o que é filesystem?
+
+FIRMWARE (.bin ~400-1000 KB): É o código compilado do BrewBOSS. Contém toda a
+lógica de controle, sensores, PID, API REST e o motor de brassagem. Sem ele o
+chip não faz nada. Atualize apenas quando houver novas funcionalidades ou
+correções.
+
+FILESYSTEM (littlefs.bin ~1400-2000 KB): É o sistema de arquivos que contém:
+  - Interface web (index.html.gz) — a página que você acessa no navegador
+  - Arquivos de configuração padrão (brew.json, mash.json, boil.json, etc.)
+  - Receitas iniciais (r_1.json, r_2.json)
+
+Por que separar? Porque a interface web pode ser atualizada sem precisar
+recompilar o firmware inteiro. Você pode inclusive editar o index.html direto
+no filesystem via OTA, se preferir.
+
+SEMPRE grave AMBOS. Se gravar só o firmware, a interface web some e o painel
+mostra erro. Se gravar só o filesystem, o firmware antigo pode não reconhecer
+os novos arquivos.
+
+
+================================================================================
+2. OPERAÇÃO DO SISTEMA
+================================================================================
+
+2.1. Primeiro acesso
+
+  1. Ligue o controlador.
+  2. Conecte-se ao Wi-Fi "BrewBOSS" (senha: brewboss).
+  3. Abra http://192.168.4.1 no navegador.
+  4. Faça login com a senha padrão: brewboss
+     (senha vazia = login desabilitado = acesso total)
+
+A barra de status mostra:
+  - NTP: bolinha verde se o relógio está sincronizado
+  - HEAP: bolinha verde = memória OK; laranja piscando = atenção;
+          vermelha piscando = memória crítica
+  - UPTIME: tempo ligado
+
+
+2.2. Importar uma receita (XML ou JSON)
+
+O BrewBOSS aceita importação de:
+  - BeerXML (.xml) — formato padrão da indústria cervejeira
+  - Brewfather (.json) — formato do aplicativo Brewfather
+  - BeerSmith (.xml) — formato do BeerSmith
+  - JSON BrewBOSS — exportação de outro BrewBOSS
+
+Como importar:
+  1. Vá em Recipes → botão "Import" (ou fazer upload do arquivo).
+  2. Selecione o arquivo .xml ou .json no computador.
+  3. O sistema analisa o arquivo e extrai:
+       - Passos de mostura (MASH_STEP)
+       - Adições de lúpulo (HOP) que viram passos de fervura
+       - Tempo de fervura (BOIL_TIME) — se presente no XML
+       - Temperatura de fervura (BOIL_TEMP ou 92°C padrão)
+  4. Confirme a importação. A receita aparece na lista.
+
+OBS: O BrewBOSS usa 92°C como temperatura padrão de fervura (ajustável
+depois em Setup > Settings). Isso evita problemas com altitude — a 700m
+a água ferve a ~98°C, mas o mosto ferve a temperatura mais alta que água.
+
+
+2.3. Carregar (LOAD) uma receita
+
+Carregar uma receita substitui os passos de mostura, fervura E as
+configurações de brassagem (temperatura e tempo de fervura, sensores,
+potência do PID) pelos valores salvos na receita.
+
+Como fazer:
+  1. Vá em Recipes.
+  2. Localize a receita desejada na lista.
+  3. Clique em "LOAD".
+  4. Confirme a mensagem. O sistema aplica:
+       - Passos de mostura
+       - Passos de fervura
+       - Configurações de brassagem (se a receita tiver "CFG" vinculada)
+
+Se a receita não tiver configurações (nunca foi usado o botão "CFG"),
+as configurações atuais do sistema são mantidas (temperatura e tempo
+de fervura, sensores, etc.). Para vincular as configurações à receita,
+veja a seção 2.5.
+
+
+2.4. Editar uma receita existente
+
+  1. Em Recipes, clique em "EDIT" na receita desejada.
+  2. Use as abas MASH e BOIL para editar os passos.
+  3. Em MASH: edite nome, temperatura alvo, tempo, opções (recirculação,
+     aquecimento, full power, travamento).
+  4. Em BOIL: edite nome, tempo (minutos), quantidade (gramas), modo
+     (BOIL / POS BOIL / COOLING) e temperatura de disparo.
+  5. Os botões "SAVE TO RECIPE" salvam as alterações na receita.
+
+
+2.5. Salvar alterações e vincular configurações
+
+Depois de editar os passos, você precisa salvar de duas formas:
+
+  a) Salvar passos LOCALMENTE (para uso imediato):
+     - Use o botão "SAVE" dentro dos editores MASH / BOIL.
+     - Os passos vão para /config/mash.json e /config/boil.json.
+     - Use "START" no Dashboard para iniciar.
+
+  b) Vincular CONFIGURAÇÕES à receita (botão "CFG"):
+     - Em Recipes, clique em "CFG" na receita.
+     - Isso copia as configurações ATUAIS do sistema para a receita:
+       temperatura de fervura, tempo de fervura, sensores, PID, etc.
+     - Após isso, quando der LOAD na receita, TUDO é restaurado.
+
+Recomendação: sempre use CFG depois de configurar sensores e ajustar
+temperatura de fervura, assim o LOAD restaura tudo corretamente.
+
+
+2.6. Selecionar sensores
+
+  1. Vá em Setup → Settings.
+  2. Localize os campos:
+       - Main Sensor: sensor principal (panela de mostura)
+       - Sparge Sensor: sensor da panela de água de lavagem
+       - Boil Sensor: sensor da panela de fervura (se usar chaleira separada)
+  3. Cada campo mostra os endereços hexa dos DS18B20 detectados.
+  4. Selecione o sensor correto para cada função.
+
+Para calibrar, use os campos "Offset" ao lado de cada sensor. Exemplo:
+se o sensor mostra 1°C a mais que um termômetro confiável, ajuste o
+offset para -1.0.
+
+
+2.7. Configurar temperatura de fervura
+
+  1. Vá em Setup → Settings.
+  2. Localize "Boil Temp" (btemp) — temperatura alvo da fervura.
+     Padrão: 92°C (ajustável de 0 a 105°C).
+  3. Localize "Boil Time" (bt) — duração da fervura em minutos.
+     Padrão: 60 min (ajustável de 0 a 600 min).
+  4. Ajuste conforme sua receita e altitude.
+
+Por que 92°C como padrão? O mosto (água + açúcares) ferve a temperatura
+mais elevada que a água pura (~100°C ao nível do mar). 92°C é um valor
+seguro que funciona na maioria das altitudes e equipamentos. Ajuste
+conforme necessário para sua realidade.
+
+
+2.8. Iniciar a brassagem
+
+  1. Verifique as configurações (seção 2.6 e 2.7).
+  2. Carregue a receita desejada (LOAD) ou certifique-se de que os passos
+     de MASH e BOIL estão preenchidos.
+  3. Vá em Dashboard.
+  4. Confira os valores: temperatura principal, alvo, bomba desligada.
+  5. Clique em "START".
+  6. O sistema aquece até o primeiro passo de mostura.
+     - Quando a temperatura alvo é atingida: dois bipes longos.
+     - O temporizador do passo começa.
+  7. Ao final da mostura, o sistema avança automaticamente para fervura.
+  8. Durante a fervura, as adições de lúpulo são disparadas nos tempos
+     programados.
+  9. Após a fervura, o sistema entra em pós-fervura (aquecimento
+     desligado, monitora resfriamento).
+  10. Quando a temperatura de resfriamento é atingida, a brassagem
+      é concluída. O buzzer toca e a tela mostra o tempo total.
+
+FUNÇÕES DURANTE A BRASSAGEM:
+  - PAUSE: pausa o processo (aquecedores e bomba desligam).
+  - RESUME: retoma de onde parou.
+  - SKIP: pula para o próximo passo (mostura apenas).
+  - STOP: interrompe tudo.
+  - +/- : ajusta potência do aquecedor em tempo real.
+
+
+================================================================================
+3. REFERÊNCIAS
+================================================================================
+
+Download dos binários:
+  https://github.com/rampanelli/BrewBOSS/tree/main/binaries
+
+Manual completo do usuário:
+  https://rampanelli.github.io/BrewBOSS/manual.html
+
+Repositório GitHub:
+  https://github.com/rampanelli/BrewBOSS
+
+Licença de uso:
+  Uso pessoal e não comercial apenas. Consulte LICENSE.md para termos
+  completos. BrewBOSS não é open-source.
