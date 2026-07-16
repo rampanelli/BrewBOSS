@@ -1,4 +1,4 @@
-# BrewBOSS v2.2.24z
+# BrewBOSS
 
 *User Operation Manual · Manual de Operação do Usuário*
 
@@ -118,48 +118,38 @@ If power is lost during a brew, on restart the device pauses and shows "RECOVERE
 
 ### Firmware & Flashing
 
-**Latest — v2.2.24z**
+The binaries are published in the [binaries/](binaries/) folder. Each release contains **two files per controller**:
 
-| Controller | File | Type | Offset | Size |
-|------------|------|------|--------|------|
-| **Wemos** ESP8266 (ESP12E) | `fw-esp12e_v2.2.24z.bin` | Firmware | `0x0` | 446,944 B |
-| | `littlefs-esp12e_v2.2.24z.bin` | LittleFS | `0x200000` | 2,072,576 B |
-| **ESP32** | `fw-esp32_v2.2.24z.bin` | Firmware | `0x10000` | 1,025,968 B |
-| | `littlefs-esp32_v2.2.24z.bin` | LittleFS | `0x290000` | 1,441,792 B |
-| **ESP32-C3** | `fw-esp32c3_v2.2.24z.bin` | Firmware | `0x10000` | 1,035,056 B |
-| | `littlefs-esp32c3_v2.2.24z.bin` | LittleFS | `0x290000` | 1,441,792 B |
+| File name pattern | What it is | Flash order |
+|-------------------|-----------|-------------|
+| `BrewBOSS_<version>_<board>.bin` | **Firmware** (the program) | **1st** |
+| `BrewBOSS_<version>_<board>_fs.bin` | **Filesystem** (LittleFS — web UI + default configs) | **2nd** |
 
-```bash
-# Wemos / ESP8266 (ESP12E)
-esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-esp12e_v2.2.24z.bin 0x200000 littlefs-esp12e_v2.2.24z.bin
+**How to identify the files:** the file ending in **`_fs`** is the **filesystem**; the file **without** the `_fs` suffix is the **firmware**. `<board>` identifies the controller: `esp12e` (Wemos D1 Mini / ESP8266), `esp32` (ESP32 WROOM-32) or `esp32c3` (ESP32-C3 Super Mini).
 
-# ESP32
-esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.24z.bin 0x290000 littlefs-esp32_v2.2.24z.bin
+**How to update:** always flash **both** files, in two steps — the **firmware first**, then the **`_fs` (filesystem) second**. Replace `<version>` below with the downloaded version.
 
-# ESP32-C3
-esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.24z.bin 0x290000 littlefs-esp32c3_v2.2.24z.bin
-```
-
-**Previous — v2.2.22i**
-
-| Controller | File | Type | Offset | Size |
-|------------|------|------|--------|------|
-| **Wemos** ESP8266 | `fw-wemos_v2.2.22i.bin` | Firmware | `0x0` | 408,880 B |
-| | `littlefs-wemos_v2.2.22i.bin` | LittleFS | `0x300000` | 1,024,000 B |
-| **ESP32** | `fw-esp32_v2.2.22i.bin` | Firmware | `0x10000` | 984,608 B |
-| | `littlefs-esp32_v2.2.22i.bin` | LittleFS | `0x290000` | 1,441,792 B |
-| **ESP32-C3** | `fw-esp32c3_v2.2.22i.bin` | Firmware | `0x10000` | 995,744 B |
-| | `littlefs-esp32c3_v2.2.22i.bin` | LittleFS | `0x290000` | 1,441,792 B |
+| Controller | Type | Offset |
+|------------|------|--------|
+| **Wemos** ESP8266 (ESP12E) | Firmware | `0x0` |
+| | LittleFS (`_fs`) | `0x200000` |
+| **ESP32** | Firmware | `0x10000` |
+| | LittleFS (`_fs`) | `0x290000` |
+| **ESP32-C3** | Firmware | `0x10000` |
+| | LittleFS (`_fs`) | `0x290000` |
 
 ```bash
-# Wemos / ESP8266
-esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-wemos_v2.2.22i.bin 0x300000 littlefs-wemos_v2.2.22i.bin
+# Wemos / ESP8266 (ESP12E) — firmware first, then filesystem (_fs)
+esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_<version>_esp12e.bin
+esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_<version>_esp12e_fs.bin
 
-# ESP32
-esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.22i.bin 0x290000 littlefs-esp32_v2.2.22i.bin
+# ESP32 — firmware first, then filesystem (_fs)
+esptool.py --chip esp32 --port COMx write_flash 0x10000 BrewBOSS_<version>_esp32.bin
+esptool.py --chip esp32 --port COMx write_flash 0x290000 BrewBOSS_<version>_esp32_fs.bin
 
-# ESP32-C3
-esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.22i.bin 0x290000 littlefs-esp32c3_v2.2.22i.bin
+# ESP32-C3 — firmware first, then filesystem (_fs)
+esptool.py --chip esp32c3 --port COMx write_flash 0x10000 BrewBOSS_<version>_esp32c3.bin
+esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_<version>_esp32c3_fs.bin
 ```
 
 ### Troubleshooting
@@ -300,48 +290,38 @@ Ao reiniciar após queda, o dispositivo pausa e mostra "RECOVERED! RESUME?" no L
 
 ### Firmware e Gravação
 
-**Mais recente — v2.2.24z**
+Os binários são publicados na pasta [binaries/](binaries/). Cada release contém **dois arquivos por controlador**:
 
-| Controlador | Arquivo | Tipo | Offset | Tamanho |
-|-------------|---------|------|--------|---------|
-| **Wemos** ESP8266 (ESP12E) | `fw-esp12e_v2.2.24z.bin` | Firmware | `0x0` | 446.944 B |
-| | `littlefs-esp12e_v2.2.24z.bin` | LittleFS | `0x200000` | 2.072.576 B |
-| **ESP32** | `fw-esp32_v2.2.24z.bin` | Firmware | `0x10000` | 1.025.968 B |
-| | `littlefs-esp32_v2.2.24z.bin` | LittleFS | `0x290000` | 1.441.792 B |
-| **ESP32-C3** | `fw-esp32c3_v2.2.24z.bin` | Firmware | `0x10000` | 1.035.056 B |
-| | `littlefs-esp32c3_v2.2.24z.bin` | LittleFS | `0x290000` | 1.441.792 B |
+| Padrão do nome do arquivo | O que é | Ordem de gravação |
+|---------------------------|---------|-------------------|
+| `BrewBOSS_<versao>_<placa>.bin` | **Firmware** (o programa) | **1º** |
+| `BrewBOSS_<versao>_<placa>_fs.bin` | **Filesystem** (LittleFS — interface web + configs padrão) | **2º** |
 
-```bash
-# Wemos / ESP8266 (ESP12E)
-esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-esp12e_v2.2.24z.bin 0x200000 littlefs-esp12e_v2.2.24z.bin
+**Como identificar os arquivos:** o arquivo terminado em **`_fs`** é o **filesystem**; o arquivo **sem** o sufixo `_fs` é o **firmware**. `<placa>` identifica o controlador: `esp12e` (Wemos D1 Mini / ESP8266), `esp32` (ESP32 WROOM-32) ou `esp32c3` (ESP32-C3 Super Mini).
 
-# ESP32
-esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.24z.bin 0x290000 littlefs-esp32_v2.2.24z.bin
+**Como atualizar:** grave sempre **os dois** arquivos, em duas etapas — o **firmware primeiro** e o **`_fs` (filesystem) em segundo**. Substitua `<versao>` abaixo pela versão baixada.
 
-# ESP32-C3
-esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.24z.bin 0x290000 littlefs-esp32c3_v2.2.24z.bin
-```
-
-**Anterior — v2.2.22i**
-
-| Controlador | Arquivo | Tipo | Offset | Tamanho |
-|-------------|---------|------|--------|---------|
-| **Wemos** ESP8266 | `fw-wemos_v2.2.22i.bin` | Firmware | `0x0` | 408.880 B |
-| | `littlefs-wemos_v2.2.22i.bin` | LittleFS | `0x300000` | 1.024.000 B |
-| **ESP32** | `fw-esp32_v2.2.22i.bin` | Firmware | `0x10000` | 984.608 B |
-| | `littlefs-esp32_v2.2.22i.bin` | LittleFS | `0x290000` | 1.441.792 B |
-| **ESP32-C3** | `fw-esp32c3_v2.2.22i.bin` | Firmware | `0x10000` | 995.744 B |
-| | `littlefs-esp32c3_v2.2.22i.bin` | LittleFS | `0x290000` | 1.441.792 B |
+| Controlador | Tipo | Offset |
+|-------------|------|--------|
+| **Wemos** ESP8266 (ESP12E) | Firmware | `0x0` |
+| | LittleFS (`_fs`) | `0x200000` |
+| **ESP32** | Firmware | `0x10000` |
+| | LittleFS (`_fs`) | `0x290000` |
+| **ESP32-C3** | Firmware | `0x10000` |
+| | LittleFS (`_fs`) | `0x290000` |
 
 ```bash
-# Wemos / ESP8266
-esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-wemos_v2.2.22i.bin 0x300000 littlefs-wemos_v2.2.22i.bin
+# Wemos / ESP8266 (ESP12E) — firmware primeiro, depois o filesystem (_fs)
+esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_<versao>_esp12e.bin
+esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_<versao>_esp12e_fs.bin
 
-# ESP32
-esptool.py --chip esp32 --port COMx write_flash 0x10000 fw-esp32_v2.2.22i.bin 0x290000 littlefs-esp32_v2.2.22i.bin
+# ESP32 — firmware primeiro, depois o filesystem (_fs)
+esptool.py --chip esp32 --port COMx write_flash 0x10000 BrewBOSS_<versao>_esp32.bin
+esptool.py --chip esp32 --port COMx write_flash 0x290000 BrewBOSS_<versao>_esp32_fs.bin
 
-# ESP32-C3
-esptool.py --chip esp32c3 --port COMx write_flash 0x10000 fw-esp32c3_v2.2.22i.bin 0x290000 littlefs-esp32c3_v2.2.22i.bin
+# ESP32-C3 — firmware primeiro, depois o filesystem (_fs)
+esptool.py --chip esp32c3 --port COMx write_flash 0x10000 BrewBOSS_<versao>_esp32c3.bin
+esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_<versao>_esp32c3_fs.bin
 ```
 
 ### Solução de Problemas

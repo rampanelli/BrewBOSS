@@ -79,7 +79,7 @@
   <header class="site">
     <div class="htext">
       <div class="brand" data-i18n="h_brand">User Operation Manual</div>
-      <h1>Brew<b>BOSS</b> <span class="ver">v2.2.24z</span></h1>
+      <h1>Brew<b>BOSS</b></h1>
       <p data-i18n="h_tagline">A brewing automation controller with a web interface and standalone operation by LCD and keypad. This guide explains, step by step, how to operate the system safely.</p>
     </div>
     <select id="lang" class="lang" aria-label="Language" onchange="setLang(this.value)">
@@ -151,10 +151,11 @@
     <h3 data-i18n="pre_flash_title">Installing the firmware (flashing)</h3>
     <p data-i18n="pre_flash_body">If the board is not flashed yet, write the firmware and filesystem with <code>esptool</code>:</p>
     <ol>
-      <li data-i18n="pre_flash_step1">Download the <code>.bin</code> files for your board (firmware + LittleFS).</li>
-      <li data-i18n="pre_flash_step2">Flash them at the correct offsets — for the Wemos/ESP8266, for example:</li>
+      <li data-i18n="pre_flash_step1">Download the two <code>.bin</code> files for your board from the <b>binaries</b> folder: the <b>firmware</b> (no <code>_fs</code> suffix — flash it <b>first</b>) and the <b>filesystem</b> (<code>_fs</code> suffix — flash it <b>second</b>).</li>
+      <li data-i18n="pre_flash_step2">Flash them at the correct offsets — for the Wemos/ESP8266, for example (replace <code>&lt;version&gt;</code> with the downloaded version):</li>
     </ol>
-    <pre><code>esptool.py --chip esp8266 --port COMx write_flash 0x0 fw-wemos_v2.2.22i.bin 0x300000 littlefs-wemos_v2.2.22i.bin</code></pre>
+    <pre><code>esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin
+esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
     <div class="callout tip"><b data-i18n="pre_flash_tip_title">Full flashing guide</b><span data-i18n="pre_flash_tip">Binaries, exact offsets and the commands for ESP32 / ESP32-C3 are in the project <b>help</b> page. The ESP8266 firmware already includes its bootloader, so it is written at <code>0x0</code>.</span></div>
 
     <h2 id="access"><span class="num">3.</span> <span data-i18n="acc_title">Accessing the system</span></h2>
@@ -397,39 +398,21 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     <p data-i18n="fw_sub">Firmware (LittleFS shipped separately) for the 3 supported controllers. Filesystem images are in <b>LittleFS</b> format.</p>
 
     <h3 data-i18n="fw_files">Files and offsets</h3>
+    <p data-i18n="fw_ident">Each release in the <b>binaries</b> folder ships <b>two files per controller</b>: <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;.bin</code> is the <b>firmware</b> (flash it <b>first</b>) and <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;_fs.bin</code> is the <b>filesystem</b> (LittleFS — flash it <b>second</b>). The file ending in <code>_fs</code> is always the filesystem; the one without the suffix is the firmware. <code>&lt;board&gt;</code> is <code>esp12e</code> (Wemos D1 Mini / ESP8266), <code>esp32</code> (ESP32 WROOM-32) or <code>esp32c3</code> (ESP32-C3 Super Mini).</p>
     <div class="tablewrap"><table>
       <thead><tr><th data-i18n="fw_th_ctrl">Controller</th><th data-i18n="fw_th_file">File</th><th data-i18n="fw_th_type">Type</th><th data-i18n="fw_th_off">Offset</th><th data-i18n="fw_th_size">Size</th></tr></thead>
       <tbody>
-        <tr><td rowspan="2"><b>Wemos</b> ESP8266 (ESP12E) <span style="opacity:.7">v2.2.24z</span></td><td><code>fw-esp12e_v2.2.24z.bin</code></td><td>Firmware</td><td><code>0x00000000</code></td><td>446,944 B</td></tr>
-        <tr><td><code>littlefs-esp12e_v2.2.24z.bin</code></td><td>LittleFS</td><td><code>0x00200000</code></td><td>2,072,576 B</td></tr>
-        <tr><td rowspan="2"><b>ESP32</b> esp32dev <span style="opacity:.7">v2.2.24z</span></td><td><code>fw-esp32_v2.2.24z.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>1,025,968 B</td></tr>
-        <tr><td><code>littlefs-esp32_v2.2.24z.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>1,441,792 B</td></tr>
-        <tr><td rowspan="2"><b>ESP32-C3</b> <span style="opacity:.7">v2.2.24z</span></td><td><code>fw-esp32c3_v2.2.24z.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>1,035,056 B</td></tr>
-        <tr><td><code>littlefs-esp32c3_v2.2.24z.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>1,441,792 B</td></tr>
-        <tr><td rowspan="2"><b>Wemos</b> ESP8266 <span style="opacity:.7">v2.2.22i</span></td><td><code>fw-wemos_v2.2.22i.bin</code></td><td>Firmware</td><td><code>0x00000000</code></td><td>408,880 B</td></tr>
-        <tr><td><code>littlefs-wemos_v2.2.22i.bin</code></td><td>LittleFS</td><td><code>0x00300000</code></td><td>1,024,000 B</td></tr>
-        <tr><td rowspan="2"><b>ESP32</b> esp32dev <span style="opacity:.7">v2.2.22i</span></td><td><code>fw-esp32_v2.2.22i.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>984,608 B</td></tr>
-        <tr><td><code>littlefs-esp32_v2.2.22i.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>1,441,792 B</td></tr>
-        <tr><td rowspan="2"><b>ESP32-C3</b> <span style="opacity:.7">v2.2.22i</span></td><td><code>fw-esp32c3_v2.2.22i.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>995,744 B</td></tr>
-        <tr><td><code>littlefs-esp32c3_v2.2.22i.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>1,441,792 B</td></tr>
+        <tr><td rowspan="2"><b>Wemos</b> ESP8266 (ESP12E)</td><td><code>BrewBOSS_&lt;version&gt;_esp12e.bin</code></td><td>Firmware</td><td><code>0x00000000</code></td><td>~440 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></td><td>LittleFS</td><td><code>0x00200000</code></td><td>~2,024 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32</b> esp32dev</td><td><code>BrewBOSS_&lt;version&gt;_esp32.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>~1,010 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c3.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>~1,020 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
       </tbody>
     </table></div>
 
-    <h3 data-i18n="ota_update">OTA Firmware & Filesystem Updates (v2.2.22o+)</h3>
-    <p data-i18n="ota_update_desc">Starting with version 'o', BrewBOSS supports <b>Over-the-Air (OTA)</b> updates directly via the web interface. This eliminates the need for USB cables and <code>esptool</code> for day-to-day updates.</p>
-    <ul>
-      <li data-i18n="ota_update_how"><b>How it works:</b> Access <b>Setup → System → Firmware Update</b> in the web interface. Upload the new firmware and filesystem binary files. The device handles the internal writing to flash and reboots.</li>
-      <li data-i18n="ota_update_adv"><b>Advantages:</b>
-        <ul>
-          <li data-i18n="ota_update_conv"><b>Convenience:</b> No need to open the controller case or deal with USB drivers/ports.</li>
-          <li data-i18n="ota_update_safe"><b>Safety:</b> The bootloader includes automatic fallbacks to ensure the device remains functional even if an update is interrupted.</li>
-          <li data-i18n="ota_update_eff"><b>Efficiency:</b> Seamless transition between firmware versions and filesystem structures without manual offset calculation.</li>
-        </ul>
-      </li>
-    </ul>
-
-    <h3 data-i18n="ota_update">OTA Firmware & Filesystem Updates (v2.2.22o+)</h3>
-    <p data-i18n="ota_update_desc">Starting with version 'o', BrewBOSS supports <b>Over-the-Air (OTA)</b> updates directly via the web interface. This eliminates the need for USB cables and <code>esptool</code> for day-to-day updates.</p>
+    <h3 data-i18n="ota_update">OTA Firmware & Filesystem Updates</h3>
+    <p data-i18n="ota_update_desc">BrewBOSS supports <b>Over-the-Air (OTA)</b> updates directly via the web interface. This eliminates the need for USB cables and <code>esptool</code> for day-to-day updates. Upload the <b>firmware</b> file first (no <code>_fs</code> suffix), then the <b>filesystem</b> file (<code>_fs</code> suffix) second.</p>
     <ul>
       <li data-i18n="ota_update_how"><b>How it works:</b> Access <b>Setup → System → Firmware Update</b> in the web interface. Upload the new firmware and filesystem binary files. The device handles the internal writing to flash and reboots.</li>
       <li data-i18n="ota_update_adv"><b>Advantages:</b>
@@ -449,29 +432,21 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
       <li data-i18n="fw_pre4">Replace <code>COMx</code> with the correct port. Add <code>--baud 460800</code> for faster flashing.</li>
     </ul>
 
-    <h3 data-i18n="fw_flash">Flashing — v2.2.24z (update)</h3>
-    <p data-i18n="fw_flash_i">For an already-provisioned controller, flash the firmware first, then the filesystem — two separate steps (more reliable):</p>
-    <p><b data-i18n="fw_wemos">Wemos / ESP8266 — firmware</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 fw-esp12e_v2.2.24z.bin</code></pre>
-    <p><b data-i18n="fw_wemos_fs">Wemos / ESP8266 — filesystem</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x200000 littlefs-esp12e_v2.2.24z.bin</code></pre>
-    <p><b data-i18n="fw_esp32">ESP32 (esp32dev) — firmware</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 fw-esp32_v2.2.24z.bin</code></pre>
-    <p><b data-i18n="fw_esp32_fs">ESP32 (esp32dev) — filesystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32_v2.2.24z.bin</code></pre>
-    <p><b data-i18n="fw_c3">ESP32-C3 — firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 fw-esp32c3_v2.2.24z.bin</code></pre>
-    <p><b data-i18n="fw_c3_fs">ESP32-C3 — filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32c3_v2.2.24z.bin</code></pre>
-
-    <h3 data-i18n="fw_flash_old" style="opacity:.8">Flashing — v2.2.22i (previous)</h3>
-    <p><b>Wemos / ESP8266 — firmware</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 fw-wemos_v2.2.22i.bin</code></pre>
-    <p><b>Wemos / ESP8266 — filesystem</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x300000 littlefs-wemos_v2.2.22i.bin</code></pre>
-    <p><b>ESP32 (esp32dev) — firmware</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 fw-esp32_v2.2.22i.bin</code></pre>
-    <p><b>ESP32 (esp32dev) — filesystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32_v2.2.22i.bin</code></pre>
-    <p><b>ESP32-C3 — firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 fw-esp32c3_v2.2.22i.bin</code></pre>
-    <p><b>ESP32-C3 — filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 littlefs-esp32c3_v2.2.22i.bin</code></pre>
+    <h3 data-i18n="fw_flash">Flashing (update)</h3>
+    <p data-i18n="fw_flash_i">For an already-provisioned controller, flash the <b>firmware first</b>, then the <b>filesystem (<code>_fs</code>) second</b> — two separate steps (more reliable). Replace <code>&lt;version&gt;</code> with the downloaded version:</p>
+    <p><b data-i18n="fw_wemos">Wemos / ESP8266 — firmware</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin</code></pre>
+    <p><b data-i18n="fw_wemos_fs">Wemos / ESP8266 — filesystem</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
+    <p><b data-i18n="fw_esp32">ESP32 (esp32dev) — firmware</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32.bin</code></pre>
+    <p><b data-i18n="fw_esp32_fs">ESP32 (esp32dev) — filesystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
+    <p><b data-i18n="fw_c3">ESP32-C3 — firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+    <p><b data-i18n="fw_c3_fs">ESP32-C3 — filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
 
     <div class="callout note"><b data-i18n="fw_note_title">ESP8266</b> <span data-i18n="fw_note">the firmware already includes the bootloader (eboot), so it is written at <code>0x0</code>. The 2 files are enough.</span></div>
 
     <h3 data-i18n="fw_blank">Blank chip (ESP32 / ESP32-C3)</h3>
     <p data-i18n="fw_blank_i">On a new/erased chip you must also flash the bootloader, partition table and boot_app0 (found in <code>.pio/build/&lt;env&gt;/</code>:<code>bootloader.bin</code>, <code>partitions.bin</code>, <code>boot_app0.bin</code>).</p>
-    <p><b data-i18n="fw_blank_esp32">ESP32 — bootloader at 0x1000</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x1000 bootloader.bin 0x8000 partitions.bin 0xe000 boot_app0.bin 0x10000 fw-esp32_v2.2.22i.bin 0x290000 littlefs-esp32_v2.2.22i.bin</code></pre>
-    <p><b data-i18n="fw_blank_c3">ESP32-C3 — bootloader at 0x0</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x0 bootloader.bin 0x8000 partitions.bin 0xe000 boot_app0.bin 0x10000 fw-esp32c3_v2.2.22i.bin 0x290000 littlefs-esp32c3_v2.2.22i.bin</code></pre>
+    <p><b data-i18n="fw_blank_esp32">ESP32 — bootloader at 0x1000</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x1000 bootloader.bin 0x8000 partitions.bin 0xe000 boot_app0.bin 0x10000 BrewBOSS_&lt;version&gt;_esp32.bin 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
+    <p><b data-i18n="fw_blank_c3">ESP32-C3 — bootloader at 0x0</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x0 bootloader.bin 0x8000 partitions.bin 0xe000 boot_app0.bin 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
 
     <div class="callout warn"><b data-i18n="fw_erase_t">Erase everything first (optional)</b> <span data-i18n="fw_erase"><code>esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. This also wipes the WiFi/recipes config stored in LittleFS.</span></div>
 
@@ -506,7 +481,7 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     </section>
   </main>
 
-  <footer><b>BrewBOSS</b> v2.2.24z — <span data-i18n="footer">User Operation Manual</span></footer>
+  <footer><b>BrewBOSS</b> — <span data-i18n="footer">User Operation Manual</span></footer>
 </div>
 
 <script src="manual-i18n.js"></script>

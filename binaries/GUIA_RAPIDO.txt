@@ -1,5 +1,5 @@
 ================================================================================
-                     BREWBOSS v2.2.22s — GUIA RÁPIDO
+                          BREWBOSS — GUIA RÁPIDO
 ================================================================================
                    SOMENTE USO PESSOAL · NÃO COMERCIAL
 ================================================================================
@@ -36,6 +36,19 @@ AMBOS precisam ser gravados para o sistema funcionar.
 NUNCA grave firmware e filesystem no mesmo comando (ex: -t upload -t uploadfs).
 Sempre grave em duas etapas: firmware primeiro, filesystem depois.
 
+COMO IDENTIFICAR OS ARQUIVOS (pasta binaries do GitHub):
+
+  BrewBOSS_<versao>_<placa>.bin      ->  FIRMWARE    (1º arquivo a gravar)
+  BrewBOSS_<versao>_<placa>_fs.bin   ->  FILESYSTEM  (2º arquivo a gravar)
+
+  - O arquivo com o sufixo "_fs" no fim do nome é o FILESYSTEM (LittleFS).
+  - O arquivo SEM o sufixo "_fs" é o FIRMWARE.
+  - <placa> identifica o controlador: esp12e (Wemos D1 Mini / ESP8266),
+    esp32 (ESP32 WROOM-32) ou esp32c3 (ESP32-C3 Super Mini).
+
+ORDEM DE ATUALIZAÇÃO: grave PRIMEIRO o firmware; o arquivo _fs (filesystem)
+deve ser SEMPRE o SEGUNDO a ser gravado.
+
 
 1.1. Método recomendado: PlatformIO (via PowerShell / Terminal)
 
@@ -70,35 +83,37 @@ IMPORTANTE:
 
 Requisitos: Python 3.7+, esptool instalado (pip install esptool)
 
-Baixe os arquivos .bin da seção de Releases do GitHub e execute:
+Baixe os arquivos .bin da pasta binaries do GitHub e execute os comandos
+abaixo, substituindo <versao> pela versão baixada (ex: v9.9.99x).
+Grave o firmware PRIMEIRO e o filesystem (_fs) em SEGUIDA:
 
 --- Wemos / ESP8266 ---
-  esptool.py --chip esp8266 --port COM4 write_flash 0x0 fw-esp12e_v2.2.22s.bin
-  esptool.py --chip esp8266 --port COM4 write_flash 0x200000 littlefs-esp12e_v2.2.22s.bin
+  esptool.py --chip esp8266 --port COM4 write_flash 0x0 BrewBOSS_<versao>_esp12e.bin
+  esptool.py --chip esp8266 --port COM4 write_flash 0x200000 BrewBOSS_<versao>_esp12e_fs.bin
 
 --- ESP32 WROOM-32 ---
-  esptool.py --chip esp32 --port COM5 write_flash 0x10000 fw-esp32_v2.2.22s.bin
-  esptool.py --chip esp32 --port COM5 write_flash 0x290000 littlefs-esp32_v2.2.22s.bin
+  esptool.py --chip esp32 --port COM5 write_flash 0x10000 BrewBOSS_<versao>_esp32.bin
+  esptool.py --chip esp32 --port COM5 write_flash 0x290000 BrewBOSS_<versao>_esp32_fs.bin
 
 --- ESP32-C3 Super Mini ---
-  esptool.py --chip esp32c3 --port COM10 write_flash 0x10000 fw-esp32c3_v2.2.22s.bin
-  esptool.py --chip esp32c3 --port COM10 write_flash 0x290000 littlefs-esp32c3_v2.2.22s.bin
+  esptool.py --chip esp32c3 --port COM10 write_flash 0x10000 BrewBOSS_<versao>_esp32c3.bin
+  esptool.py --chip esp32c3 --port COM10 write_flash 0x290000 BrewBOSS_<versao>_esp32c3_fs.bin
 
 IMPORTANTE: Sempre grave firmware E filesystem — um sem o outro não funciona.
 
 
 1.3. Tabela de arquivos e offsets
 
-Plataforma        Arquivo                    Tipo         Offset      Tamanho
----------------   ------------------------   ----------   --------   --------
-Wemos ESP8266     fw-esp12e_v2.2.22s.bin     Firmware     0x000000     431 KB
-                  littlefs-esp12e_v2.2.22s.bin LittleFS    0x200000    2024 KB
+Plataforma        Arquivo                            Tipo         Offset      Tamanho
+---------------   --------------------------------   ----------   --------   --------
+Wemos ESP8266     BrewBOSS_<versao>_esp12e.bin       Firmware     0x000000    ~440 KB
+                  BrewBOSS_<versao>_esp12e_fs.bin    LittleFS     0x200000    2024 KB
 
-ESP32             fw-esp32_v2.2.22s.bin       Firmware     0x010000     996 KB
-                  littlefs-esp32_v2.2.22s.bin LittleFS    0x290000    1408 KB
+ESP32             BrewBOSS_<versao>_esp32.bin        Firmware     0x010000   ~1010 KB
+                  BrewBOSS_<versao>_esp32_fs.bin     LittleFS     0x290000    1408 KB
 
-ESP32-C3          fw-esp32c3_v2.2.22s.bin     Firmware     0x010000    1006 KB
-                  littlefs-esp32c3_v2.2.22s.bin LittleFS  0x290000    1408 KB
+ESP32-C3          BrewBOSS_<versao>_esp32c3.bin      Firmware     0x010000   ~1020 KB
+                  BrewBOSS_<versao>_esp32c3_fs.bin   LittleFS     0x290000    1408 KB
 
 POR QUE OFFSETS DIFERENTES?
 - ESP8266: o firmware inclui o bootloader e começa no início da flash (0x0).
@@ -113,12 +128,13 @@ POR QUE OFFSETS DIFERENTES?
 
 1.4. O que é firmware e o que é filesystem?
 
-FIRMWARE (.bin ~400-1000 KB): É o código compilado do BrewBOSS. Contém toda a
-lógica de controle, sensores, PID, API REST e o motor de brassagem. Sem ele o
-chip não faz nada. Atualize apenas quando houver novas funcionalidades ou
-correções.
+FIRMWARE (arquivo SEM o sufixo "_fs", ~400-1000 KB): É o código compilado do
+BrewBOSS. Contém toda a lógica de controle, sensores, PID, API REST e o motor
+de brassagem. Sem ele o chip não faz nada. É o PRIMEIRO arquivo a ser gravado
+na atualização.
 
-FILESYSTEM (littlefs.bin ~1400-2000 KB): É o sistema de arquivos que contém:
+FILESYSTEM (arquivo COM o sufixo "_fs", ~1400-2000 KB): É o sistema de
+arquivos (LittleFS) que contém:
   - Interface web (index.html.gz) — a página que você acessa no navegador
   - Arquivos de configuração padrão (brew.json, mash.json, boil.json, etc.)
   - Receitas iniciais (r_1.json, r_2.json)
@@ -127,9 +143,10 @@ Por que separar? Porque a interface web pode ser atualizada sem precisar
 recompilar o firmware inteiro. Você pode inclusive editar o index.html direto
 no filesystem via OTA, se preferir.
 
-SEMPRE grave AMBOS. Se gravar só o firmware, a interface web some e o painel
-mostra erro. Se gravar só o filesystem, o firmware antigo pode não reconhecer
-os novos arquivos.
+SEMPRE grave AMBOS, nesta ordem: 1º o firmware, 2º o filesystem (_fs).
+Se gravar só o firmware, a interface web some e o painel mostra erro.
+Se gravar só o filesystem, o firmware antigo pode não reconhecer os
+novos arquivos.
 
 
 ================================================================================
