@@ -5,13 +5,11 @@ Copyright (c) 2026 LR
 
 ## 1. Grant of Use
 
-This software, named **BrewBOSS**, is made available **free of charge** strictly for **personal, private, and non-commercial use only**.
+This software, named **BrewBOSS**, is made available **free of charge** strictly for **personal, private, and non-commercial use only**, in the form of **compiled binaries** — the source code is not made available.
 
 Subject to the terms of this license, you are permitted to:
-- download and use the software for your own personal use;
-- inspect the source code;
-- modify the software for personal use only;
-- make private copies for backup or archival purposes, provided they are not used commercially and are not redistributed in violation of this license.
+- download and use the binaries for your own personal use;
+- make private copies of the binaries for backup or archival purposes, provided they are not used commercially and are not redistributed in violation of this license.
 
 ## 2. Prohibited Uses
 
@@ -23,6 +21,7 @@ The following actions are expressly forbidden without prior written permission f
 - distributing modified or unmodified versions for commercial purposes;
 - using this software in production, business, laboratory, factory, brewery, or industrial environments of any kind;
 - using this software as part of any service offered to third parties, whether paid or unpaid, if such use supports business, operational, or commercial activity;
+- inspecting, decompiling, reverse engineering, modifying, altering, or attempting to extract the source code (the source code is not made available);
 - removing or altering this license notice.
 
 Any use outside personal, non-commercial use is prohibited.
@@ -51,7 +50,7 @@ The user acknowledges and agrees that:
 - the software may interact with hardware in an unsafe or unintended way;
 - the software is not certified, validated, or guaranteed for any use involving safety, critical operations, industrial control, or protected systems.
 
-The user assumes all risks associated with installation, execution, modification, integration, and use of the software.
+The user assumes all risks associated with installation, execution, integration, and use of the software.
 
 ## 5. Limitation of Liability
 
@@ -86,13 +85,13 @@ Any support, if ever provided, is entirely voluntary and does not create any con
 
 ## 7. Termination
 
-Any violation of the terms of this license automatically terminates your right to use, copy, modify, or distribute the software.
+Any violation of the terms of this license automatically terminates your right to use the software.
 
-Upon termination, you must immediately stop using the software and delete all copies in your possession or control, except where retention is required by law.
+Upon termination, you must immediately stop using the software and delete all copies of the binaries in your possession or control, except where retention is required by law.
 
 ## 8. Acceptance
 
-By downloading, installing, copying, modifying, accessing, or using BrewBOSS, you acknowledge that you have read, understood, and agreed to be bound by this license.
+By downloading, installing, accessing, or using BrewBOSS, you acknowledge that you have read, understood, and agreed to be bound by this license.
 
 If you do not agree with these terms, you must not use the software.
 
