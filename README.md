@@ -386,6 +386,56 @@ esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOS
 - Faça um **Backup** (Export) após configurar o dispositivo.
 - Mantenha a área próxima aos aquecedores livre; nunca deixe uma brassagem ativa sem supervisão.
 
+### Pinout Reference
+
+The pin mappings below are published hoping the community designs **dedicated PCBs** — especially for the **ESP32-C3 Super Mini** and other ESP32 boards offering **more memory, faster processing and extra I/O** than the classic ESP8266.
+
+**ESP32-C3 Super Mini** (GPIO4&#8594;GPIO0 on pins 4-8):
+
+| Pin | Board   | Function               |
+|-----|---------|------------------------|
+| 01  | 5V      | Power                  |
+| 02  | GND     | Ground                 |
+| 03  | 3V3     | Logic power            |
+| 04  | GPIO4   | BUZZER                 |
+| 05  | GPIO3   | KEYPAD / BTN4 / START  |
+| 06  | GPIO2   | KEYPAD / BTN3 / BOIL   |
+| 07  | GPIO1   | KEYPAD / BTN2 / MANUAL |
+| 08  | GPIO0   | KEYPAD / BTN1 / PUMP   |
+| 09  | GPIO5   | MASH Heater            |
+| 10  | GPIO6   | SPARGE Heater          |
+| 11  | GPIO7   | BOIL Heater            |
+| 12  | GPIO8   | LCD / SDA              |
+| 13  | GPIO9   | LCD / SCL              |
+| 14  | GPIO10  | PUMP (active-low)      |
+| 15  | GPIO20  | DS18B20 (OneWire)      |
+| 16  | GPIO21  | AVAILABLE              |
+
+C3: keypad direct GPIO (no PCF8574). Pump active-low. LCD `0x27`.
+
+**ESP8266 (Wemos D1 Mini):**
+
+| Pin | Board       | Function                         |
+|-----|-------------|----------------------------------|
+| 01  | RST         | Reset                            |
+| 02  | A0 (ADC0)   | Analog input (available)         |
+| 03  | D0 / GPIO16 | BUZZER                           |
+| 04  | D5 / GPIO14 | PUMP                             |
+| 05  | D6 / GPIO12 | DS18B20 (OneWire)                |
+| 06  | D7 / GPIO13 | SPARGE Heater                    |
+| 07  | D8 / GPIO15 | MASH Heater                      |
+| 08  | 3V3         | Logic power                      |
+| 09  | TX / GPIO1  | Serial TX (debug)                |
+| 10  | RX / GPIO3  | Serial RX (debug)                |
+| 11  | D1 / GPIO5  | I2C SCL (LCD + PCF8574 keypad)   |
+| 12  | D2 / GPIO4  | I2C SDA (LCD + PCF8574 keypad)   |
+| 13  | D3 / GPIO0  | Flash button (boot strap)        |
+| 14  | D4 / GPIO2  | BOIL Heater (built-in LED)       |
+| 15  | GND         | Ground                           |
+| 16  | 5V          | Power                            |
+
+ESP8266: PCF8574 at `0x38`. LCD `0x27`. GPIO15 needs ext pull-down. GPIO16 **no PWM**.
+
 ### Licença
 
 **Uso pessoal / não comercial apenas.** Consulte o arquivo [LICENSE](LICENSE.md) para os termos completos.

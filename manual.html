@@ -115,6 +115,7 @@
         <li><a href="#best" data-i18n="toc_best">Best practices</a></li>
         <li><a href="#trouble" data-i18n="toc_trouble">Troubleshooting</a></li>
         <li><a href="#firmware" data-i18n="toc_fw">Firmware &amp; installation</a></li>
+        <li><a href="#pinout" data-i18n="toc_pinout">Pinout reference</a></li>
         <li><a href="#notes" data-i18n="toc_notes">Final notes</a></li>
         <li><a href="#license" data-i18n="toc_license">License &amp; terms of use</a></li>
       </ol>
@@ -475,7 +476,74 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
       <li data-i18n="fw_n4">ESP32-C3 with native USB: the port appears as an Espressif serial device (VID <code>303A</code>); reset/boot for flashing is automatic.</li>
     </ul>
 
-    <h2 id="notes"><span class="num">15.</span> <span data-i18n="notes_title">Final notes</span></h2>
+    <h2 id="pinout"><span class="num">15.</span> <span data-i18n="pin_title">Pinout Reference</span></h2>
+    <p data-i18n="pin_intro">The pin mappings below are the standard BrewBOSS configuration for each supported controller. They are published in the hope that the community will design <b>dedicated PCBs</b> — especially for the <b>ESP32-C3 Super Mini</b> and other ESP32-based boards that offer <b>more memory, faster processing and extra I/O ports</b> than the classic ESP8266. A purpose-built board makes wiring safer, assembly faster, and the whole system more reliable. If you create one, share it with the community.</p>
+
+    <h3>ESP32-C3 Super Mini</h3>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:8px;">GPIOs in descending order on pins 4 through 8 (GPIO4 &#8594; GPIO0).</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Pin</th><th>Board</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>5V</td><td>Power</td></tr>
+        <tr><td>02</td><td>GND</td><td>Ground</td></tr>
+        <tr><td>03</td><td>3V3</td><td>Logic power</td></tr>
+        <tr><td>04</td><td>GPIO4</td><td>BUZZER</td></tr>
+        <tr><td>05</td><td>GPIO3</td><td>KEYPAD / BTN4 / START</td></tr>
+        <tr><td>06</td><td>GPIO2</td><td>KEYPAD / BTN3 / BOIL</td></tr>
+        <tr><td>07</td><td>GPIO1</td><td>KEYPAD / BTN2 / MANUAL</td></tr>
+        <tr><td>08</td><td>GPIO0</td><td>KEYPAD / BTN1 / PUMP</td></tr>
+        <tr><td>09</td><td>GPIO5</td><td>MASH Heater</td></tr>
+        <tr><td>10</td><td>GPIO6</td><td>SPARGE Heater</td></tr>
+        <tr><td>11</td><td>GPIO7</td><td>BOIL Heater</td></tr>
+        <tr><td>12</td><td>GPIO8</td><td>LCD / SDA</td></tr>
+        <tr><td>13</td><td>GPIO9</td><td>LCD / SCL</td></tr>
+        <tr><td>14</td><td>GPIO10</td><td>PUMP (active-low)</td></tr>
+        <tr><td>15</td><td>GPIO20</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>16</td><td>GPIO21</td><td>AVAILABLE</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b data-i18n="pin_c3_notes_title">C3 notes</b><span data-i18n="pin_c3_notes">Keypad read directly from GPIOs (no PCF8574). BTN1=GPIO0, BTN2=GPIO1, BTN3=GPIO2, BTN4=GPIO3. Pump is active-low (<code>INVERT_PUMP=true</code>): HIGH = off, LOW = on. LCD 20&#215;4 at address <code>0x27</code>. WiFi SoftAP forced on channel 1, TX power 8.5 dBm.</span></div>
+
+    <h3>ESP8266 (Wemos D1 Mini)</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Pin</th><th>Board</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>RST</td><td>Reset</td></tr>
+        <tr><td>02</td><td>A0 (ADC0)</td><td>Analog input (available)</td></tr>
+        <tr><td>03</td><td>D0 / GPIO16</td><td>BUZZER</td></tr>
+        <tr><td>04</td><td>D5 / GPIO14</td><td>PUMP</td></tr>
+        <tr><td>05</td><td>D6 / GPIO12</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>06</td><td>D7 / GPIO13</td><td>SPARGE Heater</td></tr>
+        <tr><td>07</td><td>D8 / GPIO15</td><td>MASH Heater</td></tr>
+        <tr><td>08</td><td>3V3</td><td>Logic power</td></tr>
+        <tr><td>09</td><td>TX / GPIO1</td><td>Serial TX (debug)</td></tr>
+        <tr><td>10</td><td>RX / GPIO3</td><td>Serial RX (debug)</td></tr>
+        <tr><td>11</td><td>D1 / GPIO5</td><td>I2C SCL (LCD + PCF8574 keypad)</td></tr>
+        <tr><td>12</td><td>D2 / GPIO4</td><td>I2C SDA (LCD + PCF8574 keypad)</td></tr>
+        <tr><td>13</td><td>D3 / GPIO0</td><td>Flash button (boot strap)</td></tr>
+        <tr><td>14</td><td>D4 / GPIO2</td><td>BOIL Heater (built-in LED)</td></tr>
+        <tr><td>15</td><td>GND</td><td>Ground</td></tr>
+        <tr><td>16</td><td>5V</td><td>Power</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b data-i18n="pin_esp_notes_title">ESP8266 notes</b><span data-i18n="pin_esp_notes">PCF8574 (I2C keypad expander) at <code>0x38</code> — keypad polled via I2C, INT pin unused. LCD 20&#215;4 at <code>0x27</code> (fallback: <code>0x3F</code>, <code>0x20</code>, <code>0x3E</code>). GPIO15 (D8 / pin 7) requires external pull-down (boot strap). GPIO2 (D4 / pin 14) has internal pull-up and built-in LED — lights up with boil heater. GPIO16 (D0 / pin 3) <b>does not support PWM</b>. GPIO0 (D3 / pin 13) is a boot-strap pin: pulled LOW at power-on enters flash mode. Boot pre-safety sets GPIOs 0,2,4,5,12,13,14,15,16 as INPUT (high impedance).</span></div>
+
+    <h3 data-i18n="pin_i2c_title">I2C Addresses (both controllers)</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th data-i18n="pin_th_dev">Device</th><th data-i18n="pin_th_addr">Default address</th><th data-i18n="pin_th_fb">Fallback</th></tr></thead>
+      <tbody>
+        <tr><td>LCD 20&#215;4</td><td><code>0x27</code></td><td><code>0x3F</code>, <code>0x20</code>, <code>0x3E</code></td></tr>
+        <tr><td>PCF8574 keypad</td><td><code>0x38</code></td><td><code>0x20</code> (ESP8266 only)</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="notes"><span class="num">16.</span> <span data-i18n="notes_title">Final notes</span></h2>
     <ul>
       <li data-i18n="notes1">BrewBOSS controls real heaters and hot liquids. Always follow safe electrical and brewing practices.</li>
       <li data-i18n="notes2">The interface is served locally by the device and works offline; read access is open, and write access can be protected with the login.</li>
