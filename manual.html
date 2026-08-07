@@ -163,10 +163,10 @@ esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_&lt;version&
       <li data-i18n="acc_step1"><b>Power on</b> the controller. On boot it starts the filesystem, Wi‑Fi, sensors, LCD and keypad.</li>
       <li data-i18n="acc_step2"><b>Connect to its access point.</b> By default the device creates a Wi‑Fi network named <code>BrewBOSS</code> (password <code>brewboss</code>), with IP <code>192.168.4.1</code>.</li>
       <li data-i18n="acc_step3">Join that network with your phone/PC and open <code>http://192.168.4.1</code> in the browser.</li>
-      <li data-i18n="acc_step4">A <b>login window</b> appears (see below).</li>
+      <li data-i18n="acc_step4">If <b>login is enabled</b> (Setup → System → Security), a <b>login window</b> appears. Otherwise the interface opens with full access.</li>
     </ol>
     <h3 data-i18n="acc_login_title">Login &amp; access levels</h3>
-    <p data-i18n="acc_login_body">Access protection is optional and based on a single password. By default the password is <code>brewboss</code>.</p>
+    <p data-i18n="acc_login_body">Access protection is optional and <b>disabled by default</b> (no login). To enable it, go to <b>Setup → System → Security</b>, turn the switch ON, set a password and save. When enabled, the default password is <code>brewboss</code>.</p>
     <ul>
       <li data-i18n="acc_login_f1"><b>Enter the correct password → LOGIN</b>: full access. The session lasts until the device restarts.</li>
       <li data-i18n="acc_login_f2"><b>IGNORE</b>: read-only access — you can see everything but cannot make changes.</li>
