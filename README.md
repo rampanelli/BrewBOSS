@@ -2,7 +2,7 @@
 
 *User Operation Manual · Manual de Operação do Usuário*
 
-**Download:** [binaries/](binaries/) · **Interactive help:** [help/](https://rampanelli.github.io/BrewBOSS/help/)
+**Download:** [binaries/](binaries/) · **Interactive help:** [help/](https://rampanelli.github.io/BrewBOSS/help/) · **Support forum:** [BrewBOSS Community](https://beerschool.circle.so/c/forum-aberto/brewboss-command-the-brew-own-the-process)
 
 ---
 
@@ -150,6 +150,27 @@ esptool.py --chip esp32 --port COMx write_flash 0x290000 BrewBOSS_<version>_esp3
 # ESP32-C3 — firmware first, then filesystem (_fs)
 esptool.py --chip esp32c3 --port COMx write_flash 0x10000 BrewBOSS_<version>_esp32c3.bin
 esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_<version>_esp32c3_fs.bin
+```
+
+### ESP32-C3 — blank chip / first flash
+
+After `erase_flash`, flash all 5 files **one at a time**:
+
+```bash
+# 1. Bootloader — HOLD the BOOT button on ESP32-C3 Super Mini for this command
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x0000 BrewBOSS_<version>_esp32c3_bootloader.bin
+
+# 2. Partition table
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x8000 BrewBOSS_<version>_esp32c3_partitions.bin
+
+# 3. Boot app
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0xe000 BrewBOSS_<version>_esp32c3_boot_app0.bin
+
+# 4. Firmware
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_<version>_esp32c3.bin
+
+# 5. Filesystem
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_<version>_esp32c3_fs.bin
 ```
 
 ### Troubleshooting
@@ -322,6 +343,27 @@ esptool.py --chip esp32 --port COMx write_flash 0x290000 BrewBOSS_<versao>_esp32
 # ESP32-C3 — firmware primeiro, depois o filesystem (_fs)
 esptool.py --chip esp32c3 --port COMx write_flash 0x10000 BrewBOSS_<versao>_esp32c3.bin
 esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_<versao>_esp32c3_fs.bin
+```
+
+### ESP32-C3 — chip zerado / primeira gravação
+
+Após `erase_flash`, grave todos os 5 arquivos **um de cada vez**:
+
+```bash
+# 1. Bootloader — SEGURE o botão BOOT na ESP32-C3 Super Mini para este comando
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x0000 BrewBOSS_<versao>_esp32c3_bootloader.bin
+
+# 2. Tabela de partições
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x8000 BrewBOSS_<versao>_esp32c3_partitions.bin
+
+# 3. Boot app
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0xe000 BrewBOSS_<versao>_esp32c3_boot_app0.bin
+
+# 4. Firmware
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_<versao>_esp32c3.bin
+
+# 5. Filesystem
+esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_<versao>_esp32c3_fs.bin
 ```
 
 ### Solução de Problemas
