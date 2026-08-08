@@ -1,1 +1,123 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./manual.html"><title>BrewBOSS</title></head><body><a href="./manual.html">BrewBOSS — User Manual</a></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrewBOSS — User Manual</title>
+<style>
+  :root{
+    --accent:#4318FF; --accent2:#2B3674; --ink:#1f2640; --dim:#5b6480; --muted:#8a93ad;
+    --bg:#f6f8fc; --card:#ffffff; --line:#e3e8f2;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;font-size:16px;display:flex;flex-direction:column;min-height:100vh;}
+  header.site{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+    color:#fff;padding:28px 20px;box-shadow:0 6px 20px rgba(43,54,116,.25);text-align:center;}
+  header.site .brand{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}
+  header.site h1{margin:6px 0 .3em;font-size:30px;line-height:1.2;}
+  header.site h1 b{font-weight:800;}
+  header.site p{margin:0;opacity:.92;font-size:15px;max-width:680px;margin:0 auto;}
+  main{flex:1;max-width:680px;margin:28px auto;padding:0 20px 48px;width:100%;}
+  .pick{text-align:center;margin:24px 0 20px;font-size:18px;font-weight:700;color:var(--accent2);}
+  .lang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:20px 0 32px;}
+  .lang-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+    text-decoration:none;color:var(--ink);transition:border-color .18s,box-shadow .18s;display:flex;align-items:center;gap:10px;}
+  .lang-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(67,24,255,.10);}
+  .lang-card .flag{font-size:24px;flex:none;}
+  .lang-card .label{font-weight:700;font-size:15px;}
+  .lang-card .sub{font-size:12px;color:var(--muted);margin-top:1px;}
+  .instructions{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);}
+  .instructions h3{font-size:15px;color:var(--accent2);margin:1em 0 .3em;padding-top:.4em;border-top:1px solid var(--line);}
+  .instructions h3:first-child{border-top:0;margin-top:0;}
+  .instructions p{font-size:13.5px;color:var(--dim);margin:.2em 0;}
+  footer{margin-top:32px;padding:16px 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center;}
+  footer b{color:var(--dim);}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="brand">User Manual</div>
+  <h1>Brew<b>BOSS</b></h1>
+  <p>Select your language below to open the operation manual.</p>
+</header>
+
+<main>
+  <p class="pick">Choose your language</p>
+
+  <div class="lang-grid">
+    <a class="lang-card" href="manual_en.html">
+      <span class="flag">&#127468;&#127463;</span>
+      <div><div class="label">English</div><div class="sub">User Operation Manual</div></div>
+    </a>
+    <a class="lang-card" href="manual_pt-BR.html">
+      <span class="flag">&#127463;&#127479;</span>
+      <div><div class="label">Português (BR)</div><div class="sub">Manual de Operação do Usuário</div></div>
+    </a>
+    <a class="lang-card" href="manual_es.html">
+      <span class="flag">&#127466;&#127480;</span>
+      <div><div class="label">Español</div><div class="sub">Manual de Operación del Usuario</div></div>
+    </a>
+    <a class="lang-card" href="manual_it.html">
+      <span class="flag">&#127470;&#127481;</span>
+      <div><div class="label">Italiano</div><div class="sub">Manuale Operativo per l'Utente</div></div>
+    </a>
+    <a class="lang-card" href="manual_de.html">
+      <span class="flag">&#127465;&#127466;</span>
+      <div><div class="label">Deutsch</div><div class="sub">Benutzerhandbuch</div></div>
+    </a>
+    <a class="lang-card" href="manual_fr.html">
+      <span class="flag">&#127467;&#127479;</span>
+      <div><div class="label">Français</div><div class="sub">Manuel d'Utilisation</div></div>
+    </a>
+    <a class="lang-card" href="manual_ja.html">
+      <span class="flag">&#127471;&#127477;</span>
+      <div><div class="label">日本語</div><div class="sub">ユーザー操作マニュアル</div></div>
+    </a>
+    <a class="lang-card" href="manual_zh.html">
+      <span class="flag">&#127464;&#127475;</span>
+      <div><div class="label">中文 (简体)</div><div class="sub">用户操作手册</div></div>
+    </a>
+    <a class="lang-card" href="manual_ko.html">
+      <span class="flag">&#127472;&#127479;</span>
+      <div><div class="label">한국어</div><div class="sub">사용자 작동 매뉴얼</div></div>
+    </a>
+  </div>
+
+  <div class="instructions">
+    <h3>English</h3>
+    <p>Select your language above to open the BrewBOSS user manual. The manual covers installation, operation, recipes, troubleshooting and firmware flashing for ESP8266, ESP32 and ESP32-C3 controllers.</p>
+
+    <h3>Português (BR)</h3>
+    <p>Selecione seu idioma acima para abrir o manual do usuário BrewBOSS. O manual cobre instalação, operação, receitas, solução de problemas e gravação de firmware para os controladores ESP8266, ESP32 e ESP32-C3.</p>
+
+    <h3>Español</h3>
+    <p>Seleccione su idioma arriba para abrir el manual de usuario de BrewBOSS. El manual cubre instalación, operación, recetas, solución de problemas y flasheo de firmware para los controladores ESP8266, ESP32 y ESP32-C3.</p>
+
+    <h3>Italiano</h3>
+    <p>Seleziona la tua lingua qui sopra per aprire il manuale utente di BrewBOSS. Il manuale copre installazione, funzionamento, ricette, risoluzione dei problemi e flash del firmware per i controller ESP8266, ESP32 e ESP32-C3.</p>
+
+    <h3>Deutsch</h3>
+    <p>Wählen Sie oben Ihre Sprache aus, um das BrewBOSS-Benutzerhandbuch zu öffnen. Das Handbuch behandelt Installation, Betrieb, Rezepte, Fehlerbehebung und Firmware-Flashen für ESP8266-, ESP32- und ESP32-C3-Controller.</p>
+
+    <h3>Français</h3>
+    <p>Sélectionnez votre langue ci-dessus pour ouvrir le manuel d'utilisation de BrewBOSS. Le manuel couvre l'installation, le fonctionnement, les recettes, le dépannage et le flashage du firmware pour les contrôleurs ESP8266, ESP32 et ESP32-C3.</p>
+
+    <h3>日本語</h3>
+    <p>上で言語を選択してBrewBOSSユーザーマニュアルを開いてください。マニュアルでは、ESP8266、ESP32、ESP32-C3コントローラーのインストール、操作、レシピ、トラブルシューティング、ファームウェアのフラッシュについて説明しています。</p>
+
+    <h3>中文 (简体)</h3>
+    <p>请在上方选择您的语言以打开BrewBOSS用户手册。本手册涵盖ESP8266、ESP32和ESP32-C3控制器的安装、操作、配方、故障排除和固件刷写。</p>
+
+    <h3>한국어</h3>
+    <p>위에서 언어를 선택하여 BrewBOSS 사용자 매뉴얼을 여세요. 이 매뉴얼은 ESP8266, ESP32 및 ESP32-C3 컨트롤러의 설치, 작동, 레시피, 문제 해결 및 펌웨어 플래싱을 다룹니다.</p>
+  </div>
+</main>
+
+<footer><b>BrewBOSS</b> — User Manual</footer>
+
+</body>
+</html>

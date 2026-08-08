@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrewBOSS — ユーザー操作マニュアル</title>
+<style>
+  :root{
+    --accent:#4318FF; --accent2:#2B3674; --ink:#1f2640; --dim:#5b6480; --muted:#8a93ad;
+    --bg:#f6f8fc; --card:#ffffff; --line:#e3e8f2;
+    --tip-bg:#eafaf3; --tip-bd:#34c79933; --tip-tx:#0a6b4a;
+    --warn-bg:#fff6e9; --warn-bd:#ffcf8a; --warn-tx:#8a5200;
+    --note-bg:#eef3ff; --note-bd:#bcd0ff; --note-tx:#274690;
+    --code:#0b1437;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;font-size:16px;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 16px 64px;}
+  header.site{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+    color:#fff;padding:24px 16px;box-shadow:0 6px 20px rgba(43,54,116,.25);
+    display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  header.site .htext{min-width:0;}
+  header.site .brand{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}
+  header.site h1{margin:0 0 .15em;font-size:26px;line-height:1.2;}
+  header.site h1 b{font-weight:800;}
+  header.site .ver{display:inline-block;margin-left:8px;padding:2px 12px;border-radius:999px;
+    background:rgba(255,255,255,.18);font-size:14px;font-weight:700;vertical-align:middle;white-space:nowrap;}
+  header.site p{margin:.3em 0 0;opacity:.92;max-width:680px;font-size:14px;}
+  .lang{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);
+    border-radius:10px;padding:6px 10px;font-size:14px;font-weight:700;cursor:pointer;flex:none;margin-top:2px;}
+  .lang option{color:#2B3674;background:#fff;}
+  main{margin-top:22px;}
+  h2{font-size:22px;margin:2.2em 0 .6em;padding-bottom:.25em;border-bottom:2px solid var(--line);scroll-margin-top:14px;}
+  h3{font-size:18px;margin:1.6em 0 .4em;color:var(--accent2);scroll-margin-top:14px;}
+  h2 .num,h3 .num{color:var(--accent);font-weight:800;}
+  p{margin:.6em 0;}
+  a{color:var(--accent);}
+  ul,ol{margin:.5em 0 .9em;padding-left:1.4em;}
+  li{margin:.3em 0;}
+  code,kbd{font-family:"Cascadia Code",Consolas,monospace;font-size:.92em;}
+  code{background:#eef1fb;color:var(--accent2);padding:1px 6px;border-radius:5px;}
+  kbd{background:#2b3148;color:#fff;border-radius:6px;padding:2px 8px;font-weight:700;box-shadow:0 2px 0 #1a1f30;}
+  pre{background:var(--code);color:#e6ebff;border-radius:12px;padding:14px 16px;overflow:auto;
+    font-family:"Cascadia Code",Consolas,monospace;font-size:13.5px;line-height:1.6;}
+  pre code{background:none;color:inherit;padding:0;}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:0 4px 16px rgba(0,0,0,.04);}
+  .toc h2{margin:0 0 .4em;border:0;font-size:18px;}
+  .toc ol{columns:2;column-gap:28px;padding-left:1.2em;margin:0;}
+  @media(max-width:640px){.toc ol{columns:1;}}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  figure{margin:1em 0 1.4em;}
+  figure img{display:block;width:100%;max-width:480px;height:auto;margin-left:auto;margin-right:auto;
+    border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 22px rgba(43,54,116,.10);background:#fff;}
+  figcaption{margin-top:.5em;font-size:13.5px;color:var(--muted);text-align:center;}
+  .callout{border:1px solid var(--line);border-left-width:5px;border-radius:10px;padding:12px 16px;margin:1em 0;}
+  .callout b{display:block;margin-bottom:.15em;}
+  .tip{background:var(--tip-bg);border-color:var(--tip-bd);border-left-color:#34c799;color:var(--tip-tx);}
+  .warn{background:var(--warn-bg);border-color:var(--warn-bd);border-left-color:#f0a020;color:var(--warn-tx);}
+  .note{background:var(--note-bg);border-color:var(--note-bd);border-left-color:#4a78ff;color:var(--note-tx);}
+  .tablewrap{overflow-x:auto;margin:1em 0;}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px;}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+  th{background:#eef1fb;color:var(--accent2);font-weight:700;}
+  tbody tr:nth-child(even){background:#fafbff;}
+  .lead{font-size:17px;color:var(--dim);}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center;}
+  footer b{color:var(--dim);}
+  .screen{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 20px 14px;
+    margin:1.2em 0;box-shadow:0 4px 16px rgba(0,0,0,.03);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="site">
+    <div class="htext">
+      <div class="brand" >ユーザー操作マニュアル</div>
+      <h1>Brew<b>BOSS</b></h1>
+      <p >WebインターフェースとLCD・キーパッドによるスタンドアロン操作を備えた醸造自動化コントローラーです。このガイドでは、システムを安全に操作する方法をステップバイステップで説明します。</p>
+    </div>
+    
+  </header>
+
+  <main>
+    <p class="lead" >BrewBOSSは、醸造日のマッシュ、ボイル、ポストボイルの各段階を自動化します。スマートフォンやPCのブラウザから操作することも、20×4 LCDと4つのボタンでスタンドアロン操作することも可能です — オンラインでもオフラインでも。</p>
+
+    <nav class="toc" aria-label="目次">
+      <h2 >目次</h2>
+      <ol>
+        <li><a href="#overview" >概要</a></li>
+        <li><a href="#prerequisites" >前提条件とインストール</a></li>
+        <li><a href="#access" >システムへのアクセス</a></li>
+        <li><a href="#navigation" >インターフェースのナビゲーション</a></li>
+        <li><a href="#operation" >ステップバイステップ操作</a></li>
+        <li><a href="#screens" >各画面の説明</a></li>
+        <li><a href="#indicators" >ボタン、フィールド、メッセージ、インジケーター</a></li>
+        <li><a href="#modes" >操作モード</a></li>
+        <li><a href="#standalone" >LCDと物理ボタン（オフライン）</a></li>
+        <li><a href="#recovery" >停電復旧</a></li>
+        <li><a href="#flow" >主な使用フロー</a></li>
+        <li><a href="#best" >ベストプラクティス</a></li>
+        <li><a href="#trouble" >トラブルシューティング</a></li>
+        <li><a href="#firmware" >ファームウェアとインストール</a></li>
+        <li><a href="#pinout" >ピン配置リファレンス</a></li>
+        <li><a href="#notes" >最終注意事項</a></li>
+        <li><a href="#license" >ライセンスと利用規約</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="overview"><span class="num">1.</span> <span >概要</span></h2>
+    <p >BrewBOSSは電動醸造機器用のコントローラーです。ヒーター、ポンプ、醸造日のタイマーを管理し、温度と進行状況をリアルタイムで報告します。</p>
+    <p><b >サポート</b>: <span ><a href='https://beerschool.circle.so/c/forum-aberto/brewboss-command-the-brew-own-the-process' target='_blank' rel='noopener'>BeerSchoolフォーラム</a>でBrewBOSS公式コミュニティに参加してください — セットアップを共有し、質問し、他のブルワーを助けましょう。</span></p>
+    <p >以下の3つの方法で操作でき、これらは連携して動作します：</p>
+    <ul>
+      <li ><b>Webインターフェース</b> — デバイスが提供する単一ページ。ブラウザからすべてを制御できます。</li>
+      <li ><b>LCDと4つのボタン</b> — ネットワークがなくても完全なスタンドアロン操作が可能です。</li>
+      <li ><b>REST API</b> — オプション。統合やスクリプト用です。</li>
+    </ul>
+    <p >できること：</p>
+    <ul>
+      <li >プログラム可能な<b>マッシュ</b>ステップ、タイマー付きホップ添加による自動<b>ボイル</b>、温度トリガー添加と最終冷却を含む<b>ポストボイル</b>段階を実行します。</li>
+      <li >完全<b>手動</b>（直接出力）または<b>事前プログラムされたレシピ</b>で操作します。</li>
+      <li ><b>レシピ</b>の管理（作成、編集、保存、有効化、削除）と<b>インポート</b> — BeerSmith / Brewfatherなどのツールと互換性があり、独自のレシピをエクスポートおよびインポートできます。</li>
+      <li ><b>ログ</b>の記録：詳細なマッシュグラフ用の温度CSV（1分ごとのサンプル、イベント付き）。特定の機器に合わせてレシピを微調整できます。</li>
+      <li ><b>停電後に自動復旧</b>し、中断した場所から醸造を続行します。</li>
+      <li ><b>安全システム</b>（過温度遮断およびセンサー喪失遮断）でバッチを保護します。</li>
+      <li ><b>オンラインまたはオフライン</b>で動作。20×4 LCDにステータスを表示します。</li>
+    </ul>
+    <div class="callout note"><b >ハードウェア互換性</b><span >ESP8266 (Wemos)、ESP32、ESP32-C3ボードで動作し、<b>BrewManiac</b>や<b>BrewUNO</b>などの他のプロジェクトで使用されている配線と100%互換性があります — フラッシュするだけですぐに使用できます。</span></div>
+
+    <h2 id="prerequisites"><span class="num">2.</span> <span >前提条件とインストール</span></h2>
+    <p >BrewBOSSを操作するには以下が必要です：</p>
+    <ul>
+      <li >BrewBOSSファームウェアがインストールされた対応コントローラーボード（Wemos/ESP8266、ESP32、またはESP32-C3）。</li>
+      <li >配線された醸造ハードウェア：SSR経由のヒーター、ポンプ、1つ以上の<b>DS18B20</b>温度センサー。オプションの20×4 I²C LCDと4つのボタンでスタンドアロン使用が可能です。</li>
+      <li >Webブラウザを搭載したスマートフォン、タブレット、またはコンピューター。</li>
+      <li >オプションで、自宅のWi‑Fiネットワーク（ない場合、デバイスは独自のアクセスポイントを作成します）。</li>
+    </ul>
+    <h3 >ファームウェアのインストール（フラッシュ）</h3>
+    <p >ボードがまだフラッシュされていない場合は、<code>esptool</code>でファームウェアとファイルシステムを書き込みます：</p>
+    <ol>
+      <li ><b>binaries</b>フォルダからボード用の2つの<code>.bin</code>ファイルをダウンロードします：<b>ファームウェア</b>（<code>_fs</code>サフィックスなし — <b>最初に</b>フラッシュ）と<b>ファイルシステム</b>（<code>_fs</code>サフィックス — <b>2番目に</b>フラッシュ）。</li>
+      <li >正しいオフセットにフラッシュします — 例えばWemos/ESP8266の場合（<code>&lt;version&gt;</code>をダウンロードしたバージョンに置き換えてください）：</li>
+    </ol>
+    <pre><code>esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin
+esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
+    <div class="callout tip"><b >完全なフラッシュガイド</b><span >ESP32 / ESP32-C3用のバイナリ、正確なオフセット、コマンドはプロジェクトの<b>ヘルプ</b>ページにあります。ESP8266ファームウェアにはブートローダーが既に含まれているため、<code>0x0</code>に書き込みます。</span></div>
+
+    <h2 id="access"><span class="num">3.</span> <span >システムへのアクセス</span></h2>
+    <ol>
+      <li >コントローラーの<b>電源を入れます</b>。起動時にファイルシステム、Wi‑Fi、センサー、LCD、キーパッドが初期化されます。</li>
+      <li ><b>アクセスポイントに接続します。</b>デフォルトでは、デバイスは<code>BrewBOSS</code>という名前のWi‑Fiネットワーク（パスワード<code>brewboss</code>）を作成し、IPは<code>192.168.4.1</code>です。</li>
+      <li >スマートフォン/PCでそのネットワークに接続し、ブラウザで<code>http://192.168.4.1</code>を開きます。</li>
+      <li ><b>ログインが有効</b>な場合（設定 → システム → セキュリティ）、<b>ログイン画面</b>が表示されます。そうでない場合、インターフェースはフルアクセスで開きます。</li>
+    </ol>
+    <h3 >ログインとアクセスレベル</h3>
+    <p >アクセス保護はオプションで、<b>デフォルトでは無効</b>です（ログインなし）。有効にするには、<b>設定 → システム → セキュリティ</b>に移動し、スイッチをオンにしてパスワードを設定し、保存します。有効な場合、デフォルトのパスワードは<code>brewboss</code>です。</p>
+    <ul>
+      <li ><b>正しいパスワードを入力 → ログイン</b>：フルアクセス。セッションはデバイスが再起動するまで続きます。</li>
+      <li ><b>無視</b>：読み取り専用アクセス — すべてを見ることはできますが、変更はできません。</li>
+      <li ><b>誤ったパスワード</b>：再入力を求められ、最大<b>10回</b>の試行後、読み取り専用にフォールバックします。</li>
+    </ul>
+    <p ><b>設定 → システム → セキュリティ</b>でパスワードを変更または削除できます。<b>空のパスワードはログインを完全に無効</b>にします。</p>
+    <div class="callout note"><b >パスワードを忘れた場合</b><span >ファイルシステムを再フラッシュすると<code>brewboss</code>にリセットされます。</span></div>
+    <h3 >自宅のWi‑Fiに切り替える</h3>
+    <p >コントローラーを自宅ネットワークに接続するには、<b>設定 → システム → WiFi</b>を開き、モードを選択してSSID/パスワードを入力し、<b>保存して再起動</b>します。</p>
+    <div class="callout warn"><b >Wi‑Fiモード</b><span ><b>AP</b> = デバイスが独自のネットワーク（オフライン使用）。<b>STATION</b> = ルーターにのみ接続。<b>MIXED</b> = 両方を同時に。STATIONモードで60秒以内に接続できない場合、アクセスポイントにフォールバックします。</span></div>
+
+    <h2 id="navigation"><span class="num">4.</span> <span >インターフェースのナビゲーション</span></h2>
+    <p >インターフェースには左側に<b>サイドメニュー</b>、上部に<b>ステータスバー</b>があります。</p>
+    <p ><b>サイドメニュー</b> — 主な移動先：</p>
+    <ul>
+      <li ><b>ダッシュボード</b> — ライブ温度、タイマー、コントロールボタンを備えたメイン画面。</li>
+      <li ><b>レシピ</b> — レシピライブラリとマッシュ/ボイルステップエディター。</li>
+      <li ><b>設定</b> — 調整、システム（ネットワーク、セキュリティ、時刻、バックアップ）、および情報。</li>
+      <li ><b>モード</b> — インターフェースのカラーテーマを切り替えます。</li>
+      <li ><b>情報</b> — バージョンとハードウェア情報。</li>
+    </ul>
+    <p >ステータスバーをタップするとメニューが折りたたみ/展開されます（スマートフォンで便利です）。</p>
+    <p ><b>ステータスバー</b> — <b>Wi‑Fi</b>インジケーター、<b>NTP</b>（時計）ドット、<b>HEAP</b>（空きメモリ）ドット、デバイスの<b>稼働時間</b>。</p>
+    <figure><img src="images/4.1_menu.jpeg" alt="BrewBOSSサイドナビゲーションメニュー"><figcaption >サイドナビゲーションメニュー — 各画面への出発点です。</figcaption></figure>
+
+    <h2 id="operation"><span class="num">5.</span> <span >ステップバイステップ操作</span></h2>
+    <p >レシピを使った醸造日の典型的な流れは次のとおりです：</p>
+    <ol>
+      <li ><b>準備。</b>ケトルに水を入れ、センサーを配置し、インターフェースに接続します。</li>
+      <li ><b>レシピを選択。</b><b>レシピ</b>を開き、1つ選んで<b>有効化</b>します。</li>
+      <li ><b>設定を確認。</b><b>設定 → 調整</b>で、温度単位、ボイル温度/時間、センサーを確認します。</li>
+      <li ><b>マッシュを開始。</b><b>ダッシュボード</b>で<kbd>Start</kbd>を押します。システムは最初のステップの目標温度まで加熱し、タイマーを実行します。</li>
+      <li ><b>進行を追跡。</b>ゲージと<b>ステップ履歴</b>を確認します。ロックされたステップがビープ音を鳴らしたら、解除します。</li>
+      <li ><b>ボイル。</b>最後のマッシュステップの後、システムは自動的にボイルに移行します。沸騰温度まで加熱し、タイマーを実行し、各ホップ添加を時間通りに発動します。</li>
+      <li ><b>ポストボイルと冷却。</b>加熱をオフにして、冷却を監視し、温度ベースの添加をトリガーし、最終冷却ステップを実行します。</li>
+      <li ><b>完了。</b>ブザーが終了を知らせ、画面に総醸造時間が表示されます。</li>
+    </ol>
+    <div class="callout tip"><b >スケジュール開始（Delay）</b><span >マッシュまたはボイルを後で開始するようにスケジュールできます。LCDにカウントダウンが表示され、ゼロになると自動的にプロセスが開始します。</span></div>
+
+    <h2 id="screens"><span class="num">6.</span> <span >各画面の説明</span></h2>
+    <p >以下の各セクションでは、画面名、表示内容、目的、操作方法を説明します。</p>
+
+    <div class="screen">
+      <h3 id="screen-main"><span >6.1</span> — <span >ダッシュボード（メイン）</span></h3>
+      <p ><b>表示内容。</b>3つの円形ゲージとタイマーカードを備えたホーム画面：メイン温度、スパージ温度、出力（PWM）、現在のステップ名付き醸造タイマー。</p>
+      <p ><b>目的。</b>ここで醸造を開始、監視、停止し、ライブ状態を読み取ります。</p>
+      <p ><b>操作方法。</b>ゲージの下にあるコントロールボタンを使用します。手動モード中は、ゲージをタップして目標温度または出力を設定できます。</p>
+      <figure><img src="images/1.0_main.jpeg" alt="ダッシュボード"><figcaption >ダッシュボード — ゲージ、タイマー、コントロールボタン。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-step"><span >6.2</span> — <span >ステップとステップ履歴</span></h3>
+      <p ><b>表示内容。</b>現在のステップ/タイマーと、プロセスの各マイルストーンの実行リスト。</p>
+      <p ><b>目的。</b>醸造の正確な進行状況と直近の出来事を追跡します。</p>
+      <p ><b>操作方法。</b>読んで追跡します。イベントタイプは色分けされています。</p>
+      <figure><img src="images/1.1_step.jpeg" alt="ステップ履歴"><figcaption >ステップビューとステップ履歴 — 醸造のタイムライン。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-recipes"><span >6.3</span> — <span >レシピ</span></h3>
+      <p ><b>表示内容。</b>検索ボックスと並べ替え、<b>インポート</b>ボタンを備えたレシピライブラリ。</p>
+      <p ><b>目的。</b>レシピを作成、保存、再利用します。</p>
+      <p ><b>操作方法。</b>レシピを<b>有効化</b>して醸造用に読み込みます。他の場所に保存したレシピを<b>インポート</b>。自分のレシピを<b>保存/編集</b>。不要になったレシピを<b>削除</b>します。</p>
+      <figure><img src="images/2.0_recipes.jpeg" alt="レシピ"><figcaption >レシピ — レシピを有効化、インポート、編集、管理します。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-mash"><span >6.4</span> — <span >マッシュステップエディター</span></h3>
+      <p ><b>表示内容。</b>名前、目標温度、時間、ステップごとのフラグを含むマッシュステップのリスト。</p>
+      <p ><b>目的。</b>マッシュプロファイルを定義します。</p>
+      <p ><b>操作方法。</b>ステップを追加、編集、並べ替え。温度と時間を設定。フラグを設定：<b>循環</b>（ポンプ作動）、<b>ヒーターオン</b>、<b>最大出力</b>、<b>ステップロック</b>（手動操作のための一時停止）。</p>
+      <figure><img src="images/2.1_mash.jpeg" alt="マッシュエディター"><figcaption >マッシュエディター — ステップバイステップでマッシュプロファイルを構築します。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-boil"><span >6.5</span> — <span >ボイルと添加エディター</span></h3>
+      <p ><b>表示内容。</b>ボイルプログラムと添加。</p>
+      <p ><b>目的。</b>ボイル中およびボイル後のホップ添加をスケジュールします。</p>
+      <p ><b>操作方法。</b>添加を追加し、各添加のトリガー方法を選択：<b>タイマー添加</b>（ボイル中）、<b>ポストボイル添加</b>（温度による）、<b>最終冷却</b>。</p>
+      <figure><img src="images/2.2_boil.jpeg" alt="ボイルエディター"><figcaption >ボイルエディター — タイマーおよび温度トリガー添加。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-settings"><span >6.6</span> — <span >調整</span></h3>
+      <p ><b>表示内容。</b>各バッチに適用される醸造パラメーター：単位、遅延、出力パーセント、ボイル温度/時間、スパージ、PIDバンド、ポンプタイミング、センサー割り当て、チェックボックス。</p>
+      <p ><b>目的。</b>コントローラーを機器に合わせます。</p>
+      <p ><b>操作方法。</b>値を設定し、<b>保存</b>を押します。センサー<b>オフセット</b>を使用して基準温度計に対して読み取り値を校正します。</p>
+      <figure><img src="images/3.0_settings.jpeg" alt="調整"><figcaption >調整 — コントローラーを機器に合わせます。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-system"><span >6.7</span> — <span >システム（ネットワーク、セキュリティ、時刻、バックアップ）</span></h3>
+      <p ><b>表示内容。</b>デバイス設定パネル。</p>
+      <p ><b>目的。</b>ネットワーク、ログイン、時計、バックアップ。</p>
+      <p ><b>操作方法。</b><b>Wi‑Fi</b>モードと認証情報、<b>セキュリティ</b>（ログインのオン/オフとパスワード）、<b>NTP</b>サーバーとGMTオフセット、<b>バックアップ</b>（設定のエクスポート/インポート）を設定します。</p>
+      <figure><img src="images/3.1_system.jpeg" alt="システム"><figcaption >システム — Wi‑Fi、セキュリティ、時刻、バックアップ。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-about"><span >6.8</span> — <span >情報</span></h3>
+      <p ><b>表示内容。</b>ファームウェアバージョン、ハードウェア、ネットワーク状態、時刻/NTP、システム情報。</p>
+      <p ><b>目的。</b>ヘルスチェックと、助けを求める際に含める情報。</p>
+      <p ><b>操作方法。</b>読み取り専用 — すべてが正常に動作していることを確認するために使用します。</p>
+      <figure><img src="images/3.2_about.jpeg" alt="情報"><figcaption >情報 — バージョン、ハードウェア、システム状態。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-themes"><span >6.9</span> — <span >カラーテーマ（モード）</span></h3>
+      <p ><b>表示内容。</b>異なるカラースキームのインターフェース。</p>
+      <p ><b>目的。</b>快適さと可読性 — 例えば、薄暗い醸造室用のダークテーマ。</p>
+      <p ><b>操作方法。</b>サイドメニューの<b>モード</b>をタップして、利用可能なカラースキームを切り替えます。</p>
+      <figure><img src="images/4.0_themes.jpeg" alt="テーマ"><figcaption >カラーテーマ — モードボタンで切り替えます。</figcaption></figure>
+    </div>
+
+    <h2 id="indicators"><span class="num">7.</span> <span >ボタン、フィールド、メッセージ、インジケーター</span></h2>
+    <h3 >コントロールボタン（ダッシュボード）</h3>
+    <ul>
+      <li ><kbd>Start</kbd> — マッシュを開始します。</li>
+      <li ><kbd>Pause</kbd> / <kbd>Resume</kbd> — 一時停止と再開。</li>
+      <li ><kbd>Stop</kbd> — すべてを停止します。</li>
+      <li ><kbd>Skip</kbd> — 現在のマッシュステップをスキップします。</li>
+      <li ><kbd>Boil</kbd> — ボイルを直接開始します。</li>
+      <li ><kbd>Pump</kbd> — ポンプをオン/オフします。</li>
+      <li ><kbd>Prime</kbd> — 自動プライミングサイクルを実行します。</li>
+    </ul>
+    <h3 >ステータスインジケーター</h3>
+    <ul>
+      <li ><b>Wi‑Fi</b>：ネットワーク接続時はdBm単位の信号強度、またはデバイスがアクセスポイントとして動作している場合は<b>AP</b>（緑）とアクセスポイント名。</li>
+      <li ><b>NTPドット</b>：時計が同期している場合は緑。</li>
+      <li ><b>HEAPドット</b>：空きメモリの状態。</li>
+      <li ><b>稼働時間</b>：デバイスが動作している時間。</li>
+    </ul>
+    <h3 >メッセージとイベント</h3>
+    <p ><b>ステップ履歴</b>とLCDには、<em>Brew STARTED</em>、目標到達、ステップ完了、ホップ添加、完了などのイベントが表示されます。アラーム付きの<b>SAFETY</b>イベントは、保護機能が作動したことを意味します。</p>
+    <h3 >サウンド（ブザー）</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th >タイミング</th><th >聞こえる音</th></tr></thead>
+      <tbody>
+        <tr><td >目標温度到達</td><td >長いビープ2回</td></tr>
+        <tr><td >マッシュステップ進行</td><td >短–短–長</td></tr>
+        <tr><td >ボイル開始 / ホップ添加</td><td >短2回 + 長2回</td></tr>
+        <tr><td >ステップロック（操作が必要）</td><td >15秒ごとにビープ2回</td></tr>
+        <tr><td >醸造完了</td><td >長いビープ4回</td></tr>
+        <tr><td >安全装置作動</td><td >アラームパターン</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 id="modes"><span class="num">8.</span> <span >操作モード</span></h2>
+    <ul>
+      <li ><b>マッシュ</b> — マッシュステップを実行。各ステップで目標まで加熱し、タイマーを実行し、次に進みます。最後のステップ後、自動的にボイルに移行します。</li>
+      <li ><b>ボイル</b> — ボイル温度まで加熱し、タイマーを実行し、タイマー添加を発動します。単独で開始することもできます。</li>
+      <li ><b>ポストボイル</b> — 加熱はオフ。冷却を監視し、温度ベースの添加をトリガーし、最終冷却ステップを実行します。</li>
+      <li ><b>手動</b> — ヒーター出力を直接設定します（オープンループ）。目標は参考値のみ。復旧用に保存されません。</li>
+      <li ><b>Delay（スケジュール開始）</b> — マッシュまたはボイルを遅延付きで開始。デバイスがカウントダウンし、自動的に開始します。</li>
+    </ul>
+    <h3 >ポンプとプライミング</h3>
+    <ul>
+      <li ><b>ポンプ</b> — 手動でオン/オフ。循環ステップ中は自動制御されます。</li>
+      <li ><b>プライミング</b> — 開始前に配管を満たすための自動サイクル（5 × 3秒オン / 2秒オフ）。</li>
+    </ul>
+
+    <h2 id="standalone"><span class="num">9.</span> <span >スタンドアロン使用 — LCDと物理ボタン</span></h2>
+    <p >Webインターフェースなしで醸造全体を実行できます。</p>
+    <h3 >20×4ディスプレイ</h3>
+    <pre>[w] BrewBOSS 00:14:32         &lt;- Wi-Fiアイコン + タイトル + ステップタイマー
+[H]  65.20&gt;66   [W] 68% [P]   &lt;- メイン: 現在&gt;目標, 出力, PWM, ポンプ
+[S]  74.00&gt;74   100%        M &lt;- スパージ: 現在&gt;目標, PWM, フラグ B/M/L
+Add Citra 30g@15'             &lt;- 最後のイベントメッセージ (またはIP / AP)</pre>
+    <ul>
+      <li >1行目 — Wi‑Fiアイコン + "BrewBOSS"、醸造中はステップタイマー。それ以外はバージョン。</li>
+      <li >2行目 — メイン温度（現在>目標）、単位、ヒーター出力、PWM%、ポンプオンの場合はポンプアイコン。</li>
+      <li >3行目 — スパージ温度とそのPWM%。フラグ：<b>B</b>（ボイル一時停止）、<b>M</b>（マッシュ一時停止）、<b>L</b>（ステップロック）。</li>
+      <li >4行目 — 最後のイベントメッセージ。アイドル時は<code>IP: &lt;アドレス&gt;</code>または<code>AP: 192.168.4.1</code>を表示。</li>
+    </ul>
+    <p >醸造完了後、画面は15秒間お礼を表示し、その後いずれかのボタンを押すまで総醸造時間を表示します。</p>
+
+    <h3 >4つのボタン</h3>
+    <p >4つのメンブレンキーパッドボタンには<b>1–4</b>の番号が付いています。各ボタンは3つの押下時間に反応します：<b>短押し</b>、<b>長押し</b>（約2秒）、<b>超長押し</b>（約3秒）。モード開始後の1.5秒のロックにより、誤停止を防止します。</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th >押下</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+      <tbody>
+        <tr><td><b >短押し</b></td><td >ポンプ オン/オフ</td><td >出力 <b>−10%</b></td><td >出力 <b>+10%</b></td><td >一時停止 / 再開</td></tr>
+        <tr><td><b >長押し</b>（約2秒）</td><td ><b>プライミング</b></td><td ><b>手動</b>開始 / ステップスキップ / ロック解除</td><td ><b>ボイル</b>開始</td><td ><b>マッシュ</b>開始</td></tr>
+        <tr><td><b >超長押し</b>（約3秒）</td><td >—</td><td >停止</td><td >停止</td><td >停止</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li >±10%の出力変更は、現在のモードのアクティブなヒーターに影響します。</li>
+      <li >マッシュ中、<b>ボタン2</b>の長押しで現在のステップをスキップします。ステップが<b>ロック</b>されている場合、同じ長押しでロックを解除して進行します。</li>
+      <li >完了後の「総時間」画面では、いずれかのボタンでホーム画面に戻ります。</li>
+    </ul>
+
+    <h2 id="recovery"><span class="num">10.</span> <span >停電復旧</span></h2>
+    <p >醸造中に停電が発生した場合、再起動時にデバイスは保存された状態を検出し、<b>一時停止に入り</b>、LCDに<b>"復旧しました！再開しますか？"</b>と表示します。</p>
+    <ol>
+      <li ><b>ボタン4（短押し）</b>を押して、中断した場所から再開します。</li>
+      <li >時計が同期されていた場合、残り時間はデバイスがオフだった時間に応じて調整されます。</li>
+    </ol>
+    <div class="callout warn"><b >注意</b><span >手動モードは復旧されません（保存された状態がありません）。</span></div>
+
+    <h2 id="flow"><span class="num">11.</span> <span >主な使用フロー（クイックリファレンス）</span></h2>
+    <ol>
+      <li >電源オン → <code>BrewBOSS</code>に接続 / <code>192.168.4.1</code>を開く → ログイン。</li>
+      <li ><b>レシピ</b> → レシピを有効化。</li>
+      <li ><b>調整</b> → 単位、温度、センサーを確認。</li>
+      <li ><b>ダッシュボード</b> → <kbd>Prime</kbd>（オプション） → <kbd>Start</kbd>。</li>
+      <li >マッシュが実行され進行 → <b>ボイル</b>に移行 → 添加が時間通りに発動。</li>
+      <li ><b>ポストボイル</b> / 冷却 → <b>完了</b>（総時間が表示されます）。</li>
+    </ol>
+
+    <h2 id="best"><span class="num">12.</span> <span >ベストプラクティス</span></h2>
+    <ul>
+      <li >最初の醸造前に、信頼できる温度計に対してセンサー<b>オフセット</b>を校正してください。</li>
+      <li >マッシュ開始前に<b>プライミング</b>を実行し、流量を確認してください。</li>
+      <li >デバイスを<b>信頼できるWi‑Fi</b>ネットワークに接続してください — 接続はローカルネットワーク上でパスワードを平文で送信します。</li>
+      <li >醸造を<b>レシピ</b>として保存し、温度<b>ログ/CSV</b>を使用して機器に合わせて微調整してください。</li>
+      <li >デバイスの設定完了後、<b>バックアップ</b>（エクスポート）を作成してください。</li>
+      <li >ヒーター周辺を整理してください。アクティブな醸造を完全に放置しないでください。</li>
+    </ul>
+
+    <h2 id="trouble"><span class="num">13.</span> <span >トラブルシューティング</span></h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th >症状</th><th >考えられる原因と対処法</th></tr></thead>
+      <tbody>
+        <tr><td ><code>192.168.4.1</code>を開けない</td><td ><code>BrewBOSS</code>ネットワークに接続していることを確認してください。<code>http://192.168.4.1</code>（<code>http://</code>付き）と入力します。スマートフォンでは「インターネット接続なし」の表示を無視してください。</td></tr>
+        <tr><td >アクセスポイントが不安定</td><td >MIXEDモードで到達不能なWi‑Fiに接続しようとしている間、APが最大60秒間ちらつき、その後APのみにフォールバックして安定します。またはAPのみモードを使用してください。</td></tr>
+        <tr><td >温度が<code>---</code>と表示される</td><td >そのセンサーが検出されないか、切断されています。配線を確認し、<b>調整</b>でセンサーを再割り当てしてください。</td></tr>
+        <tr><td >ヒーターがオンにならない / "SAFETY"イベント</td><td >自動モードでの過温度またはセンサー喪失。冷却する / センサーを修理してください。安全になると加熱が再開されます。</td></tr>
+        <tr><td >変更できない（読み取り専用）</td><td >読み取り専用モードです。「読み取り専用 — タップしてログイン」バッジをタップし、パスワードを入力してください。</td></tr>
+        <tr><td >パスワードを忘れた</td><td >ファイルシステムを再フラッシュしてパスワードを<code>brewboss</code>にリセットします。</td></tr>
+        <tr><td >ログの時刻が間違っている</td><td >時計が同期されていません。<b>システム</b>で<b>NTP</b>サーバーとGMTオフセットを設定してください。</td></tr>
+        <tr><td >停電後に一時停止している</td><td >復旧機能です。<b>ボタン4（短押し）</b>を押す（またはインターフェースを使用する）と再開します。</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 id="firmware"><span class="num">14.</span> <span >ファームウェアとインストール</span></h2>
+    <p >3つの対応コントローラー用ファームウェア（LittleFSは別途提供）。ファイルシステムイメージは<b>LittleFS</b>形式です。</p>
+
+    <h3 >ファイルとオフセット</h3>
+    <p ><b>binaries</b>フォルダの各リリースには、<b>コントローラーごとに2つのファイル</b>が含まれています：<code>BrewBOSS_&lt;version&gt;_&lt;board&gt;.bin</code>は<b>ファームウェア</b>（<b>最初に</b>フラッシュ）、<code>BrewBOSS_&lt;version&gt;_&lt;board&gt;_fs.bin</code>は<b>ファイルシステム</b>（LittleFS — <b>2番目に</b>フラッシュ）。<code>_fs</code>で終わるファイルが常にファイルシステムで、サフィックスがない方がファームウェアです。<code>&lt;board&gt;</code>は<code>esp12e</code>（Wemos D1 Mini / ESP8266）、<code>esp32</code>（ESP32 WROOM-32）、または<code>esp32c3</code>（ESP32-C3 Super Mini）です。</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th >コントローラー</th><th >ファイル</th><th >種類</th><th >オフセット</th><th >サイズ</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2"><b>Wemos</b> ESP8266 (ESP12E)</td><td><code>BrewBOSS_&lt;version&gt;_esp12e.bin</code></td><td>ファームウェア</td><td><code>0x00000000</code></td><td>約440 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></td><td>LittleFS</td><td><code>0x00200000</code></td><td>約2,024 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32</b> esp32dev</td><td><code>BrewBOSS_&lt;version&gt;_esp32.bin</code></td><td>ファームウェア</td><td><code>0x00010000</code></td><td>約1,010 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>約1,408 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c3.bin</code></td><td>ファームウェア</td><td><code>0x00010000</code></td><td>約1,020 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>約1,408 KB</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 >OTAファームウェアとファイルシステムの更新</h3>
+    <p >BrewBOSSはWebインターフェースから直接<b>Over-the-Air (OTA)</b>更新をサポートしています。これにより、日常的な更新にUSBケーブルや<code>esptool</code>が不要になります。最初に<b>ファームウェア</b>ファイル（<code>_fs</code>サフィックスなし）をアップロードし、次に<b>ファイルシステム</b>ファイル（<code>_fs</code>サフィックス）をアップロードします。</p>
+    <ul>
+      <li ><b>仕組み：</b>Webインターフェースで<b>設定 → システム → ファームウェア更新</b>にアクセスします。新しいファームウェアとファイルシステムのバイナリファイルをアップロードします。デバイスがフラッシュへの内部書き込みを処理し、再起動します。</li>
+      <li ><b>利点：</b></li>
+          <li ><b>安全性：</b>ブートローダーに自動フォールバックが含まれており、更新が中断されてもデバイスが機能し続けることを保証します。</li>
+          <li ><b>効率性：</b>手動でのオフセット計算なしで、ファームウェアバージョンとファイルシステム構造間のシームレスな移行。</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 >前提条件</h3>
+    <ul>
+      <li >esptoolをインストール：<code>pip install esptool</code></li>
+      <li >USBでコントローラーを接続し、シリアルポートを見つけます（例：Windowsでは<code>COM5</code>、Linuxでは<code>/dev/ttyUSB0</code>）。</li>
+      <li ><code>.bin</code>ファイルがあるフォルダからコマンドを実行します。</li>
+      <li ><code>COMx</code>を正しいポートに置き換えてください。高速フラッシュには<code>--baud 460800</code>を追加します。</li>
+    </ul>
+
+    <h3 >フラッシュ（更新）</h3>
+    <p >既に設定済みのコントローラーの場合、<b>最初にファームウェア</b>、<b>次にファイルシステム（<code>_fs</code>）</b>をフラッシュします — 2つの別々のステップ（より信頼性が高い）。<code>&lt;version&gt;</code>をダウンロードしたバージョンに置き換えてください：</p>
+    <p><b >Wemos / ESP8266 — ファームウェア</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin</code></pre>
+    <p><b >Wemos / ESP8266 — ファイルシステム</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
+    <p><b >ESP32 (esp32dev) — ファームウェア</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32.bin</code></pre>
+    <p><b >ESP32 (esp32dev) — ファイルシステム</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
+    <p><b >ESP32-C3 — ファームウェア</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+    <p><b >ESP32-C3 — ファイルシステム</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <div class="callout note"><b >ESP8266</b> <span >ファームウェアには既にブートローダー（eboot）が含まれているため、<code>0x0</code>に書き込みます。2つのファイルで十分です。</span></div>
+
+    <h3 >空のチップ / 初回フラッシュ（ESP32 / ESP32-C3）</h3>
+    <p ><b>erase_flash</b>後または新品のチップでは、5つのファイルすべてを正しいオフセットにフラッシュする必要があります。ブートローダー、パーティションテーブル、boot_app0は既にbinariesフォルダに含まれています。</p>
+
+    <div class="callout warn"><b >ESP32-C3 Super Mini - BOOTボタン</b><span ><b>初回フラッシュ</b>（ブートローダーを<code>0x0</code>に）では、コマンド実行中にボード上の<b>BOOTボタンを押し続ける</b>必要があります。フラッシュ開始後に離してください。以降のフラッシュはボタンなしで実行されます。</span></div>
+
+    <p><b >1. ブートローダー</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x0000 BrewBOSS_&lt;version&gt;_esp32c3_bootloader.bin</code></pre>
+
+    <p><b >2. パーティションテーブル</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x8000 BrewBOSS_&lt;version&gt;_esp32c3_partitions.bin</code></pre>
+
+    <p><b >3. ブートアプリ</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0xe000 BrewBOSS_&lt;version&gt;_esp32c3_boot_app0.bin</code></pre>
+
+    <p><b >4. ファームウェア</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+
+    <p><b >5. ファイルシステム</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <h3 >ファームウェアのみの更新（ブートローダーはそのまま）</h3>
+    <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+
+    <h3 >ファイルシステムのみの更新</h3>
+    <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <div class="callout warn"><b >最初にすべて消去（オプション）</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>。これによりLittleFSに保存されたWiFi/レシピ設定も消去されます。</span></div>
+
+    <h3 >注意事項</h3>
+    <ul>
+      <li >オフセットは現在のパーティションテーブル（4 MBフラッシュ）に対して有効です。テーブルが変更されると、オフセットも変わります。</li>
+      <li >イメージは<b>LittleFS</b>（SPIFFSではない）です — ファームウェアはファイルシステムをLittleFSとしてマウントします。</li>
+      <li >フラッシュ後、コントローラーはWebサーバーを起動します。ネットワークIPまたはAP経由でアクセスします。</li>
+      <li >ネイティブUSB搭載のESP32-C3：ポートはEspressifシリアルデバイス（VID <code>303A</code>）として表示されます。フラッシュ用のリセット/ブートは自動です。</li>
+    </ul>
+
+    <h2 id="pinout"><span class="num">15.</span> <span >ピン配置リファレンス</span></h2>
+    <p >以下のピン割り当ては、各対応コントローラーの標準BrewBOSS設定です。コミュニティが<b>専用PCB</b>を設計することを期待して公開されています — 特に、クラシックなESP8266よりも<b>より多くのメモリ、高速処理、追加I/Oポート</b>を提供する<b>ESP32-C3 Super Mini</b>やその他のESP32ベースのボード向けです。専用に設計されたボードは、配線をより安全にし、組み立てをより速くし、システム全体をより信頼性の高いものにします。作成した場合は、コミュニティと共有してください。</p>
+
+    <h3>ESP32-C3 Super Mini</h3>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:8px;">4番から8番ピンのGPIOは降順（GPIO4 &#8594; GPIO0）。</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>ピン</th><th>ボード</th><th>機能</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>5V</td><td>電源</td></tr>
+        <tr><td>02</td><td>GND</td><td>グランド</td></tr>
+        <tr><td>03</td><td>3V3</td><td>ロジック電源</td></tr>
+        <tr><td>04</td><td>GPIO4</td><td>ブザー</td></tr>
+        <tr><td>05</td><td>GPIO3</td><td>キーパッド / BTN4 / START</td></tr>
+        <tr><td>06</td><td>GPIO2</td><td>キーパッド / BTN3 / BOIL</td></tr>
+        <tr><td>07</td><td>GPIO1</td><td>キーパッド / BTN2 / MANUAL</td></tr>
+        <tr><td>08</td><td>GPIO0</td><td>キーパッド / BTN1 / PUMP</td></tr>
+        <tr><td>09</td><td>GPIO5</td><td>マッシュヒーター</td></tr>
+        <tr><td>10</td><td>GPIO6</td><td>スパージヒーター</td></tr>
+        <tr><td>11</td><td>GPIO7</td><td>ボイルヒーター</td></tr>
+        <tr><td>12</td><td>GPIO8</td><td>LCD / SDA</td></tr>
+        <tr><td>13</td><td>GPIO9</td><td>LCD / SCL</td></tr>
+        <tr><td>14</td><td>GPIO10</td><td>ポンプ（アクティブロー）</td></tr>
+        <tr><td>15</td><td>GPIO20</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>16</td><td>GPIO21</td><td>使用可能</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b >C3注意事項</b><span >キーパッドはGPIOから直接読み取り（PCF8574なし）。BTN1=GPIO0、BTN2=GPIO1、BTN3=GPIO2、BTN4=GPIO3。ポンプはアクティブロー（<code>INVERT_PUMP=true</code>）：HIGH = オフ、LOW = オン。LCD 20×4はアドレス<code>0x27</code>。WiFi SoftAPはチャンネル1に強制、TX出力8.5 dBm。</span></div>
+
+    <h3>ESP8266 (Wemos D1 Mini)</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>ピン</th><th>ボード</th><th>機能</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>RST</td><td>リセット</td></tr>
+        <tr><td>02</td><td>A0 (ADC0)</td><td>アナログ入力（使用可能）</td></tr>
+        <tr><td>03</td><td>D0 / GPIO16</td><td>ブザー</td></tr>
+        <tr><td>04</td><td>D5 / GPIO14</td><td>ポンプ</td></tr>
+        <tr><td>05</td><td>D6 / GPIO12</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>06</td><td>D7 / GPIO13</td><td>スパージヒーター</td></tr>
+        <tr><td>07</td><td>D8 / GPIO15</td><td>マッシュヒーター</td></tr>
+        <tr><td>08</td><td>3V3</td><td>ロジック電源</td></tr>
+        <tr><td>09</td><td>TX / GPIO1</td><td>シリアルTX（デバッグ）</td></tr>
+        <tr><td>10</td><td>RX / GPIO3</td><td>シリアルRX（デバッグ）</td></tr>
+        <tr><td>11</td><td>D1 / GPIO5</td><td>I2C SCL（LCD + PCF8574キーパッド）</td></tr>
+        <tr><td>12</td><td>D2 / GPIO4</td><td>I2C SDA（LCD + PCF8574キーパッド）</td></tr>
+        <tr><td>13</td><td>D3 / GPIO0</td><td>フラッシュボタン（ブートストラップ）</td></tr>
+        <tr><td>14</td><td>D4 / GPIO2</td><td>ボイルヒーター（内蔵LED）</td></tr>
+        <tr><td>15</td><td>GND</td><td>グランド</td></tr>
+        <tr><td>16</td><td>5V</td><td>電源</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b >ESP8266注意事項</b><span >PCF8574（I2Cキーパッドエクスパンダー）は<code>0x38</code> — キーパッドはI2C経由でポーリング、INTピン未使用。LCD 20×4は<code>0x27</code>（代替：<code>0x3F</code>、<code>0x20</code>、<code>0x3E</code>）。GPIO15（D8 / ピン7）は外部プルダウンが必要（ブートストラップ）。GPIO2（D4 / ピン14）は内部プルアップと内蔵LED — ボイルヒーター作動時に点灯。GPIO16（D0 / ピン3）は<b>PWM非対応</b>。GPIO0（D3 / ピン13）はブートストラップピン：電源投入時にLOWでフラッシュモードに入ります。起動前安全機構はGPIO 0,2,4,5,12,13,14,15,16をINPUT（高インピーダンス）に設定。</span></div>
+
+    <h3 >I2Cアドレス（両コントローラー）</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th >デバイス</th><th >デフォルトアドレス</th><th >代替</th></tr></thead>
+      <tbody>
+        <tr><td>LCD 20&#215;4</td><td><code>0x27</code></td><td><code>0x3F</code>, <code>0x20</code>, <code>0x3E</code></td></tr>
+        <tr><td>PCF8574キーパッド</td><td><code>0x38</code></td><td><code>0x20</code>（ESP8266のみ）</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="notes"><span class="num">16.</span> <span >最終注意事項</span></h2>
+    <ul>
+      <li >BrewBOSSは実際のヒーターと高温の液体を制御します。安全な電気および醸造の慣行に常に従ってください。</li>
+      <li >インターフェースはデバイスによってローカルに提供され、オフラインで動作します。読み取りアクセスはオープンで、書き込みアクセスはログインで保護できます。</li>
+      <li ><b>ライセンス：</b>個人/非商用利用のみ。</li>
+    </ul>
+
+    <section id="license">
+      <h2 >ライセンスと利用規約</h2>
+      <div style="font-size:0.72rem;line-height:1.55;color:var(--dim);">
+        <p ><b>BrewBOSSライセンス契約 — バージョン1.0</b><br>Copyright &copy; 2026 LR</p>
+        <p ><b>第1条 使用許諾。</b><b>BrewBOSS</b>と称する本ソフトウェアは、<b>コンパイル済みバイナリ</b>の形式で、<b>個人、私的、非商業的使用</b>に限定して<b>無償</b>で提供されます — ソースコードは提供されません。本条件に従い、お客様は以下を許可されます：個人使用のためのバイナリのダウンロードおよび使用；バックアップのためのバイナリの私的コピーの作成。</p>
+        <p ><b>第2条 禁止事項。</b>事前の書面による許可なく以下を禁止します：販売、再販売または商業化；商業、産業、企業または収益を生む活動での使用；販売用製品への組み込み；商業目的での配布；生産または産業環境での使用；ソースコードの検査、逆コンパイル、リバースエンジニアリング、改変、変更または抽出の試み（コードは提供されていません）；本ライセンス通知の削除。個人的、非商業的範囲外でのいかなる使用も禁止されます。</p>
+        <p ><b>第3条 無保証。</b>本ソフトウェアは「現状のまま」提供され、明示または黙示を問わず、いかなる種類の保証もありません。著作権者および貢献者は、商品性、適合性、非侵害、正確性、信頼性、互換性、継続的な動作、またはソフトウェアがエラーフリーもしくは安全であることについて、いかなる保証も行いません。</p>
+        <p ><b>第4条 安全性および運用リスク。</b>ユーザーは、本ソフトウェアに欠陥が含まれる可能性、動作を停止する可能性、予測不能な動作をする可能性、ハードウェアと安全でない方法で相互作用する可能性があり、安全または重要操作について認定されていないことを認識します。ユーザーはすべてのリスクを負います。</p>
+        <p ><b>第5条 責任の制限。</b>著作権者、作者または貢献者は、直接的、間接的、偶発的、特別、結果的またはその他を問わず、いかなる請求、損失、損害、費用または責任についても、一切の責任を負いません。これには、データの損失、ファイルの破損、機器の誤動作、ハードウェアの損傷、電気的損傷、過熱、火災、人身傷害、利益の損失、事業の中断、生産損失、およびその他あらゆる損害が含まれます。</p>
+        <p ><b>第6条 サポートなし。</b>技術サポート、更新、バグ修正、メンテナンス、セキュリティパッチ、互換性の変更、またはドキュメントの更新を提供する義務はありません。任意のサポートは継続的な義務を生じさせません。</p>
+        <p ><b>第7条 終了。</b>違反があった場合、本ソフトウェアの使用権は自動的に終了します。終了時には、使用を中止し、バイナリのすべてのコピーを削除してください。</p>
+        <p ><b>第8条 同意。</b>BrewBOSSをダウンロード、インストール、アクセスまたは使用することにより、お客様は本ライセンスに拘束されることに同意したものとみなされます。同意しない場合は、本ソフトウェアを使用しないでください。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer><b>BrewBOSS</b> — <span >ユーザー操作マニュアル</span></footer>
+</div>
+
+
+</body>
+</html>

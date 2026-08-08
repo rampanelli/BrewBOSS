@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrewBOSS — User Operation Manual</title>
+<style>
+  :root{
+    --accent:#4318FF; --accent2:#2B3674; --ink:#1f2640; --dim:#5b6480; --muted:#8a93ad;
+    --bg:#f6f8fc; --card:#ffffff; --line:#e3e8f2;
+    --tip-bg:#eafaf3; --tip-bd:#34c79933; --tip-tx:#0a6b4a;
+    --warn-bg:#fff6e9; --warn-bd:#ffcf8a; --warn-tx:#8a5200;
+    --note-bg:#eef3ff; --note-bd:#bcd0ff; --note-tx:#274690;
+    --code:#0b1437;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;font-size:16px;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 16px 64px;}
+  header.site{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+    color:#fff;padding:24px 16px;box-shadow:0 6px 20px rgba(43,54,116,.25);
+    display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  header.site .htext{min-width:0;}
+  header.site .brand{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}
+  header.site h1{margin:0 0 .15em;font-size:26px;line-height:1.2;}
+  header.site h1 b{font-weight:800;}
+  header.site .ver{display:inline-block;margin-left:8px;padding:2px 12px;border-radius:999px;
+    background:rgba(255,255,255,.18);font-size:14px;font-weight:700;vertical-align:middle;white-space:nowrap;}
+  header.site p{margin:.3em 0 0;opacity:.92;max-width:680px;font-size:14px;}
+  .lang{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);
+    border-radius:10px;padding:6px 10px;font-size:14px;font-weight:700;cursor:pointer;flex:none;margin-top:2px;}
+  .lang option{color:#2B3674;background:#fff;}
+  main{margin-top:22px;}
+  h2{font-size:22px;margin:2.2em 0 .6em;padding-bottom:.25em;border-bottom:2px solid var(--line);scroll-margin-top:14px;}
+  h3{font-size:18px;margin:1.6em 0 .4em;color:var(--accent2);scroll-margin-top:14px;}
+  h2 .num,h3 .num{color:var(--accent);font-weight:800;}
+  p{margin:.6em 0;}
+  a{color:var(--accent);}
+  ul,ol{margin:.5em 0 .9em;padding-left:1.4em;}
+  li{margin:.3em 0;}
+  code,kbd{font-family:"Cascadia Code",Consolas,monospace;font-size:.92em;}
+  code{background:#eef1fb;color:var(--accent2);padding:1px 6px;border-radius:5px;}
+  kbd{background:#2b3148;color:#fff;border-radius:6px;padding:2px 8px;font-weight:700;box-shadow:0 2px 0 #1a1f30;}
+  pre{background:var(--code);color:#e6ebff;border-radius:12px;padding:14px 16px;overflow:auto;
+    font-family:"Cascadia Code",Consolas,monospace;font-size:13.5px;line-height:1.6;}
+  pre code{background:none;color:inherit;padding:0;}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:0 4px 16px rgba(0,0,0,.04);}
+  .toc h2{margin:0 0 .4em;border:0;font-size:18px;}
+  .toc ol{columns:2;column-gap:28px;padding-left:1.2em;margin:0;}
+  @media(max-width:640px){.toc ol{columns:1;}}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  figure{margin:1em 0 1.4em;}
+  figure img{display:block;width:100%;max-width:480px;height:auto;margin-left:auto;margin-right:auto;
+    border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 22px rgba(43,54,116,.10);background:#fff;}
+  figcaption{margin-top:.5em;font-size:13.5px;color:var(--muted);text-align:center;}
+  .callout{border:1px solid var(--line);border-left-width:5px;border-radius:10px;padding:12px 16px;margin:1em 0;}
+  .callout b{display:block;margin-bottom:.15em;}
+  .tip{background:var(--tip-bg);border-color:var(--tip-bd);border-left-color:#34c799;color:var(--tip-tx);}
+  .warn{background:var(--warn-bg);border-color:var(--warn-bd);border-left-color:#f0a020;color:var(--warn-tx);}
+  .note{background:var(--note-bg);border-color:var(--note-bd);border-left-color:#4a78ff;color:var(--note-tx);}
+  .tablewrap{overflow-x:auto;margin:1em 0;}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px;}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+  th{background:#eef1fb;color:var(--accent2);font-weight:700;}
+  tbody tr:nth-child(even){background:#fafbff;}
+  .lead{font-size:17px;color:var(--dim);}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center;}
+  footer b{color:var(--dim);}
+  .screen{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 20px 14px;
+    margin:1.2em 0;box-shadow:0 4px 16px rgba(0,0,0,.03);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="site">
+    <div class="htext">
+      <div class="brand" >User Operation Manual</div>
+      <h1>Brew<b>BOSS</b></h1>
+      <p >A brewing automation controller with a web interface and standalone operation by LCD and keypad. This guide explains, step by step, how to operate the system safely.</p>
+    </div>
+    
+  </header>
+
+  <main>
+    <p class="lead" >BrewBOSS automates the mash, boil and post-boil stages of a brew day. You can run it from any phone or computer browser, or stand-alone with the 20×4 LCD and 4 buttons — online or offline.</p>
+
+    <nav class="toc" aria-label="Table of contents">
+      <h2 >Contents</h2>
+      <ol>
+        <li><a href="#overview" >Overview</a></li>
+        <li><a href="#prerequisites" >Prerequisites & installation</a></li>
+        <li><a href="#access" >Accessing the system</a></li>
+        <li><a href="#navigation" >Navigating the interface</a></li>
+        <li><a href="#operation" >Step-by-step operation</a></li>
+        <li><a href="#screens" >The screens, one by one</a></li>
+        <li><a href="#indicators" >Buttons, fields, messages & indicators</a></li>
+        <li><a href="#modes" >Operation modes</a></li>
+        <li><a href="#standalone" >LCD & physical buttons (offline)</a></li>
+        <li><a href="#recovery" >Power-loss recovery</a></li>
+        <li><a href="#flow" >Main usage flow</a></li>
+        <li><a href="#best" >Best practices</a></li>
+        <li><a href="#trouble" >Troubleshooting</a></li>
+        <li><a href="#firmware" >Firmware & installation</a></li>
+        <li><a href="#pinout" >Pinout reference</a></li>
+        <li><a href="#notes" >Final notes</a></li>
+        <li><a href="#license" >License & terms of use</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="overview"><span class="num">1.</span> <span >Overview</span></h2>
+    <p >BrewBOSS is a controller for electric brewing equipment. It manages the heaters, the pump and the timers of a full brew day, and reports temperatures and progress in real time.</p>
+    <p><b >Support</b>: <span >Join the official BrewBOSS community at <a href='https://beerschool.circle.so/c/forum-aberto/brewboss-command-the-brew-own-the-process' target='_blank' rel='noopener'>BeerSchool Forum</a> — share your setup, ask questions and help other brewers.</span></p>
+    <p >You can operate it in three ways, which work together:</p>
+    <ul>
+      <li ><b>Web interface</b> — a single page served by the device; control everything from a browser.</li>
+      <li ><b>LCD & 4 buttons</b> — full stand-alone operation, even with no network.</li>
+      <li ><b>REST API</b> — optional, for integrations and scripts.</li>
+    </ul>
+    <p >What it can do:</p>
+    <ul>
+      <li >Run programmable <b>mash</b> steps, an automatic <b>boil</b> with timed hop additions, and a <b>post-boil</b> stage with temperature-triggered additions and final cooling.</li>
+      <li >Run fully <b>manual</b> (direct power) or by <b>pre-programmed recipes</b>.</li>
+      <li >Manage <b>recipes</b> (create, edit, save, activate, delete) and <b>import</b> recipes — compatible with tools such as BeerSmith / Brewfather, and your own recipes can be exported and imported.</li>
+      <li >Record <b>logs</b>: a temperature CSV (one sample per minute, with events) ready for detailed mash graphs, so you can fine-tune a recipe for your specific equipment.</li>
+      <li ><b>Recover automatically after a power loss</b> and continue the brew where it stopped.</li>
+      <li >Protect the batch with a <b>safety system</b> (over-temperature cut-off and sensor-loss cut-off).</li>
+      <li >Work <b>online or offline</b>; show status on a 20×4 LCD.</li>
+    </ul>
+    <div class="callout note"><b >Hardware compatibility</b><span >It runs on ESP8266 (Wemos), ESP32 and ESP32-C3 boards and is 100% compatible with the wiring used by other projects such as <b>BrewManiac</b> and <b>BrewUNO</b> — just flash it and use.</span></div>
+
+    <h2 id="prerequisites"><span class="num">2.</span> <span >Prerequisites & installation</span></h2>
+    <p >To operate BrewBOSS you need:</p>
+    <ul>
+      <li >A supported controller board (Wemos/ESP8266, ESP32 or ESP32-C3) with the BrewBOSS firmware installed.</li>
+      <li >The brewing hardware wired to it: heater(s) via SSR, a pump, and one or more <b>DS18B20</b> temperature sensors. An optional 20×4 I²C LCD and 4 buttons enable stand-alone use.</li>
+      <li >A phone, tablet or computer with a web browser.</li>
+      <li >Optionally, your home Wi-Fi network (otherwise the device runs its own access point).</li>
+    </ul>
+    <h3 >Installing the firmware (flashing)</h3>
+    <p >If the board is not flashed yet, write the firmware and filesystem with <code>esptool</code>:</p>
+    <ol>
+      <li >Download the two <code>.bin</code> files for your board from the <b>binaries</b> folder: the <b>firmware</b> (no <code>_fs</code> suffix — flash it <b>first</b>) and the <b>filesystem</b> (<code>_fs</code> suffix — flash it <b>second</b>).</li>
+      <li >Flash them at the correct offsets — for the Wemos/ESP8266, for example (replace <code>&lt;version&gt;</code> with the downloaded version):</li>
+    </ol>
+    <pre><code>esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin
+esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
+    <div class="callout tip"><b >Full flashing guide</b><span >Binaries, exact offsets and the commands for ESP32 / ESP32-C3 are in the project <b>help</b> page. The ESP8266 firmware already includes its bootloader, so it is written at <code>0x0</code>.</span></div>
+
+    <h2 id="access"><span class="num">3.</span> <span >Accessing the system</span></h2>
+    <ol>
+      <li ><b>Power on</b> the controller. On boot it starts the filesystem, Wi‑Fi, sensors, LCD and keypad.</li>
+      <li ><b>Connect to its access point.</b> By default the device creates a Wi‑Fi network named <code>BrewBOSS</code> (password <code>brewboss</code>), with IP <code>192.168.4.1</code>.</li>
+      <li >Join that network with your phone/PC and open <code>http://192.168.4.1</code> in the browser.</li>
+      <li >If <b>login is enabled</b> (Setup → System → Security), a <b>login window</b> appears. Otherwise the interface opens with full access.</li>
+    </ol>
+    <h3 >Login & access levels</h3>
+    <p >Access protection is optional and <b>disabled by default</b> (no login). To enable it, go to <b>Setup → System → Security</b>, turn the switch ON, set a password and save. When enabled, the default password is <code>brewboss</code>.</p>
+    <ul>
+      <li ><b>Enter the correct password → LOGIN</b>: full access. The session lasts until the device restarts.</li>
+      <li ><b>IGNORE</b>: read-only access — you can see everything but cannot make changes.</li>
+      <li ><b>Wrong password</b>: it asks again, up to <b>10 attempts</b>, then falls back to read-only.</li>
+    </ul>
+    <p >You change or remove the password in <b>Setup → System → Security</b>. An <b>empty password disables</b> the login entirely.</p>
+    <div class="callout note"><b >Forgot the password?</b><span >Re‑flashing the filesystem resets it back to <code>brewboss</code>.</span></div>
+    <h3 >Switching to your Wi‑Fi</h3>
+    <p >To put the controller on your home network, open <b>Setup → System → WiFi</b>, choose the mode and enter your SSID/password, then <b>Save & Reboot</b>.</p>
+    <div class="callout warn"><b >Wi‑Fi modes</b><span ><b>AP</b> = the device is its own network (offline use). <b>STATION</b> = it joins your router only. <b>MIXED</b> = both at the same time. In STATION mode, if it cannot connect within 60 s it falls back to the access point.</span></div>
+
+    <h2 id="navigation"><span class="num">4.</span> <span >Navigating the interface</span></h2>
+    <p >The interface has a <b>side menu</b> on the left and a <b>status bar</b> at the top.</p>
+    <p ><b>Side menu</b> — the main destinations:</p>
+    <ul>
+      <li ><b>Dashboard</b> — the main screen with live temperatures, the timer and the control buttons.</li>
+      <li ><b>Recipes</b> — your recipe library and the mash/boil step editors.</li>
+      <li ><b>Setup</b> — Settings, System (network, security, time, backup) and About.</li>
+      <li ><b>Mode</b> — switches the color theme of the interface.</li>
+      <li ><b>About</b> — version and hardware information.</li>
+    </ul>
+    <p >Tap the status bar to collapse/expand the menu (useful on phones).</p>
+    <p ><b>Status bar</b> — the <b>Wi‑Fi</b> indicator, the <b>NTP</b> (clock) dot, the <b>HEAP</b> (free memory) dot, and the device <b>UPTIME</b>.</p>
+    <figure><img src="images/4.1_menu.jpeg" alt="BrewBOSS side navigation menu"><figcaption >Side navigation menu — your starting point for every screen.</figcaption></figure>
+
+    <h2 id="operation"><span class="num">5.</span> <span >Step‑by‑step operation</span></h2>
+    <p >This is the typical flow of a brew day with a recipe:</p>
+    <ol>
+      <li ><b>Prepare.</b> Fill the kettle, place the sensors, and connect to the interface.</li>
+      <li ><b>Choose a recipe.</b> Open <b>Recipes</b>, pick one and <b>Activate</b> it.</li>
+      <li ><b>Check the settings.</b> In <b>Setup → Settings</b>, confirm temperature unit, boil temperature/time and sensors.</li>
+      <li ><b>Start the mash.</b> On the <b>Dashboard</b> press <kbd>Start</kbd>. The system heats to the first step's target, then runs its timer.</li>
+      <li ><b>Follow along.</b> Watch the gauges and the <b>Steps history</b>. When a locked step beeps, release it.</li>
+      <li ><b>Boil.</b> After the last mash step the system moves to the boil automatically. It heats to boiling, runs the timer and fires each hop addition on time.</li>
+      <li ><b>Post‑boil & cooling.</b> With heating off, it monitors cooling and triggers temperature‑based additions, then the final cooling step.</li>
+      <li ><b>Finish.</b> The buzzer signals the end and the screen shows the total brew time.</li>
+    </ol>
+    <div class="callout tip"><b >Scheduled start (Delay)</b><span >You can schedule the mash or boil to begin later. The LCD shows a countdown and the process starts on its own when it reaches zero.</span></div>
+
+    <h2 id="screens"><span class="num">6.</span> <span >The screens, one by one</span></h2>
+    <p >Each section below tells you the screen name, what it shows, what it is for, and how to act on it.</p>
+
+    <div class="screen">
+      <h3 id="screen-main"><span >6.1</span> — <span >Dashboard (Main)</span></h3>
+      <p ><b>What it shows.</b> The home screen with three round gauges and a timer card: main temperature, sparge temperature, power (PWM), and the brew timer with the current step name.</p>
+      <p ><b>What it is for.</b> This is where you start, monitor and stop a brew, and read the live state.</p>
+      <p ><b>How to act.</b> Use the control buttons below the gauges. During manual mode you can tap a gauge to set the target temperature or power.</p>
+      <figure><img src="images/1.0_main.jpeg" alt="Dashboard"><figcaption >Dashboard — gauges, timer and control buttons.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-step"><span >6.2</span> — <span >Step & steps history</span></h3>
+      <p ><b>What it shows.</b> The current step/timer and a running list of every milestone of the process.</p>
+      <p ><b>What it is for.</b> To follow exactly where the brew is and what just happened.</p>
+      <p ><b>How to act.</b> Read it to keep track. Event types are color-coded.</p>
+      <figure><img src="images/1.1_step.jpeg" alt="Steps history"><figcaption >Step view and steps history — the timeline of your brew.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-recipes"><span >6.3</span> — <span >Recipes</span></h3>
+      <p ><b>What it shows.</b> Your recipe library, with a search box and sorting, plus an <b>Import</b> button.</p>
+      <p ><b>What it is for.</b> To create, store and reuse recipes.</p>
+      <p ><b>How to act.</b> <b>Activate</b> a recipe to load it for brewing. <b>Import</b> recipes you saved elsewhere; <b>save/edit</b> your own; <b>delete</b> the ones you no longer need.</p>
+      <figure><img src="images/2.0_recipes.jpeg" alt="Recipes"><figcaption >Recipes — activate, import, edit and manage your recipes.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-mash"><span >6.4</span> — <span >Mash steps editor</span></h3>
+      <p ><b>What it shows.</b> The list of mash steps with name, target temperature, duration and per‑step flags.</p>
+      <p ><b>What it is for.</b> To define the mash profile.</p>
+      <p ><b>How to act.</b> Add, edit and reorder steps; set temperature and time; and set the flags: <b>Recirculate</b> (run pump), <b>Heater on</b>, <b>Full power</b>, <b>Step-lock</b> (pause for manual action).</p>
+      <figure><img src="images/2.1_mash.jpeg" alt="Mash editor"><figcaption >Mash editor — build your mash profile, step by step.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-boil"><span >6.5</span> — <span >Boil steps & additions editor</span></h3>
+      <p ><b>What it shows.</b> The boil program and the additions.</p>
+      <p ><b>What it is for.</b> To schedule hop additions during and after the boil.</p>
+      <p ><b>How to act.</b> Add additions and choose how each one is triggered: <b>timed addition</b> (during the boil), <b>post‑boil addition</b> (by temperature), or <b>final cooling</b>.</p>
+      <figure><img src="images/2.2_boil.jpeg" alt="Boil editor"><figcaption >Boil editor — timed and temperature‑triggered additions.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-settings"><span >6.6</span> — <span >Settings</span></h3>
+      <p ><b>What it shows.</b> The brew parameters that apply to every batch: unit, delay, power percentages, boil temperature/time, sparge, PID band, pump timing, sensor assignments and checkboxes.</p>
+      <p ><b>What it is for.</b> To match the controller to your equipment.</p>
+      <p ><b>How to act.</b> Set the values and press <b>Save</b>. Use the sensor <b>offsets</b> to calibrate readings against a reference thermometer.</p>
+      <figure><img src="images/3.0_settings.jpeg" alt="Settings"><figcaption >Settings — tune the controller to your equipment.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-system"><span >6.7</span> — <span >System (network, security, time, backup)</span></h3>
+      <p ><b>What it shows.</b> The device configuration panels.</p>
+      <p ><b>What it is for.</b> Network, login, clock and backup.</p>
+      <p ><b>How to act.</b> Set <b>Wi‑Fi</b> mode and credentials, <b>Security</b> (login on/off and password), <b>NTP</b> server and GMT offset, and <b>Backup</b> (export/import your config).</p>
+      <figure><img src="images/3.1_system.jpeg" alt="System"><figcaption >System — Wi‑Fi, security, time and backup.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-about"><span >6.8</span> — <span >About</span></h3>
+      <p ><b>What it shows.</b> The firmware version, hardware, network status, time/NTP and system info.</p>
+      <p ><b>What it is for.</b> A health check and the information to include when asking for help.</p>
+      <p ><b>How to act.</b> Read‑only — use it to verify everything is working.</p>
+      <figure><img src="images/3.2_about.jpeg" alt="About"><figcaption >About — version, hardware and system status.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-themes"><span >6.9</span> — <span >Color themes (Mode)</span></h3>
+      <p ><b>What it shows.</b> The interface in its different color schemes.</p>
+      <p ><b>What it is for.</b> Comfort and readability — for example a dark theme for a dim brew room.</p>
+      <p ><b>How to act.</b> Tap <b>Mode</b> in the side menu to cycle through the available color schemes.</p>
+      <figure><img src="images/4.0_themes.jpeg" alt="Themes"><figcaption >Color themes — switch with the Mode button.</figcaption></figure>
+    </div>
+
+    <h2 id="indicators"><span class="num">7.</span> <span >Buttons, fields, messages & indicators</span></h2>
+    <h3 >Control buttons (Dashboard)</h3>
+    <ul>
+      <li ><kbd>Start</kbd> — begins the mash.</li>
+      <li ><kbd>Pause</kbd> / <kbd>Resume</kbd> — pauses and resumes.</li>
+      <li ><kbd>Stop</kbd> — stops everything.</li>
+      <li ><kbd>Skip</kbd> — skips the current mash step.</li>
+      <li ><kbd>Boil</kbd> — starts the boil directly.</li>
+      <li ><kbd>Pump</kbd> — turns the pump on/off.</li>
+      <li ><kbd>Prime</kbd> — runs an automatic priming cycle.</li>
+    </ul>
+    <h3 >Status indicators</h3>
+    <ul>
+      <li ><b>Wi‑Fi</b>: signal strength in dBm when joined to a network, or <b>AP</b> (green) plus the access‑point name when the device is running as an access point.</li>
+      <li ><b>NTP dot</b>: green when the clock is synchronized.</li>
+      <li ><b>HEAP dot</b>: free memory health.</li>
+      <li ><b>UPTIME</b>: how long the device has been running.</li>
+    </ul>
+    <h3 >Messages & events</h3>
+    <p >The <b>Steps history</b> and the LCD show events such as <em>Brew STARTED</em>, target reached, step done, hop addition, and completion. A <b>SAFETY</b> event with an alarm means a protection was triggered.</p>
+    <h3 >Sounds (buzzer)</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th >When</th><th >You hear</th></tr></thead>
+      <tbody>
+        <tr><td >Target temperature reached</td><td >Two long beeps</td></tr>
+        <tr><td >Mash step advances</td><td >Short–short–long</td></tr>
+        <tr><td >Boil starts / hop addition</td><td >Two short + two long</td></tr>
+        <tr><td >Step locked (needs your action)</td><td >Two beeps every 15 s</td></tr>
+        <tr><td >Brew complete</td><td >Four long beeps</td></tr>
+        <tr><td >Safety triggered</td><td >Alarm pattern</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 id="modes"><span class="num">8.</span> <span >Operation modes</span></h2>
+    <ul>
+      <li ><b>Mash</b> — runs your mash steps; for each step it heats to the target, runs the timer, then advances. After the last step it moves to the boil automatically.</li>
+      <li ><b>Boil</b> — heats to the boil temperature, runs the timer and fires the timed additions. You can start it on its own.</li>
+      <li ><b>Post‑boil</b> — heating is off; it monitors cooling and triggers temperature‑based additions, then the final cooling step.</li>
+      <li ><b>Manual</b> — you set the heater power directly (open loop). The target is informational only. Not saved for recovery.</li>
+      <li ><b>Delay (scheduled start)</b> — start the mash or boil with a delay; the device counts down and begins on its own.</li>
+    </ul>
+    <h3 >Pump & prime</h3>
+    <ul>
+      <li ><b>Pump</b> — switch it on/off manually; during a recirculation step it is controlled automatically.</li>
+      <li ><b>Prime</b> — an automatic cycle (5 × 3 s on / 2 s off) to fill the plumbing before you start.</li>
+    </ul>
+
+    <h2 id="standalone"><span class="num">9.</span> <span >Standalone use — LCD & physical buttons</span></h2>
+    <p >You can run a whole brew without the web interface.</p>
+    <h3 >The 20×4 display</h3>
+    <pre>[w] BrewBOSS 00:14:32         &lt;- Wi-Fi icon + title + step timer
+[H]  65.20&gt;66   [W] 68% [P]   &lt;- Main: current&gt;target, power, PWM, pump
+[S]  74.00&gt;74   100%        M &lt;- Sparge: current&gt;target, PWM, B/M/L flag
+Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
+    <ul>
+      <li >Line 1 — Wi‑Fi icon + "BrewBOSS" with the step timer while brewing; otherwise the version.</li>
+      <li >Line 2 — main temperature (current>target), unit, heater power, PWM% and a pump icon when on.</li>
+      <li >Line 3 — sparge temperature and its PWM%; a flag: <b>B</b> (boil paused), <b>M</b> (mash paused) or <b>L</b> (step locked).</li>
+      <li >Line 4 — the last event message; when idle, it shows <code>IP: &lt;address&gt;</code> or <code>AP: 192.168.4.1</code>.</li>
+    </ul>
+    <p >After a brew completes, the screen shows a thank-you for 15 s and then the total brew time until you press any button.</p>
+
+    <h3 >The 4 buttons</h3>
+    <p >The four membrane-keypad buttons are numbered <b>1–4</b>. Each one reacts to three press lengths: <b>short</b>, <b>long</b> (~2 s) and <b>very long</b> (~3 s). A 1.5 s lock after starting a mode avoids an accidental stop.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th >Press</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+      <tbody>
+        <tr><td><b >Short</b></td><td >Pump on/off</td><td >Power <b>−10%</b></td><td >Power <b>+10%</b></td><td >Pause / Resume</td></tr>
+        <tr><td><b >Long</b> (~2 s)</td><td ><b>Prime</b></td><td >Start <b>manual</b> / skip step / unlock</td><td >Start <b>boil</b></td><td >Start <b>mash</b></td></tr>
+        <tr><td><b >Very long</b> (~3 s)</td><td >—</td><td >Stop</td><td >Stop</td><td >Stop</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li >The ±10% power change affects the active heater for the current mode.</li>
+      <li >In the mash, a long press on <b>button 2</b> skips the current step; if the step is <b>locked</b>, the same long press unlocks and advances it.</li>
+      <li >On the "total time" screen after completion, any button returns to the home screen.</li>
+    </ul>
+
+    <h2 id="recovery"><span class="num">10.</span> <span >Power‑loss recovery</span></h2>
+    <p >If power is lost during a brew, on restart the device detects the saved state, <b>enters PAUSE</b> and shows <b>"RECOVERED! RESUME?"</b> on the LCD.</p>
+    <ol>
+      <li >Press <b>button 4 (short)</b> to resume from where it stopped.</li>
+      <li >If the clock was synchronized, the remaining time is adjusted for the time the device was off.</li>
+    </ol>
+    <div class="callout warn"><b >Note</b><span >Manual mode is not recovered (it has no saved state).</span></div>
+
+    <h2 id="flow"><span class="num">11.</span> <span >Main usage flow (quick reference)</span></h2>
+    <ol>
+      <li >Power on → connect to <code>BrewBOSS</code> / open <code>192.168.4.1</code> → log in.</li>
+      <li ><b>Recipes</b> → Activate your recipe.</li>
+      <li ><b>Settings</b> → confirm unit, temperatures and sensors.</li>
+      <li ><b>Dashboard</b> → <kbd>Prime</kbd> (optional) → <kbd>Start</kbd>.</li>
+      <li >Mash runs and advances → moves to <b>Boil</b> → additions fire on time.</li>
+      <li ><b>Post‑boil</b> / cooling → <b>Complete</b> (total time shown).</li>
+    </ol>
+
+    <h2 id="best"><span class="num">12.</span> <span >Best practices</span></h2>
+    <ul>
+      <li >Calibrate sensor <b>offsets</b> against a trusted thermometer before your first brew.</li>
+      <li >Run <b>Prime</b> and confirm flow before starting the mash.</li>
+      <li >Keep the device on a <b>trusted Wi‑Fi</b> network — the connection carries the password in clear text on the local network.</li>
+      <li >Save your brews as <b>recipes</b> and use the temperature <b>log/CSV</b> to fine‑tune them for your equipment.</li>
+      <li >Make a <b>Backup</b> (Export) after you finish configuring the device.</li>
+      <li >Keep the area near the heaters clear; never leave an active brew fully unattended.</li>
+    </ul>
+
+    <h2 id="trouble"><span class="num">13.</span> <span >Troubleshooting</span></h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th >Symptom</th><th >Likely cause & what to do</th></tr></thead>
+      <tbody>
+        <tr><td >Cannot open <code>192.168.4.1</code></td><td >Make sure you are joined to the <code>BrewBOSS</code> network. Type <code>http://192.168.4.1</code> (with <code>http://</code>). On a phone, dismiss any "no internet" prompt.</td></tr>
+        <tr><td >Access point is unstable</td><td >In MIXED mode while the device is trying to reach an unreachable Wi‑Fi, the AP can flicker for up to 60 s, then falls back to AP‑only and becomes stable. Or use AP‑only mode.</td></tr>
+        <tr><td >A temperature shows <code>---</code></td><td >That sensor is not detected or is disconnected. Check the wiring and re‑assign the sensor in <b>Settings</b>.</td></tr>
+        <tr><td >Heaters won't turn on / "SAFETY" event</td><td >Over‑temperature or sensor loss in an automatic mode. Let it cool / fix the sensor; heating resumes when safe.</td></tr>
+        <tr><td >Cannot make changes (read‑only)</td><td >You are in read‑only mode. Tap the "Read‑only — tap to login" badge and enter the password.</td></tr>
+        <tr><td >Forgot the password</td><td >Re‑flash the filesystem to reset the password to <code>brewboss</code>.</td></tr>
+        <tr><td >Wrong time on logs</td><td >The clock is not synced. Set an <b>NTP</b> server and the GMT offset in <b>System</b>.</td></tr>
+        <tr><td >After a power cut it is paused</td><td >That is the recovery feature. Press <b>button 4 (short)</b> (or use the interface) to resume.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 id="firmware"><span class="num">14.</span> <span >Firmware & installation</span></h2>
+    <p >Firmware (LittleFS shipped separately) for the 3 supported controllers. Filesystem images are in <b>LittleFS</b> format.</p>
+
+    <h3 >Files and offsets</h3>
+    <p >Each release in the <b>binaries</b> folder ships <b>two files per controller</b>: <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;.bin</code> is the <b>firmware</b> (flash it <b>first</b>) and <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;_fs.bin</code> is the <b>filesystem</b> (LittleFS — flash it <b>second</b>). The file ending in <code>_fs</code> is always the filesystem; the one without the suffix is the firmware. <code>&lt;board&gt;</code> is <code>esp12e</code> (Wemos D1 Mini / ESP8266), <code>esp32</code> (ESP32 WROOM-32) or <code>esp32c3</code> (ESP32-C3 Super Mini).</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th >Controller</th><th >File</th><th >Type</th><th >Offset</th><th >Size</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2"><b>Wemos</b> ESP8266 (ESP12E)</td><td><code>BrewBOSS_&lt;version&gt;_esp12e.bin</code></td><td>Firmware</td><td><code>0x00000000</code></td><td>~440 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></td><td>LittleFS</td><td><code>0x00200000</code></td><td>~2,024 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32</b> esp32dev</td><td><code>BrewBOSS_&lt;version&gt;_esp32.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>~1,010 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c3.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>~1,020 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 >OTA Firmware & Filesystem Updates</h3>
+    <p >BrewBOSS supports <b>Over-the-Air (OTA)</b> updates directly via the web interface. This eliminates the need for USB cables and <code>esptool</code> for day-to-day updates. Upload the <b>firmware</b> file first (no <code>_fs</code> suffix), then the <b>filesystem</b> file (<code>_fs</code> suffix) second.</p>
+    <ul>
+      <li ><b>How it works:</b> Access <b>Setup → System → Firmware Update</b> in the web interface. Upload the new firmware and filesystem binary files. The device handles the internal writing to flash and reboots.</li>
+      <li ><b>Advantages:</b></li>
+          <li ><b>Safety:</b> The bootloader includes automatic fallbacks to ensure the device remains functional even if an update is interrupted.</li>
+          <li ><b>Efficiency:</b> Seamless transition between firmware versions and filesystem structures without manual offset calculation.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 >Prerequisites</h3>
+    <ul>
+      <li >Install esptool: <code>pip install esptool</code></li>
+      <li >Connect the controller via USB and find its serial port (e.g. <code>COM5</code> on Windows, <code>/dev/ttyUSB0</code> on Linux).</li>
+      <li >Run the commands from the folder where the <code>.bin</code> files are.</li>
+      <li >Replace <code>COMx</code> with the correct port. Add <code>--baud 460800</code> for faster flashing.</li>
+    </ul>
+
+    <h3 >Flashing (update)</h3>
+    <p >For an already-provisioned controller, flash the <b>firmware first</b>, then the <b>filesystem (<code>_fs</code>) second</b> — two separate steps (more reliable). Replace <code>&lt;version&gt;</code> with the downloaded version:</p>
+    <p><b >Wemos / ESP8266 — firmware</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin</code></pre>
+    <p><b >Wemos / ESP8266 — filesystem</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
+    <p><b >ESP32 (esp32dev) — firmware</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32.bin</code></pre>
+    <p><b >ESP32 (esp32dev) — filesystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
+    <p><b >ESP32-C3 — firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+    <p><b >ESP32-C3 — filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <div class="callout note"><b >ESP8266</b> <span >the firmware already includes the bootloader (eboot), so it is written at <code>0x0</code>. The 2 files are enough.</span></div>
+
+    <h3 >Blank chip / First flash (ESP32 / ESP32-C3)</h3>
+    <p >After an <b>erase_flash</b> or on a brand-new chip, you must flash all 5 files at the correct offsets. The bootloader, partition table and boot_app0 are already included in the binaries folder.</p>
+
+    <div class="callout warn"><b >ESP32-C3 Super Mini - BOOT button</b><span >For the <b>first flash</b> (bootloader at <code>0x0</code>), you must <b>hold the BOOT button</b> on the board while running the command. Release it after the flash starts. The remaining flashes run without the button.</span></div>
+
+    <p><b >1. Bootloader</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x0000 BrewBOSS_&lt;version&gt;_esp32c3_bootloader.bin</code></pre>
+
+    <p><b >2. Partition table</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x8000 BrewBOSS_&lt;version&gt;_esp32c3_partitions.bin</code></pre>
+
+    <p><b >3. Boot app</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0xe000 BrewBOSS_&lt;version&gt;_esp32c3_boot_app0.bin</code></pre>
+
+    <p><b >4. Firmware</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+
+    <p><b >5. Filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <h3 >Firmware update only (bootloader intact)</h3>
+    <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+
+    <h3 >Filesystem update only</h3>
+    <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <div class="callout warn"><b >Erase everything first (optional)</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. This also wipes the WiFi/recipes config stored in LittleFS.</span></div>
+
+    <h3 >Notes</h3>
+    <ul>
+      <li >Offsets are valid for the current partition table (4 MB flash). If the table changes, the offsets change.</li>
+      <li >Images are <b>LittleFS</b> (not SPIFFS) — the firmware mounts the filesystem as LittleFS.</li>
+      <li >After flashing, the controller starts the web server; access it via the network IP or the AP.</li>
+      <li >ESP32-C3 with native USB: the port appears as an Espressif serial device (VID <code>303A</code>); reset/boot for flashing is automatic.</li>
+    </ul>
+
+    <h2 id="pinout"><span class="num">15.</span> <span >Pinout Reference</span></h2>
+    <p >The pin mappings below are the standard BrewBOSS configuration for each supported controller. They are published in the hope that the community will design <b>dedicated PCBs</b> — especially for the <b>ESP32-C3 Super Mini</b> and other ESP32-based boards that offer <b>more memory, faster processing and extra I/O ports</b> than the classic ESP8266. A purpose-built board makes wiring safer, assembly faster, and the whole system more reliable. If you create one, share it with the community.</p>
+
+    <h3>ESP32-C3 Super Mini</h3>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:8px;">GPIOs in descending order on pins 4 through 8 (GPIO4 &#8594; GPIO0).</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Pin</th><th>Board</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>5V</td><td>Power</td></tr>
+        <tr><td>02</td><td>GND</td><td>Ground</td></tr>
+        <tr><td>03</td><td>3V3</td><td>Logic power</td></tr>
+        <tr><td>04</td><td>GPIO4</td><td>BUZZER</td></tr>
+        <tr><td>05</td><td>GPIO3</td><td>KEYPAD / BTN4 / START</td></tr>
+        <tr><td>06</td><td>GPIO2</td><td>KEYPAD / BTN3 / BOIL</td></tr>
+        <tr><td>07</td><td>GPIO1</td><td>KEYPAD / BTN2 / MANUAL</td></tr>
+        <tr><td>08</td><td>GPIO0</td><td>KEYPAD / BTN1 / PUMP</td></tr>
+        <tr><td>09</td><td>GPIO5</td><td>MASH Heater</td></tr>
+        <tr><td>10</td><td>GPIO6</td><td>SPARGE Heater</td></tr>
+        <tr><td>11</td><td>GPIO7</td><td>BOIL Heater</td></tr>
+        <tr><td>12</td><td>GPIO8</td><td>LCD / SDA</td></tr>
+        <tr><td>13</td><td>GPIO9</td><td>LCD / SCL</td></tr>
+        <tr><td>14</td><td>GPIO10</td><td>PUMP (active-low)</td></tr>
+        <tr><td>15</td><td>GPIO20</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>16</td><td>GPIO21</td><td>AVAILABLE</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b >C3 notes</b><span >Keypad read directly from GPIOs (no PCF8574). BTN1=GPIO0, BTN2=GPIO1, BTN3=GPIO2, BTN4=GPIO3. Pump is active-low (<code>INVERT_PUMP=true</code>): HIGH = off, LOW = on. LCD 20×4 at address <code>0x27</code>. WiFi SoftAP forced on channel 1, TX power 8.5 dBm.</span></div>
+
+    <h3>ESP8266 (Wemos D1 Mini)</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Pin</th><th>Board</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>RST</td><td>Reset</td></tr>
+        <tr><td>02</td><td>A0 (ADC0)</td><td>Analog input (available)</td></tr>
+        <tr><td>03</td><td>D0 / GPIO16</td><td>BUZZER</td></tr>
+        <tr><td>04</td><td>D5 / GPIO14</td><td>PUMP</td></tr>
+        <tr><td>05</td><td>D6 / GPIO12</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>06</td><td>D7 / GPIO13</td><td>SPARGE Heater</td></tr>
+        <tr><td>07</td><td>D8 / GPIO15</td><td>MASH Heater</td></tr>
+        <tr><td>08</td><td>3V3</td><td>Logic power</td></tr>
+        <tr><td>09</td><td>TX / GPIO1</td><td>Serial TX (debug)</td></tr>
+        <tr><td>10</td><td>RX / GPIO3</td><td>Serial RX (debug)</td></tr>
+        <tr><td>11</td><td>D1 / GPIO5</td><td>I2C SCL (LCD + PCF8574 keypad)</td></tr>
+        <tr><td>12</td><td>D2 / GPIO4</td><td>I2C SDA (LCD + PCF8574 keypad)</td></tr>
+        <tr><td>13</td><td>D3 / GPIO0</td><td>Flash button (boot strap)</td></tr>
+        <tr><td>14</td><td>D4 / GPIO2</td><td>BOIL Heater (built-in LED)</td></tr>
+        <tr><td>15</td><td>GND</td><td>Ground</td></tr>
+        <tr><td>16</td><td>5V</td><td>Power</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b >ESP8266 notes</b><span >PCF8574 (I2C keypad expander) at <code>0x38</code> — keypad polled via I2C, INT pin unused. LCD 20×4 at <code>0x27</code> (fallback: <code>0x3F</code>, <code>0x20</code>, <code>0x3E</code>). GPIO15 (D8 / pin 7) requires external pull-down (boot strap). GPIO2 (D4 / pin 14) has internal pull-up and built-in LED — lights up with boil heater. GPIO16 (D0 / pin 3) <b>does not support PWM</b>. GPIO0 (D3 / pin 13) is a boot-strap pin: pulled LOW at power-on enters flash mode. Boot pre-safety sets GPIOs 0,2,4,5,12,13,14,15,16 as INPUT (high impedance).</span></div>
+
+    <h3 >I2C Addresses (both controllers)</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th >Device</th><th >Default address</th><th >Fallback</th></tr></thead>
+      <tbody>
+        <tr><td>LCD 20&#215;4</td><td><code>0x27</code></td><td><code>0x3F</code>, <code>0x20</code>, <code>0x3E</code></td></tr>
+        <tr><td>PCF8574 keypad</td><td><code>0x38</code></td><td><code>0x20</code> (ESP8266 only)</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="notes"><span class="num">16.</span> <span >Final notes</span></h2>
+    <ul>
+      <li >BrewBOSS controls real heaters and hot liquids. Always follow safe electrical and brewing practices.</li>
+      <li >The interface is served locally by the device and works offline; read access is open, and write access can be protected with the login.</li>
+      <li ><b>License:</b> personal / non‑commercial use only.</li>
+    </ul>
+
+    <section id="license">
+      <h2 >License & terms of use</h2>
+      <div style="font-size:0.72rem;line-height:1.55;color:var(--dim);">
+        <p ><b>BrewBOSS License Agreement — Version 1.0</b><br>Copyright &copy; 2026 LR</p>
+        <p ><b>1. Grant of Use.</b> This software, named <b>BrewBOSS</b>, is made available <b>free of charge</b> strictly for <b>personal, private, and non‑commercial use only</b>, in the form of <b>compiled binaries</b> — the source code is not made available. Subject to the terms, you are permitted to: download and use the binaries for personal use; make private copies of the binaries for backup.</p>
+        <p ><b>2. Prohibited Uses.</b> Forbidden without prior written permission: selling, reselling or commercializing; using in any commercial, industrial, corporate or revenue‑generating activity; embedding into products for sale; distributing for commercial purposes; using in production or industrial environments; inspecting, decompiling, reverse engineering, modifying, altering or attempting to extract the source code (the code is not made available); removing this license notice. Any use outside personal, non‑commercial use is prohibited.</p>
+        <p ><b>3. No Warranty.</b> PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. The copyright holder and contributors make no warranties of merchantability, fitness, non‑infringement, accuracy, reliability, compatibility, continuous operation, or that the software is error‑free or safe.</p>
+        <p ><b>4. Safety and Operational Risk.</b> The user acknowledges that the software may contain defects, may stop working, may behave unpredictably, may interact with hardware unsafely, and is not certified for safety or critical operations. The user assumes all risks.</p>
+        <p ><b>5. Limitation of Liability.</b> IN NO EVENT SHALL THE COPYRIGHT HOLDER, AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM, LOSS, DAMAGE, COST OR LIABILITY OF ANY KIND, WHETHER DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR OTHERWISE. This includes loss of data, file corruption, equipment malfunction, hardware damage, electrical damage, overheating, fire, personal injury, loss of profits, business interruption, production loss, and any other damages.</p>
+        <p ><b>6. No Support.</b> No obligation to provide technical support, updates, bug fixes, maintenance, security patches, compatibility changes or documentation updates. Any voluntary support does not create a continuing obligation.</p>
+        <p ><b>7. Termination.</b> Any violation automatically terminates your right to use the software. Upon termination, stop using and delete all copies of the binaries.</p>
+        <p ><b>8. Acceptance.</b> By downloading, installing, accessing or using BrewBOSS, you agree to be bound by this license. If you do not agree, do not use the software.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer><b>BrewBOSS</b> — <span >User Operation Manual</span></footer>
+</div>
+
+
+</body>
+</html>

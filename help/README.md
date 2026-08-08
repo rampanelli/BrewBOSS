@@ -2,7 +2,7 @@
 
 *User Operation Manual · Manual de Operação do Usuário*
 
-**Download:** [binaries/](binaries/) · **Interactive help:** [help/](https://rampanelli.github.io/BrewBOSS/help/) · **Support forum:** [BrewBOSS Community](https://beerschool.circle.so/c/forum-aberto/brewboss-command-the-brew-own-the-process)
+**Download:** [binaries/](binaries/) · **Manual:** [index.html](https://rampanelli.github.io/BrewBOSS/) · **Interactive help:** [help/](https://rampanelli.github.io/BrewBOSS/help/) · **Support forum:** [BeerSchool Community](https://beerschool.circle.so/c/forum-aberto/brewboss-command-the-brew-own-the-process)
 
 ---
 

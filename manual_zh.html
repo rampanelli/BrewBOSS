@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrewBOSS — 用户操作手册</title>
+<style>
+  :root{
+    --accent:#4318FF; --accent2:#2B3674; --ink:#1f2640; --dim:#5b6480; --muted:#8a93ad;
+    --bg:#f6f8fc; --card:#ffffff; --line:#e3e8f2;
+    --tip-bg:#eafaf3; --tip-bd:#34c79933; --tip-tx:#0a6b4a;
+    --warn-bg:#fff6e9; --warn-bd:#ffcf8a; --warn-tx:#8a5200;
+    --note-bg:#eef3ff; --note-bd:#bcd0ff; --note-tx:#274690;
+    --code:#0b1437;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;font-size:16px;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 16px 64px;}
+  header.site{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+    color:#fff;padding:24px 16px;box-shadow:0 6px 20px rgba(43,54,116,.25);
+    display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  header.site .htext{min-width:0;}
+  header.site .brand{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}
+  header.site h1{margin:0 0 .15em;font-size:26px;line-height:1.2;}
+  header.site h1 b{font-weight:800;}
+  header.site .ver{display:inline-block;margin-left:8px;padding:2px 12px;border-radius:999px;
+    background:rgba(255,255,255,.18);font-size:14px;font-weight:700;vertical-align:middle;white-space:nowrap;}
+  header.site p{margin:.3em 0 0;opacity:.92;max-width:680px;font-size:14px;}
+  .lang{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);
+    border-radius:10px;padding:6px 10px;font-size:14px;font-weight:700;cursor:pointer;flex:none;margin-top:2px;}
+  .lang option{color:#2B3674;background:#fff;}
+  main{margin-top:22px;}
+  h2{font-size:22px;margin:2.2em 0 .6em;padding-bottom:.25em;border-bottom:2px solid var(--line);scroll-margin-top:14px;}
+  h3{font-size:18px;margin:1.6em 0 .4em;color:var(--accent2);scroll-margin-top:14px;}
+  h2 .num,h3 .num{color:var(--accent);font-weight:800;}
+  p{margin:.6em 0;}
+  a{color:var(--accent);}
+  ul,ol{margin:.5em 0 .9em;padding-left:1.4em;}
+  li{margin:.3em 0;}
+  code,kbd{font-family:"Cascadia Code",Consolas,monospace;font-size:.92em;}
+  code{background:#eef1fb;color:var(--accent2);padding:1px 6px;border-radius:5px;}
+  kbd{background:#2b3148;color:#fff;border-radius:6px;padding:2px 8px;font-weight:700;box-shadow:0 2px 0 #1a1f30;}
+  pre{background:var(--code);color:#e6ebff;border-radius:12px;padding:14px 16px;overflow:auto;
+    font-family:"Cascadia Code",Consolas,monospace;font-size:13.5px;line-height:1.6;}
+  pre code{background:none;color:inherit;padding:0;}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:0 4px 16px rgba(0,0,0,.04);}
+  .toc h2{margin:0 0 .4em;border:0;font-size:18px;}
+  .toc ol{columns:2;column-gap:28px;padding-left:1.2em;margin:0;}
+  @media(max-width:640px){.toc ol{columns:1;}}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  figure{margin:1em 0 1.4em;}
+  figure img{display:block;width:100%;max-width:480px;height:auto;margin-left:auto;margin-right:auto;
+    border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 22px rgba(43,54,116,.10);background:#fff;}
+  figcaption{margin-top:.5em;font-size:13.5px;color:var(--muted);text-align:center;}
+  .callout{border:1px solid var(--line);border-left-width:5px;border-radius:10px;padding:12px 16px;margin:1em 0;}
+  .callout b{display:block;margin-bottom:.15em;}
+  .tip{background:var(--tip-bg);border-color:var(--tip-bd);border-left-color:#34c799;color:var(--tip-tx);}
+  .warn{background:var(--warn-bg);border-color:var(--warn-bd);border-left-color:#f0a020;color:var(--warn-tx);}
+  .note{background:var(--note-bg);border-color:var(--note-bd);border-left-color:#4a78ff;color:var(--note-tx);}
+  .tablewrap{overflow-x:auto;margin:1em 0;}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px;}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+  th{background:#eef1fb;color:var(--accent2);font-weight:700;}
+  tbody tr:nth-child(even){background:#fafbff;}
+  .lead{font-size:17px;color:var(--dim);}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center;}
+  footer b{color:var(--dim);}
+  .screen{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 20px 14px;
+    margin:1.2em 0;box-shadow:0 4px 16px rgba(0,0,0,.03);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="site">
+    <div class="htext">
+      <div class="brand" >用户操作手册</div>
+      <h1>Brew<b>BOSS</b></h1>
+      <p >一款带有Web界面和LCD/键盘独立操作的酿造自动化控制器。本指南逐步说明如何安全地操作该系统。</p>
+    </div>
+    
+  </header>
+
+  <main>
+    <p class="lead" >BrewBOSS可自动完成酿造日中的糖化、煮沸和后煮沸阶段。您可以通过任何手机或电脑浏览器操作，也可以使用20×4 LCD和4个按钮独立操作 — 在线或离线均可。</p>
+
+    <nav class="toc" aria-label="目录">
+      <h2 >目录</h2>
+      <ol>
+        <li><a href="#overview" >概述</a></li>
+        <li><a href="#prerequisites" >前提条件与安装</a></li>
+        <li><a href="#access" >访问系统</a></li>
+        <li><a href="#navigation" >界面导航</a></li>
+        <li><a href="#operation" >逐步操作</a></li>
+        <li><a href="#screens" >各界面逐一说明</a></li>
+        <li><a href="#indicators" >按钮、字段、消息与指示器</a></li>
+        <li><a href="#modes" >操作模式</a></li>
+        <li><a href="#standalone" >LCD与物理按钮（离线）</a></li>
+        <li><a href="#recovery" >断电恢复</a></li>
+        <li><a href="#flow" >主要使用流程</a></li>
+        <li><a href="#best" >最佳实践</a></li>
+        <li><a href="#trouble" >故障排除</a></li>
+        <li><a href="#firmware" >固件与安装</a></li>
+        <li><a href="#pinout" >引脚参考</a></li>
+        <li><a href="#notes" >最终说明</a></li>
+        <li><a href="#license" >许可与使用条款</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="overview"><span class="num">1.</span> <span >概述</span></h2>
+    <p >BrewBOSS是一款电动酿造设备控制器。它管理加热器、泵和整个酿造日的计时器，并实时报告温度和进度。</p>
+    <p><b >支持</b>：<span >加入<a href='https://beerschool.circle.so/c/forum-aberto/brewboss-command-the-brew-own-the-process' target='_blank' rel='noopener'>BeerSchool论坛</a>上的BrewBOSS官方社区 — 分享您的设备、提问并帮助其他酿酒师。</span></p>
+    <p >您可以通过三种方式操作，它们可以协同工作：</p>
+    <ul>
+      <li ><b>Web界面</b> — 设备提供的单页面；从浏览器控制一切。</li>
+      <li ><b>LCD和4个按钮</b> — 完全独立操作，即使没有网络。</li>
+      <li ><b>REST API</b> — 可选，用于集成和脚本。</li>
+    </ul>
+    <p >功能：</p>
+    <ul>
+      <li >运行可编程<b>糖化</b>步骤、带定时酒花添加的自动<b>煮沸</b>，以及带温度触发添加和最终冷却的<b>后煮沸</b>阶段。</li>
+      <li >以完全<b>手动</b>（直接功率）或<b>预编程配方</b>方式运行。</li>
+      <li >管理<b>配方</b>（创建、编辑、保存、激活、删除）和<b>导入</b>配方 — 兼容BeerSmith / Brewfather等工具，您自己的配方也可以导出和导入。</li>
+      <li >记录<b>日志</b>：温度CSV（每分钟一个样本，含事件）可用于详细的糖化图表，为您的特定设备微调配方的。</li>
+      <li ><b>断电后自动恢复</b>，从中断处继续酿造。</li>
+      <li >通过<b>安全系统</b>（过温切断和传感器丢失切断）保护批次。</li>
+      <li ><b>在线或离线</b>工作；在20×4 LCD上显示状态。</li>
+    </ul>
+    <div class="callout note"><b >硬件兼容性</b><span >它运行在ESP8266 (Wemos)、ESP32和ESP32-C3开发板上，与<b>BrewManiac</b>和<b>BrewUNO</b>等其他项目使用的接线100%兼容 — 只需刷写即可使用。</span></div>
+
+    <h2 id="prerequisites"><span class="num">2.</span> <span >前提条件与安装</span></h2>
+    <p >操作BrewBOSS需要：</p>
+    <ul>
+      <li >一块已安装BrewBOSS固件的支持控制器板（Wemos/ESP8266、ESP32或ESP32-C3）。</li>
+      <li >连接的酿造硬件：通过SSR连接的加热器、一个泵，以及一个或多个<b>DS18B20</b>温度传感器。可选的20×4 I²C LCD和4个按钮可实现独立使用。</li>
+      <li >一部带有Web浏览器的手机、平板或电脑。</li>
+      <li >可选的家用Wi‑Fi网络（否则设备会创建自己的接入点）。</li>
+    </ul>
+    <h3 >安装固件（刷写）</h3>
+    <p >如果开发板尚未刷写，请使用<code>esptool</code>写入固件和文件系统：</p>
+    <ol>
+      <li >从<b>binaries</b>文件夹下载适用于您开发板的两个<code>.bin</code>文件：<b>固件</b>（无<code>_fs</code>后缀 — <b>首先</b>刷写）和<b>文件系统</b>（<code>_fs</code>后缀 — <b>然后</b>刷写）。</li>
+      <li >在正确的偏移地址刷写 — 以Wemos/ESP8266为例（将<code>&lt;version&gt;</code>替换为下载的版本）：</li>
+    </ol>
+    <pre><code>esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin
+esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
+    <div class="callout tip"><b >完整刷写指南</b><span >ESP32 / ESP32-C3的二进制文件、精确偏移地址和命令可在项目<b>帮助</b>页面找到。ESP8266固件已包含其引导程序，因此写入地址<code>0x0</code>。</span></div>
+
+    <h2 id="access"><span class="num">3.</span> <span >访问系统</span></h2>
+    <ol>
+      <li ><b>给控制器通电。</b>启动时它会初始化文件系统、Wi‑Fi、传感器、LCD和键盘。</li>
+      <li ><b>连接到它的接入点。</b>默认情况下，设备创建一个名为<code>BrewBOSS</code>的Wi‑Fi网络（密码<code>brewboss</code>），IP为<code>192.168.4.1</code>。</li>
+      <li >用您的手机/PC加入该网络，在浏览器中打开<code>http://192.168.4.1</code>。</li>
+      <li >如果<b>登录已启用</b>（设置 → 系统 → 安全），会弹出<b>登录窗口</b>。否则，界面将以完全访问权限打开。</li>
+    </ol>
+    <h3 >登录与访问级别</h3>
+    <p >访问保护是可选的，<b>默认禁用</b>（无需登录）。要启用它，请前往<b>设置 → 系统 → 安全</b>，打开开关，设置密码并保存。启用后，默认密码为<code>brewboss</code>。</p>
+    <ul>
+      <li ><b>输入正确密码 → 登录</b>：完全访问。会话持续到设备重启。</li>
+      <li ><b>忽略</b>：只读访问 — 您可以查看所有内容但无法进行更改。</li>
+      <li ><b>密码错误</b>：再次询问，最多<b>10次</b>尝试，然后降级为只读。</li>
+    </ul>
+    <p >您可以在<b>设置 → 系统 → 安全</b>中更改或删除密码。<b>空密码将完全禁用</b>登录。</p>
+    <div class="callout note"><b >忘记密码？</b><span >重新刷写文件系统会将其重置为<code>brewboss</code>。</span></div>
+    <h3 >切换到您的Wi‑Fi</h3>
+    <p >要将控制器连接到家庭网络，请打开<b>设置 → 系统 → WiFi</b>，选择模式并输入SSID/密码，然后<b>保存并重启</b>。</p>
+    <div class="callout warn"><b >Wi‑Fi模式</b><span ><b>AP</b> = 设备是自己的网络（离线使用）。<b>STATION</b> = 仅连接到您的路由器。<b>MIXED</b> = 两者同时。在STATION模式下，如果60秒内无法连接，则回退到接入点。</span></div>
+
+    <h2 id="navigation"><span class="num">4.</span> <span >界面导航</span></h2>
+    <p >界面左侧有一个<b>侧边菜单</b>，顶部有一个<b>状态栏</b>。</p>
+    <p ><b>侧边菜单</b> — 主要目的地：</p>
+    <ul>
+      <li ><b>仪表盘</b> — 显示实时温度、计时器和控制按钮的主屏幕。</li>
+      <li ><b>配方</b> — 您的配方库以及糖化/煮沸步骤编辑器。</li>
+      <li ><b>设置</b> — 调整、系统（网络、安全、时间、备份）和关于。</li>
+      <li ><b>模式</b> — 切换界面的颜色主题。</li>
+      <li ><b>关于</b> — 版本和硬件信息。</li>
+    </ul>
+    <p >点击状态栏可折叠/展开菜单（在手机上很有用）。</p>
+    <p ><b>状态栏</b> — <b>Wi‑Fi</b>指示器、<b>NTP</b>（时钟）点、<b>HEAP</b>（空闲内存）点和设备<b>运行时间</b>。</p>
+    <figure><img src="images/4.1_menu.jpeg" alt="BrewBOSS侧边导航菜单"><figcaption >侧边导航菜单 — 每个屏幕的起点。</figcaption></figure>
+
+    <h2 id="operation"><span class="num">5.</span> <span >逐步操作</span></h2>
+    <p >以下是使用配方进行酿造日的典型流程：</p>
+    <ol>
+      <li ><b>准备。</b>填满煮沸锅，放置传感器，连接到界面。</li>
+      <li ><b>选择配方。</b>打开<b>配方</b>，选择一个并<b>激活</b>。</li>
+      <li ><b>检查设置。</b>在<b>设置 → 调整</b>中，确认温度单位、煮沸温度/时间和传感器。</li>
+      <li ><b>开始糖化。</b>在<b>仪表盘</b>上按<kbd>Start</kbd>。系统加热到第一步的目标温度，然后运行其计时器。</li>
+      <li ><b>跟踪进度。</b>观察仪表和<b>步骤历史</b>。当锁定的步骤发出蜂鸣声时，将其释放。</li>
+      <li ><b>煮沸。</b>最后一个糖化步骤后，系统自动进入煮沸。加热至沸腾，运行计时器并按时触发每个酒花添加。</li>
+      <li ><b>后煮沸和冷却。</b>加热关闭，监控冷却并触发基于温度的添加，然后执行最终冷却步骤。</li>
+      <li ><b>完成。</b>蜂鸣器发出结束信号，屏幕显示总酿造时间。</li>
+    </ol>
+    <div class="callout tip"><b >定时启动（延迟）</b><span >您可以安排糖化或煮沸稍后开始。LCD显示倒计时，进程在归零时自动开始。</span></div>
+
+    <h2 id="screens"><span class="num">6.</span> <span >各界面逐一说明</span></h2>
+    <p >以下各部分说明屏幕名称、显示内容、用途以及如何操作。</p>
+
+    <div class="screen">
+      <h3 id="screen-main"><span >6.1</span> — <span >仪表盘（主界面）</span></h3>
+      <p ><b>显示内容。</b>带有三个圆形仪表和计时器卡片的主屏幕：主温度、洗糟温度、功率（PWM），以及带有当前步骤名称的酿造计时器。</p>
+      <p ><b>用途。</b>在这里启动、监控和停止酿造，并读取实时状态。</p>
+      <p ><b>如何操作。</b>使用仪表下方的控制按钮。在手动模式下，可以点击仪表设定目标温度或功率。</p>
+      <figure><img src="images/1.0_main.jpeg" alt="仪表盘"><figcaption >仪表盘 — 仪表、计时器和控制按钮。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-step"><span >6.2</span> — <span >步骤与步骤历史</span></h3>
+      <p ><b>显示内容。</b>当前步骤/计时器和每个过程里程碑的运行列表。</p>
+      <p ><b>用途。</b>精确跟踪酿造的位置和刚刚发生的事情。</p>
+      <p ><b>如何操作。</b>阅读以跟踪。事件类型用颜色编码。</p>
+      <figure><img src="images/1.1_step.jpeg" alt="步骤历史"><figcaption >步骤视图和步骤历史 — 酿造的时间线。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-recipes"><span >6.3</span> — <span >配方</span></h3>
+      <p ><b>显示内容。</b>您的配方库，带有搜索框和排序功能，以及<b>导入</b>按钮。</p>
+      <p ><b>用途。</b>创建、存储和重复使用配方。</p>
+      <p ><b>如何操作。</b><b>激活</b>一个配方以加载用于酿造。<b>导入</b>保存在其他地方的配方；<b>保存/编辑</b>您自己的配方；<b>删除</b>不再需要的配方。</p>
+      <figure><img src="images/2.0_recipes.jpeg" alt="配方"><figcaption >配方 — 激活、导入、编辑和管理您的配方。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-mash"><span >6.4</span> — <span >糖化步骤编辑器</span></h3>
+      <p ><b>显示内容。</b>糖化步骤列表，包含名称、目标温度、时间和每个步骤的标志。</p>
+      <p ><b>用途。</b>定义糖化曲线。</p>
+      <p ><b>如何操作。</b>添加、编辑和重新排序步骤；设置温度和时间；设置标志：<b>循环</b>（运行泵）、<b>加热器开启</b>、<b>全功率</b>、<b>步骤锁定</b>（暂停以进行手动操作）。</p>
+      <figure><img src="images/2.1_mash.jpeg" alt="糖化编辑器"><figcaption >糖化编辑器 — 逐步构建您的糖化曲线。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-boil"><span >6.5</span> — <span >煮沸与添加编辑器</span></h3>
+      <p ><b>显示内容。</b>煮沸程序和添加。</p>
+      <p ><b>用途。</b>安排在煮沸期间和之后的酒花添加。</p>
+      <p ><b>如何操作。</b>添加并选择每个添加的触发方式：<b>定时添加</b>（煮沸期间）、<b>后煮沸添加</b>（按温度）或<b>最终冷却</b>。</p>
+      <figure><img src="images/2.2_boil.jpeg" alt="煮沸编辑器"><figcaption >煮沸编辑器 — 定时和温度触发的添加。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-settings"><span >6.6</span> — <span >调整</span></h3>
+      <p ><b>显示内容。</b>适用于每个批次的酿造参数：单位、延迟、功率百分比、煮沸温度/时间、洗糟、PID带宽、泵时序、传感器分配和复选框。</p>
+      <p ><b>用途。</b>使控制器匹配您的设备。</p>
+      <p ><b>如何操作。</b>设定值并按<b>保存</b>。使用传感器<b>偏移</b>对照参考温度计校准读数。</p>
+      <figure><img src="images/3.0_settings.jpeg" alt="调整"><figcaption >调整 — 使控制器匹配您的设备。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-system"><span >6.7</span> — <span >系统（网络、安全、时间、备份）</span></h3>
+      <p ><b>显示内容。</b>设备配置面板。</p>
+      <p ><b>用途。</b>网络、登录、时钟和备份。</p>
+      <p ><b>如何操作。</b>设置<b>Wi‑Fi</b>模式和凭据、<b>安全</b>（登录开关和密码）、<b>NTP</b>服务器和GMT偏移，以及<b>备份</b>（导出/导入配置）。</p>
+      <figure><img src="images/3.1_system.jpeg" alt="系统"><figcaption >系统 — Wi‑Fi、安全、时间和备份。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-about"><span >6.8</span> — <span >关于</span></h3>
+      <p ><b>显示内容。</b>固件版本、硬件、网络状态、时间/NTP和系统信息。</p>
+      <p ><b>用途。</b>健康检查以及寻求帮助时需要包含的信息。</p>
+      <p ><b>如何操作。</b>只读 — 用于验证一切正常。</p>
+      <figure><img src="images/3.2_about.jpeg" alt="关于"><figcaption >关于 — 版本、硬件和系统状态。</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-themes"><span >6.9</span> — <span >颜色主题（模式）</span></h3>
+      <p ><b>显示内容。</b>不同配色方案下的界面。</p>
+      <p ><b>用途。</b>舒适度和可读性 — 例如为昏暗的酿造室提供深色主题。</p>
+      <p ><b>如何操作。</b>点击侧边菜单中的<b>模式</b>以循环切换可用的配色方案。</p>
+      <figure><img src="images/4.0_themes.jpeg" alt="主题"><figcaption >颜色主题 — 使用模式按钮切换。</figcaption></figure>
+    </div>
+
+    <h2 id="indicators"><span class="num">7.</span> <span >按钮、字段、消息与指示器</span></h2>
+    <h3 >控制按钮（仪表盘）</h3>
+    <ul>
+      <li ><kbd>Start</kbd> — 开始糖化。</li>
+      <li ><kbd>Pause</kbd> / <kbd>Resume</kbd> — 暂停和恢复。</li>
+      <li ><kbd>Stop</kbd> — 停止一切。</li>
+      <li ><kbd>Skip</kbd> — 跳过当前糖化步骤。</li>
+      <li ><kbd>Boil</kbd> — 直接开始煮沸。</li>
+      <li ><kbd>Pump</kbd> — 开关泵。</li>
+      <li ><kbd>Prime</kbd> — 运行自动引水循环。</li>
+    </ul>
+    <h3 >状态指示器</h3>
+    <ul>
+      <li ><b>Wi‑Fi</b>：连接到网络时的信号强度（dBm），或者当设备作为接入点运行时显示<b>AP</b>（绿色）加接入点名称。</li>
+      <li ><b>NTP点</b>：时钟同步时为绿色。</li>
+      <li ><b>HEAP点</b>：空闲内存健康状态。</li>
+      <li ><b>运行时间</b>：设备已运行的时间。</li>
+    </ul>
+    <h3 >消息与事件</h3>
+    <p ><b>步骤历史</b>和LCD显示诸如<em>Brew STARTED</em>、目标到达、步骤完成、酒花添加和完成等事件。带有警报的<b>SAFETY</b>事件表示保护功能被触发。</p>
+    <h3 >声音（蜂鸣器）</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th >时机</th><th >听到的声音</th></tr></thead>
+      <tbody>
+        <tr><td >达到目标温度</td><td >两声长鸣</td></tr>
+        <tr><td >糖化步骤推进</td><td >短–短–长</td></tr>
+        <tr><td >开始煮沸 / 酒花添加</td><td >两短 + 两长</td></tr>
+        <tr><td >步骤锁定（需要您的操作）</td><td >每15秒两声鸣响</td></tr>
+        <tr><td >酿造完成</td><td >四声长鸣</td></tr>
+        <tr><td >安全触发</td><td >报警模式</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 id="modes"><span class="num">8.</span> <span >操作模式</span></h2>
+    <ul>
+      <li ><b>糖化</b> — 运行您的糖化步骤；对每个步骤加热到目标，运行计时器，然后推进。最后一步后自动进入煮沸。</li>
+      <li ><b>煮沸</b> — 加热到煮沸温度，运行计时器并触发定时添加。可单独启动。</li>
+      <li ><b>后煮沸</b> — 加热关闭；监控冷却并触发基于温度的添加，然后执行最终冷却步骤。</li>
+      <li ><b>手动</b> — 您直接设定加热器功率（开环）。目标仅供参考。不保存用于恢复。</li>
+      <li ><b>延迟（定时启动）</b> — 延迟启动糖化或煮沸；设备倒计时并自动开始。</li>
+    </ul>
+    <h3 >泵与引水</h3>
+    <ul>
+      <li ><b>泵</b> — 手动开关；在循环步骤期间自动控制。</li>
+      <li ><b>引水</b> — 自动循环（5 × 3秒开 / 2秒关），在开始前填充管道。</li>
+    </ul>
+
+    <h2 id="standalone"><span class="num">9.</span> <span >独立使用 — LCD与物理按钮</span></h2>
+    <p >您可以在没有Web界面的情况下完成整个酿造过程。</p>
+    <h3 >20×4显示屏</h3>
+    <pre>[w] BrewBOSS 00:14:32         &lt;- Wi-Fi图标 + 标题 + 步骤计时器
+[H]  65.20&gt;66   [W] 68% [P]   &lt;- 主温度：当前&gt;目标, 功率, PWM, 泵
+[S]  74.00&gt;74   100%        M &lt;- 洗糟：当前&gt;目标, PWM, 标志 B/M/L
+Add Citra 30g@15'             &lt;- 最后事件消息（或IP / AP）</pre>
+    <ul>
+      <li >第1行 — Wi‑Fi图标 + "BrewBOSS"，酿造期间带步骤计时器；否则显示版本。</li>
+      <li >第2行 — 主温度（当前>目标）、单位、加热器功率、PWM%以及泵开启时的泵图标。</li>
+      <li >第3行 — 洗糟温度和其PWM%；标志：<b>B</b>（煮沸暂停）、<b>M</b>（糖化暂停）或<b>L</b>（步骤锁定）。</li>
+      <li >第4行 — 最后事件消息；空闲时显示<code>IP: &lt;地址&gt;</code>或<code>AP: 192.168.4.1</code>。</li>
+    </ul>
+    <p >酿造完成后，屏幕显示感谢信息15秒，然后显示总酿造时间，直到您按任意按钮。</p>
+
+    <h3 >4个按钮</h3>
+    <p >四个薄膜键盘按钮编号为<b>1–4</b>。每个按钮响应三种按压时长：<b>短按</b>、<b>长按</b>（约2秒）和<b>超长按</b>（约3秒）。启动模式后有1.5秒锁定以防止意外停止。</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th >按压</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+      <tbody>
+        <tr><td><b >短按</b></td><td >泵 开/关</td><td >功率 <b>−10%</b></td><td >功率 <b>+10%</b></td><td >暂停 / 恢复</td></tr>
+        <tr><td><b >长按</b>（约2秒）</td><td ><b>引水</b></td><td >启动<b>手动</b> / 跳过步骤 / 解锁</td><td >启动<b>煮沸</b></td><td >启动<b>糖化</b></td></tr>
+        <tr><td><b >超长按</b>（约3秒）</td><td >—</td><td >停止</td><td >停止</td><td >停止</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li >±10%功率变化影响当前模式的活跃加热器。</li>
+      <li >糖化中，长按<b>按钮2</b>跳过当前步骤；如果步骤被<b>锁定</b>，同样的长按会解锁并推进它。</li>
+      <li >完成后的"总时间"屏幕上，任意按钮返回主屏幕。</li>
+    </ul>
+
+    <h2 id="recovery"><span class="num">10.</span> <span >断电恢复</span></h2>
+    <p >如果在酿造过程中断电，重启时设备会检测到保存的状态，<b>进入暂停</b>并在LCD上显示<b>"已恢复！是否继续？"</b>。</p>
+    <ol>
+      <li >按<b>按钮4（短按）</b>从中断处恢复。</li>
+      <li >如果时钟已同步，剩余时间会根据设备关闭的时间进行调整。</li>
+    </ol>
+    <div class="callout warn"><b >注意</b><span >手动模式不会被恢复（它没有保存的状态）。</span></div>
+
+    <h2 id="flow"><span class="num">11.</span> <span >主要使用流程（快速参考）</span></h2>
+    <ol>
+      <li >通电 → 连接到<code>BrewBOSS</code> / 打开<code>192.168.4.1</code> → 登录。</li>
+      <li ><b>配方</b> → 激活您的配方。</li>
+      <li ><b>调整</b> → 确认单位、温度和传感器。</li>
+      <li ><b>仪表盘</b> → <kbd>Prime</kbd>（可选） → <kbd>Start</kbd>。</li>
+      <li >糖化运行并推进 → 进入<b>煮沸</b> → 添加按时触发。</li>
+      <li ><b>后煮沸</b> / 冷却 → <b>完成</b>（显示总时间）。</li>
+    </ol>
+
+    <h2 id="best"><span class="num">12.</span> <span >最佳实践</span></h2>
+    <ul>
+      <li >首次酿造前，对照可靠温度计校准传感器<b>偏移</b>。</li>
+      <li >在开始糖化前运行<b>引水</b>并确认流量。</li>
+      <li >将设备保持在<b>可信Wi‑Fi</b>网络中 — 连接在本地网络上以明文传输密码。</li>
+      <li >将您的酿造保存为<b>配方</b>，并使用温度<b>日志/CSV</b>为您的设备进行微调。</li>
+      <li >完成设备配置后制作<b>备份</b>（导出）。</li>
+      <li >保持加热器周围区域整洁；切勿让活跃的酿造完全无人看管。</li>
+    </ul>
+
+    <h2 id="trouble"><span class="num">13.</span> <span >故障排除</span></h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th >症状</th><th >可能原因及处理方法</th></tr></thead>
+      <tbody>
+        <tr><td >无法打开<code>192.168.4.1</code></td><td >确保您已连接到<code>BrewBOSS</code>网络。输入<code>http://192.168.4.1</code>（带<code>http://</code>）。在手机上，忽略任何"无互联网"提示。</td></tr>
+        <tr><td >接入点不稳定</td><td >在MIXED模式下，当设备尝试连接不可达的Wi‑Fi时，AP可能会闪烁长达60秒，然后回退到纯AP模式并稳定。或者使用纯AP模式。</td></tr>
+        <tr><td >温度显示<code>---</code></td><td >该传感器未检测到或已断开。检查接线并在<b>调整</b>中重新分配传感器。</td></tr>
+        <tr><td >加热器不启动 / "SAFETY"事件</td><td >自动模式下的过温或传感器丢失。让其冷却 / 修复传感器；安全后恢复加热。</td></tr>
+        <tr><td >无法更改（只读）</td><td >您处于只读模式。点击"只读 — 点击登录"徽章并输入密码。</td></tr>
+        <tr><td >忘记密码</td><td >重新刷写文件系统将密码重置为<code>brewboss</code>。</td></tr>
+        <tr><td >日志时间错误</td><td >时钟未同步。在<b>系统</b>中设置<b>NTP</b>服务器和GMT偏移。</td></tr>
+        <tr><td >断电后处于暂停状态</td><td >这是恢复功能。按<b>按钮4（短按）</b>（或使用界面）恢复。</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 id="firmware"><span class="num">14.</span> <span >固件与安装</span></h2>
+    <p >适用于3个支持控制器的固件（LittleFS单独提供）。文件系统映像为<b>LittleFS</b>格式。</p>
+
+    <h3 >文件和偏移地址</h3>
+    <p ><b>binaries</b>文件夹中的每个版本都包含<b>每个控制器两个文件</b>：<code>BrewBOSS_&lt;version&gt;_&lt;board&gt;.bin</code>是<b>固件</b>（<b>首先</b>刷写），<code>BrewBOSS_&lt;version&gt;_&lt;board&gt;_fs.bin</code>是<b>文件系统</b>（LittleFS — <b>然后</b>刷写）。以<code>_fs</code>结尾的文件总是文件系统；没有后缀的是固件。<code>&lt;board&gt;</code>为<code>esp12e</code>（Wemos D1 Mini / ESP8266）、<code>esp32</code>（ESP32 WROOM-32）或<code>esp32c3</code>（ESP32-C3 Super Mini）。</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th >控制器</th><th >文件</th><th >类型</th><th >偏移地址</th><th >大小</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2"><b>Wemos</b> ESP8266 (ESP12E)</td><td><code>BrewBOSS_&lt;version&gt;_esp12e.bin</code></td><td>固件</td><td><code>0x00000000</code></td><td>约440 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></td><td>LittleFS</td><td><code>0x00200000</code></td><td>约2,024 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32</b> esp32dev</td><td><code>BrewBOSS_&lt;version&gt;_esp32.bin</code></td><td>固件</td><td><code>0x00010000</code></td><td>约1,010 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>约1,408 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c3.bin</code></td><td>固件</td><td><code>0x00010000</code></td><td>约1,020 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>约1,408 KB</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 >OTA固件与文件系统更新</h3>
+    <p >BrewBOSS支持通过Web界面直接进行<b>无线 (OTA)</b>更新。这消除了日常更新中对USB线和<code>esptool</code>的需求。先上传<b>固件</b>文件（无<code>_fs</code>后缀），然后上传<b>文件系统</b>文件（<code>_fs</code>后缀）。</p>
+    <ul>
+      <li ><b>工作原理：</b>在Web界面中访问<b>设置 → 系统 → 固件更新</b>。上传新的固件和文件系统二进制文件。设备处理向闪存的内部写入并重启。</li>
+      <li ><b>优势：</b></li>
+          <li ><b>安全性：</b>引导程序包含自动回退功能，确保即使更新中断，设备仍能正常工作。</li>
+          <li ><b>效率：</b>无需手动计算偏移地址，即可在固件版本和文件系统结构之间无缝过渡。</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 >前提条件</h3>
+    <ul>
+      <li >安装esptool：<code>pip install esptool</code></li>
+      <li >通过USB连接控制器并找到其串口（例如Windows上的<code>COM5</code>，Linux上的<code>/dev/ttyUSB0</code>）。</li>
+      <li >从<code>.bin</code>文件所在的文件夹运行命令。</li>
+      <li >将<code>COMx</code>替换为正确的端口。添加<code>--baud 460800</code>以获得更快的刷写速度。</li>
+    </ul>
+
+    <h3 >刷写（更新）</h3>
+    <p >对于已配置的控制器，<b>首先刷写固件</b>，然后<b>刷写文件系统（<code>_fs</code>）</b> — 两个独立的步骤（更可靠）。用下载的版本替换<code>&lt;version&gt;</code>：</p>
+    <p><b >Wemos / ESP8266 — 固件</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin</code></pre>
+    <p><b >Wemos / ESP8266 — 文件系统</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
+    <p><b >ESP32 (esp32dev) — 固件</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32.bin</code></pre>
+    <p><b >ESP32 (esp32dev) — 文件系统</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
+    <p><b >ESP32-C3 — 固件</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+    <p><b >ESP32-C3 — 文件系统</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <div class="callout note"><b >ESP8266</b> <span >固件已包含引导程序（eboot），因此写入地址<code>0x0</code>。2个文件就足够了。</span></div>
+
+    <h3 >空白芯片 / 首次刷写（ESP32 / ESP32-C3）</h3>
+    <p >在执行<b>erase_flash</b>后或在全新芯片上，必须按正确偏移地址刷写全部5个文件。引导程序、分区表和boot_app0已包含在binaries文件夹中。</p>
+
+    <div class="callout warn"><b >ESP32-C3 Super Mini - BOOT按钮</b><span >对于<b>首次刷写</b>（引导程序位于<code>0x0</code>），必须在运行命令时<b>按住开发板上的BOOT按钮</b>。刷写开始后松开。后续刷写无需按钮即可运行。</span></div>
+
+    <p><b >1. 引导程序</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x0000 BrewBOSS_&lt;version&gt;_esp32c3_bootloader.bin</code></pre>
+
+    <p><b >2. 分区表</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x8000 BrewBOSS_&lt;version&gt;_esp32c3_partitions.bin</code></pre>
+
+    <p><b >3. 引导应用</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0xe000 BrewBOSS_&lt;version&gt;_esp32c3_boot_app0.bin</code></pre>
+
+    <p><b >4. 固件</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+
+    <p><b >5. 文件系统</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <h3 >仅更新固件（引导程序不变）</h3>
+    <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+
+    <h3 >仅更新文件系统</h3>
+    <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <div class="callout warn"><b >先擦除全部（可选）</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>。这也会擦除存储在LittleFS中的WiFi/配方配置。</span></div>
+
+    <h3 >注意事项</h3>
+    <ul>
+      <li >偏移地址对当前分区表（4 MB闪存）有效。如果表更改，偏移地址也会更改。</li>
+      <li >映像为<b>LittleFS</b>（非SPIFFS） — 固件将文件系统挂载为LittleFS。</li>
+      <li >刷写后，控制器启动Web服务器；通过网络IP或AP访问。</li>
+      <li >带原生USB的ESP32-C3：端口显示为Espressif串行设备（VID <code>303A</code>）；刷写时的重置/启动是自动的。</li>
+    </ul>
+
+    <h2 id="pinout"><span class="num">15.</span> <span >引脚参考</span></h2>
+    <p >以下引脚映射是每个支持控制器的标准BrewBOSS配置。发布这些映射是希望社区设计<b>专用PCB</b> — 特别是为<b>ESP32-C3 Super Mini</b>和其他基于ESP32的开发板，它们比经典ESP8266提供<b>更多内存、更快的处理和额外的I/O端口</b>。专用设计的开发板使接线更安全、组装更快、整个系统更可靠。如果您创建了一个，请与社区分享。</p>
+
+    <h3>ESP32-C3 Super Mini</h3>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:8px;">GPIO在第4至第8引脚上按降序排列（GPIO4 &#8594; GPIO0）。</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>引脚</th><th>开发板</th><th>功能</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>5V</td><td>电源</td></tr>
+        <tr><td>02</td><td>GND</td><td>地</td></tr>
+        <tr><td>03</td><td>3V3</td><td>逻辑电源</td></tr>
+        <tr><td>04</td><td>GPIO4</td><td>蜂鸣器</td></tr>
+        <tr><td>05</td><td>GPIO3</td><td>键盘 / BTN4 / START</td></tr>
+        <tr><td>06</td><td>GPIO2</td><td>键盘 / BTN3 / BOIL</td></tr>
+        <tr><td>07</td><td>GPIO1</td><td>键盘 / BTN2 / MANUAL</td></tr>
+        <tr><td>08</td><td>GPIO0</td><td>键盘 / BTN1 / PUMP</td></tr>
+        <tr><td>09</td><td>GPIO5</td><td>糖化加热器</td></tr>
+        <tr><td>10</td><td>GPIO6</td><td>洗糟加热器</td></tr>
+        <tr><td>11</td><td>GPIO7</td><td>煮沸加热器</td></tr>
+        <tr><td>12</td><td>GPIO8</td><td>LCD / SDA</td></tr>
+        <tr><td>13</td><td>GPIO9</td><td>LCD / SCL</td></tr>
+        <tr><td>14</td><td>GPIO10</td><td>泵（低电平有效）</td></tr>
+        <tr><td>15</td><td>GPIO20</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>16</td><td>GPIO21</td><td>可用</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b >C3注意事项</b><span >键盘直接从GPIO读取（无PCF8574）。BTN1=GPIO0、BTN2=GPIO1、BTN3=GPIO2、BTN4=GPIO3。泵为低电平有效（<code>INVERT_PUMP=true</code>）：HIGH = 关，LOW = 开。LCD 20×4位于地址<code>0x27</code>。WiFi SoftAP强制在通道1，TX功率8.5 dBm。</span></div>
+
+    <h3>ESP8266 (Wemos D1 Mini)</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>引脚</th><th>开发板</th><th>功能</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>RST</td><td>复位</td></tr>
+        <tr><td>02</td><td>A0 (ADC0)</td><td>模拟输入（可用）</td></tr>
+        <tr><td>03</td><td>D0 / GPIO16</td><td>蜂鸣器</td></tr>
+        <tr><td>04</td><td>D5 / GPIO14</td><td>泵</td></tr>
+        <tr><td>05</td><td>D6 / GPIO12</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>06</td><td>D7 / GPIO13</td><td>洗糟加热器</td></tr>
+        <tr><td>07</td><td>D8 / GPIO15</td><td>糖化加热器</td></tr>
+        <tr><td>08</td><td>3V3</td><td>逻辑电源</td></tr>
+        <tr><td>09</td><td>TX / GPIO1</td><td>串行TX（调试）</td></tr>
+        <tr><td>10</td><td>RX / GPIO3</td><td>串行RX（调试）</td></tr>
+        <tr><td>11</td><td>D1 / GPIO5</td><td>I2C SCL（LCD + PCF8574键盘）</td></tr>
+        <tr><td>12</td><td>D2 / GPIO4</td><td>I2C SDA（LCD + PCF8574键盘）</td></tr>
+        <tr><td>13</td><td>D3 / GPIO0</td><td>刷写按钮（启动引脚）</td></tr>
+        <tr><td>14</td><td>D4 / GPIO2</td><td>煮沸加热器（内置LED）</td></tr>
+        <tr><td>15</td><td>GND</td><td>地</td></tr>
+        <tr><td>16</td><td>5V</td><td>电源</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b >ESP8266注意事项</b><span >PCF8574（I2C键盘扩展器）位于<code>0x38</code> — 通过I2C轮询键盘，INT引脚未使用。LCD 20×4位于<code>0x27</code>（备用：<code>0x3F</code>、<code>0x20</code>、<code>0x3E</code>）。GPIO15（D8 / 引脚7）需要外部下拉（启动引脚）。GPIO2（D4 / 引脚14）有内部上拉和内置LED — 煮沸加热器工作时点亮。GPIO16（D0 / 引脚3）<b>不支持PWM</b>。GPIO0（D3 / 引脚13）是启动引脚：上电时拉低进入刷写模式。启动预安全将GPIO 0,2,4,5,12,13,14,15,16设为INPUT（高阻抗）。</span></div>
+
+    <h3 >I2C地址（两个控制器）</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th >设备</th><th >默认地址</th><th >备用</th></tr></thead>
+      <tbody>
+        <tr><td>LCD 20&#215;4</td><td><code>0x27</code></td><td><code>0x3F</code>, <code>0x20</code>, <code>0x3E</code></td></tr>
+        <tr><td>PCF8574键盘</td><td><code>0x38</code></td><td><code>0x20</code>（仅ESP8266）</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="notes"><span class="num">16.</span> <span >最终说明</span></h2>
+    <ul>
+      <li >BrewBOSS控制真实的加热器和热液体。请始终遵循安全的电气和酿造操作规范。</li>
+      <li >界面由设备本地提供，可离线工作；读取权限开放，写入权限可通过登录保护。</li>
+      <li ><b>许可：</b>仅限个人/非商业用途。</li>
+    </ul>
+
+    <section id="license">
+      <h2 >许可与使用条款</h2>
+      <div style="font-size:0.72rem;line-height:1.55;color:var(--dim);">
+        <p ><b>BrewBOSS许可协议 — 版本1.0</b><br>Copyright &copy; 2026 LR</p>
+        <p ><b>第1条 使用授权。</b>本软件（名称为<b>BrewBOSS</b>）以<b>编译后的二进制文件</b>形式<b>免费</b>提供，严格限于<b>个人、私人和非商业用途</b> — 源代码不予提供。根据本条款，您被允许：为个人用途下载和使用二进制文件；为备份目的制作二进制文件的私人副本。</p>
+        <p ><b>第2条 禁止用途。</b>未经事先书面许可禁止：销售、转售或商业化；在任何商业、工业、企业或创收活动中使用；嵌入待售产品中；为商业目的分发；在生产或工业环境中使用；检查、反编译、逆向工程、修改、更改或试图提取源代码（代码不予提供）；删除本许可声明。任何超出个人、非商业范围的使用均被禁止。</p>
+        <p ><b>第3条 无担保。</b>按"现状"提供，不提供任何明示或暗示的担保。版权持有人和贡献者对适销性、适用性、不侵权、准确性、可靠性、兼容性、持续运行或软件无错误或安全不作任何担保。</p>
+        <p ><b>第4条 安全和操作风险。</b>用户承认本软件可能包含缺陷、可能停止工作、可能表现出不可预测的行为、可能与硬件进行不安全的交互，并且未经安全或关键操作认证。用户承担所有风险。</p>
+        <p ><b>第5条 责任限制。</b>在任何情况下，版权持有人、作者或贡献者均不对任何索赔、损失、损害、费用或任何类型的责任承担责任，无论是直接、间接、偶然、特殊、后果性还是其他。这包括数据丢失、文件损坏、设备故障、硬件损坏、电气损坏、过热、火灾、人身伤害、利润损失、业务中断、生产损失以及任何其他损害。</p>
+        <p ><b>第6条 无支持。</b>没有义务提供技术支持、更新、错误修复、维护、安全补丁、兼容性更改或文档更新。任何自愿支持不产生持续义务。</p>
+        <p ><b>第7条 终止。</b>任何违反行为将自动终止您使用本软件的权利。终止后，请停止使用并删除所有二进制文件的副本。</p>
+        <p ><b>第8条 接受。</b>下载、安装、访问或使用BrewBOSS即表示您同意受本许可约束。如果您不同意，请勿使用本软件。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer><b>BrewBOSS</b> — <span >用户操作手册</span></footer>
+</div>
+
+
+</body>
+</html>

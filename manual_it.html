@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrewBOSS — Manuale Operativo per l'Utente</title>
+<style>
+  :root{
+    --accent:#4318FF; --accent2:#2B3674; --ink:#1f2640; --dim:#5b6480; --muted:#8a93ad;
+    --bg:#f6f8fc; --card:#ffffff; --line:#e3e8f2;
+    --tip-bg:#eafaf3; --tip-bd:#34c79933; --tip-tx:#0a6b4a;
+    --warn-bg:#fff6e9; --warn-bd:#ffcf8a; --warn-tx:#8a5200;
+    --note-bg:#eef3ff; --note-bd:#bcd0ff; --note-tx:#274690;
+    --code:#0b1437;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;font-size:16px;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 16px 64px;}
+  header.site{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+    color:#fff;padding:24px 16px;box-shadow:0 6px 20px rgba(43,54,116,.25);
+    display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  header.site .htext{min-width:0;}
+  header.site .brand{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}
+  header.site h1{margin:0 0 .15em;font-size:26px;line-height:1.2;}
+  header.site h1 b{font-weight:800;}
+  header.site .ver{display:inline-block;margin-left:8px;padding:2px 12px;border-radius:999px;
+    background:rgba(255,255,255,.18);font-size:14px;font-weight:700;vertical-align:middle;white-space:nowrap;}
+  header.site p{margin:.3em 0 0;opacity:.92;max-width:680px;font-size:14px;}
+  .lang{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);
+    border-radius:10px;padding:6px 10px;font-size:14px;font-weight:700;cursor:pointer;flex:none;margin-top:2px;}
+  .lang option{color:#2B3674;background:#fff;}
+  main{margin-top:22px;}
+  h2{font-size:22px;margin:2.2em 0 .6em;padding-bottom:.25em;border-bottom:2px solid var(--line);scroll-margin-top:14px;}
+  h3{font-size:18px;margin:1.6em 0 .4em;color:var(--accent2);scroll-margin-top:14px;}
+  h2 .num,h3 .num{color:var(--accent);font-weight:800;}
+  p{margin:.6em 0;}
+  a{color:var(--accent);}
+  ul,ol{margin:.5em 0 .9em;padding-left:1.4em;}
+  li{margin:.3em 0;}
+  code,kbd{font-family:"Cascadia Code",Consolas,monospace;font-size:.92em;}
+  code{background:#eef1fb;color:var(--accent2);padding:1px 6px;border-radius:5px;}
+  kbd{background:#2b3148;color:#fff;border-radius:6px;padding:2px 8px;font-weight:700;box-shadow:0 2px 0 #1a1f30;}
+  pre{background:var(--code);color:#e6ebff;border-radius:12px;padding:14px 16px;overflow:auto;
+    font-family:"Cascadia Code",Consolas,monospace;font-size:13.5px;line-height:1.6;}
+  pre code{background:none;color:inherit;padding:0;}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:0 4px 16px rgba(0,0,0,.04);}
+  .toc h2{margin:0 0 .4em;border:0;font-size:18px;}
+  .toc ol{columns:2;column-gap:28px;padding-left:1.2em;margin:0;}
+  @media(max-width:640px){.toc ol{columns:1;}}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  figure{margin:1em 0 1.4em;}
+  figure img{display:block;width:100%;max-width:480px;height:auto;margin-left:auto;margin-right:auto;
+    border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 22px rgba(43,54,116,.10);background:#fff;}
+  figcaption{margin-top:.5em;font-size:13.5px;color:var(--muted);text-align:center;}
+  .callout{border:1px solid var(--line);border-left-width:5px;border-radius:10px;padding:12px 16px;margin:1em 0;}
+  .callout b{display:block;margin-bottom:.15em;}
+  .tip{background:var(--tip-bg);border-color:var(--tip-bd);border-left-color:#34c799;color:var(--tip-tx);}
+  .warn{background:var(--warn-bg);border-color:var(--warn-bd);border-left-color:#f0a020;color:var(--warn-tx);}
+  .note{background:var(--note-bg);border-color:var(--note-bd);border-left-color:#4a78ff;color:var(--note-tx);}
+  .tablewrap{overflow-x:auto;margin:1em 0;}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px;}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+  th{background:#eef1fb;color:var(--accent2);font-weight:700;}
+  tbody tr:nth-child(even){background:#fafbff;}
+  .lead{font-size:17px;color:var(--dim);}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center;}
+  footer b{color:var(--dim);}
+  .screen{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 20px 14px;
+    margin:1.2em 0;box-shadow:0 4px 16px rgba(0,0,0,.03);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="site">
+    <div class="htext">
+      <div class="brand" >Manuale Operativo per l'Utente</div>
+      <h1>Brew<b>BOSS</b></h1>
+      <p >Un controller per l'automazione della birrificazione con interfaccia web e funzionamento autonomo tramite LCD e tastierino. Questa guida spiega, passo dopo passo, come utilizzare il sistema in sicurezza.</p>
+    </div>
+    
+  </header>
+
+  <main>
+    <p class="lead" >BrewBOSS automatizza le fasi di ammostamento, bollitura e post-bollitura di una giornata di cotta. Puoi controllarlo da qualsiasi browser su telefono o computer, oppure in modo autonomo con il display LCD 20×4 e 4 pulsanti — online o offline.</p>
+
+    <nav class="toc" aria-label="Indice dei contenuti">
+      <h2 >Indice</h2>
+      <ol>
+        <li><a href="#overview" >Panoramica</a></li>
+        <li><a href="#prerequisites" >Prerequisiti e installazione</a></li>
+        <li><a href="#access" >Accesso al sistema</a></li>
+        <li><a href="#navigation" >Navigazione nell'interfaccia</a></li>
+        <li><a href="#operation" >Funzionamento passo dopo passo</a></li>
+        <li><a href="#screens" >Le schermate, una per una</a></li>
+        <li><a href="#indicators" >Pulsanti, campi, messaggi e indicatori</a></li>
+        <li><a href="#modes" >Modalità operative</a></li>
+        <li><a href="#standalone" >LCD e pulsanti fisici (offline)</a></li>
+        <li><a href="#recovery" >Ripristino dopo interruzione di corrente</a></li>
+        <li><a href="#flow" >Flusso principale di utilizzo</a></li>
+        <li><a href="#best" >Buone pratiche</a></li>
+        <li><a href="#trouble" >Risoluzione dei problemi</a></li>
+        <li><a href="#firmware" >Firmware e installazione</a></li>
+        <li><a href="#pinout" >Riferimento pinout</a></li>
+        <li><a href="#notes" >Note finali</a></li>
+        <li><a href="#license" >Licenza e termini di utilizzo</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="overview"><span class="num">1.</span> <span >Panoramica</span></h2>
+    <p >BrewBOSS è un controller per attrezzature di birrificazione elettrica. Gestisce i riscaldatori, la pompa e i timer di un'intera giornata di cotta, e riporta temperature e avanzamento in tempo reale.</p>
+    <p><b >Supporto</b>: <span >Unisciti alla comunità ufficiale BrewBOSS sul <a href='https://beerschool.circle.so/c/forum-aberto/brewboss-command-the-brew-own-the-process' target='_blank' rel='noopener'>Forum BeerSchool</a> — condividi il tuo setup, fai domande e aiuta altri birrai.</span></p>
+    <p >Puoi utilizzarlo in tre modalità, che funzionano insieme:</p>
+    <ul>
+      <li ><b>Interfaccia web</b> — una singola pagina servita dal dispositivo; controlla tutto dal browser.</li>
+      <li ><b>LCD e 4 pulsanti</b> — funzionamento autonomo completo, anche senza rete.</li>
+      <li ><b>API REST</b> — opzionale, per integrazioni e script.</li>
+    </ul>
+    <p >Cosa può fare:</p>
+    <ul>
+      <li >Eseguire step di <b>ammostamento</b> programmabili, una <b>bollitura</b> automatica con aggiunte di luppolo temporizzate, e una fase di <b>post-bollitura</b> con aggiunte attivate dalla temperatura e raffreddamento finale.</li>
+      <li >Funzionare in modalità totalmente <b>manuale</b> (potenza diretta) o tramite <b>ricette preprogrammate</b>.</li>
+      <li >Gestire <b>ricette</b> (creare, modificare, salvare, attivare, eliminare) e <b>importare</b> ricette — compatibile con strumenti come BeerSmith / Brewfather, e le tue ricette possono essere esportate e importate.</li>
+      <li >Registrare <b>log</b>: un CSV di temperatura (un campione al minuto, con eventi) pronto per grafici dettagliati dell'ammostamento, per perfezionare una ricetta per la tua specifica attrezzatura.</li>
+      <li ><b>Ripristinarsi automaticamente dopo un'interruzione di corrente</b> e continuare la cotta da dove si era fermata.</li>
+      <li >Proteggere il lotto con un <b>sistema di sicurezza</b> (arresto per sovratemperatura e arresto per perdita del sensore).</li>
+      <li >Funzionare <b>online o offline</b>; mostrare lo stato su un LCD 20×4.</li>
+    </ul>
+    <div class="callout note"><b >Compatibilità hardware</b><span >Funziona su schede ESP8266 (Wemos), ESP32 e ESP32-C3 ed è compatibile al 100% con il cablaggio usato da altri progetti come <b>BrewManiac</b> e <b>BrewUNO</b> — basta flashare e usare.</span></div>
+
+    <h2 id="prerequisites"><span class="num">2.</span> <span >Prerequisiti e installazione</span></h2>
+    <p >Per utilizzare BrewBOSS ti servono:</p>
+    <ul>
+      <li >Una scheda controller supportata (Wemos/ESP8266, ESP32 o ESP32-C3) con il firmware BrewBOSS installato.</li>
+      <li >L'hardware di birrificazione cablato: riscaldatore/i via SSR, una pompa, e uno o più sensori di temperatura <b>DS18B20</b>. Un LCD I²C 20×4 opzionale e 4 pulsanti consentono l'uso autonomo.</li>
+      <li >Un telefono, tablet o computer con un browser web.</li>
+      <li >Opzionalmente, la tua rete Wi‑Fi domestica (altrimenti il dispositivo crea il proprio punto di accesso).</li>
+    </ul>
+    <h3 >Installazione del firmware (flash)</h3>
+    <p >Se la scheda non è ancora flashata, scrivi il firmware e il filesystem con <code>esptool</code>:</p>
+    <ol>
+      <li >Scarica i due file <code>.bin</code> per la tua scheda dalla cartella <b>binaries</b>: il <b>firmware</b> (senza suffisso <code>_fs</code> — flashalo <b>per primo</b>) e il <b>filesystem</b> (suffisso <code>_fs</code> — flashalo <b>per secondo</b>).</li>
+      <li >Flashali agli offset corretti — per il Wemos/ESP8266, ad esempio (sostituisci <code>&lt;version&gt;</code> con la versione scaricata):</li>
+    </ol>
+    <pre><code>esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin
+esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
+    <div class="callout tip"><b >Guida completa al flash</b><span >I binari, gli offset esatti e i comandi per ESP32 / ESP32-C3 sono nella pagina di <b>aiuto</b> del progetto. Il firmware ESP8266 include già il suo bootloader, quindi va scritto a <code>0x0</code>.</span></div>
+
+    <h2 id="access"><span class="num">3.</span> <span >Accesso al sistema</span></h2>
+    <ol>
+      <li ><b>Accendi</b> il controller. All'avvio carica il filesystem, Wi‑Fi, sensori, LCD e tastierino.</li>
+      <li ><b>Connettiti al suo punto di accesso.</b> Per impostazione predefinita, il dispositivo crea una rete Wi‑Fi chiamata <code>BrewBOSS</code> (password <code>brewboss</code>), con IP <code>192.168.4.1</code>.</li>
+      <li >Unisciti a quella rete con il tuo telefono/PC e apri <code>http://192.168.4.1</code> nel browser.</li>
+      <li >Se il <b>login è abilitato</b> (Impostazioni → Sistema → Sicurezza), appare una <b>finestra di login</b>. Altrimenti l'interfaccia si apre con accesso completo.</li>
+    </ol>
+    <h3 >Login e livelli di accesso</h3>
+    <p >La protezione di accesso è opzionale e <b>disabilitata per impostazione predefinita</b> (nessun login). Per abilitarla, vai su <b>Impostazioni → Sistema → Sicurezza</b>, attiva l'interruttore, imposta una password e salva. Quando abilitato, la password predefinita è <code>brewboss</code>.</p>
+    <ul>
+      <li ><b>Inserisci la password corretta → LOGIN</b>: accesso completo. La sessione dura fino al riavvio del dispositivo.</li>
+      <li ><b>IGNORA</b>: accesso in sola lettura — puoi vedere tutto ma non puoi fare modifiche.</li>
+      <li ><b>Password errata</b>: chiede di nuovo, fino a <b>10 tentativi</b>, poi passa alla sola lettura.</li>
+    </ul>
+    <p >Puoi cambiare o rimuovere la password in <b>Impostazioni → Sistema → Sicurezza</b>. Una <b>password vuota disabilita</b> completamente il login.</p>
+    <div class="callout note"><b >Password dimenticata?</b><span >Riflashare il filesystem la riporta a <code>brewboss</code>.</span></div>
+    <h3 >Passaggio alla tua rete Wi‑Fi</h3>
+    <p >Per mettere il controller sulla tua rete domestica, apri <b>Impostazioni → Sistema → WiFi</b>, scegli la modalità e inserisci SSID/password, quindi <b>Salva e Riavvia</b>.</p>
+    <div class="callout warn"><b >Modalità Wi‑Fi</b><span ><b>AP</b> = il dispositivo è la propria rete (uso offline). <b>STATION</b> = si unisce solo al tuo router. <b>MIXED</b> = entrambe contemporaneamente. In modalità STATION, se non riesce a connettersi entro 60 s, torna al punto di accesso.</span></div>
+
+    <h2 id="navigation"><span class="num">4.</span> <span >Navigazione nell'interfaccia</span></h2>
+    <p >L'interfaccia ha un <b>menu laterale</b> a sinistra e una <b>barra di stato</b> in alto.</p>
+    <p ><b>Menu laterale</b> — le destinazioni principali:</p>
+    <ul>
+      <li ><b>Dashboard</b> — la schermata principale con temperature in tempo reale, il timer e i pulsanti di controllo.</li>
+      <li ><b>Ricette</b> — la tua libreria di ricette e gli editor degli step di ammostamento/bollitura.</li>
+      <li ><b>Impostazioni</b> — Regolazioni, Sistema (rete, sicurezza, ora, backup) e Informazioni.</li>
+      <li ><b>Modalità</b> — cambia il tema colore dell'interfaccia.</li>
+      <li ><b>Informazioni</b> — versione e informazioni hardware.</li>
+    </ul>
+    <p >Tocca la barra di stato per comprimere/espandere il menu (utile sui telefoni).</p>
+    <p ><b>Barra di stato</b> — l'indicatore <b>Wi‑Fi</b>, il punto <b>NTP</b> (orologio), il punto <b>HEAP</b> (memoria libera), e l'<b>UPTIME</b> del dispositivo.</p>
+    <figure><img src="images/4.1_menu.jpeg" alt="Menu di navigazione laterale BrewBOSS"><figcaption >Menu di navigazione laterale — il tuo punto di partenza per ogni schermata.</figcaption></figure>
+
+    <h2 id="operation"><span class="num">5.</span> <span >Funzionamento passo dopo passo</span></h2>
+    <p >Questo è il flusso tipico di una giornata di cotta con una ricetta:</p>
+    <ol>
+      <li ><b>Prepara.</b> Riempi la pentola, posiziona i sensori e connettiti all'interfaccia.</li>
+      <li ><b>Scegli una ricetta.</b> Apri <b>Ricette</b>, selezionane una e <b>Attiva</b>.</li>
+      <li ><b>Controlla le impostazioni.</b> In <b>Impostazioni → Regolazioni</b>, conferma l'unità di temperatura, la temperatura/tempo di bollitura e i sensori.</li>
+      <li ><b>Avvia l'ammostamento.</b> Nella <b>Dashboard</b> premi <kbd>Start</kbd>. Il sistema riscalda fino al target del primo step, poi esegue il suo timer.</li>
+      <li ><b>Segui il processo.</b> Osserva gli indicatori e la <b>cronologia degli step</b>. Quando uno step bloccato emette un segnale acustico, sbloccalo.</li>
+      <li ><b>Bollitura.</b> Dopo l'ultimo step di ammostamento, il sistema passa automaticamente alla bollitura. Riscalda fino all'ebollizione, esegue il timer e attiva ogni aggiunta di luppolo al momento giusto.</li>
+      <li ><b>Post-bollitura e raffreddamento.</b> Con il riscaldamento spento, monitora il raffreddamento e attiva le aggiunte in base alla temperatura, poi lo step di raffreddamento finale.</li>
+      <li ><b>Fine.</b> Il buzzer segnala la fine e la schermata mostra il tempo totale di cotta.</li>
+    </ol>
+    <div class="callout tip"><b >Avvio programmato (Delay)</b><span >Puoi programmare l'ammostamento o la bollitura per iniziare più tardi. L'LCD mostra un conto alla rovescia e il processo parte da solo quando arriva a zero.</span></div>
+
+    <h2 id="screens"><span class="num">6.</span> <span >Le schermate, una per una</span></h2>
+    <p >Ogni sezione qui sotto ti dice il nome della schermata, cosa mostra, a cosa serve e come agire su di essa.</p>
+
+    <div class="screen">
+      <h3 id="screen-main"><span >6.1</span> — <span >Dashboard (Principale)</span></h3>
+      <p ><b>Cosa mostra.</b> La schermata principale con tre indicatori circolari e una scheda timer: temperatura principale, temperatura sparge, potenza (PWM), e il timer di cotta con il nome dello step corrente.</p>
+      <p ><b>A cosa serve.</b> Qui è dove avvii, monitori e fermi una cotta, e leggi lo stato in tempo reale.</p>
+      <p ><b>Come agire.</b> Usa i pulsanti di controllo sotto gli indicatori. Durante la modalità manuale puoi toccare un indicatore per impostare la temperatura target o la potenza.</p>
+      <figure><img src="images/1.0_main.jpeg" alt="Dashboard"><figcaption >Dashboard — indicatori, timer e pulsanti di controllo.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-step"><span >6.2</span> — <span >Step e cronologia degli step</span></h3>
+      <p ><b>Cosa mostra.</b> Lo step/timer corrente e un elenco continuo di ogni traguardo del processo.</p>
+      <p ><b>A cosa serve.</b> Per seguire esattamente dove si trova la cotta e cosa è appena successo.</p>
+      <p ><b>Come agire.</b> Leggilo per tenere traccia. I tipi di evento sono codificati a colori.</p>
+      <figure><img src="images/1.1_step.jpeg" alt="Cronologia step"><figcaption >Vista step e cronologia — la linea temporale della tua cotta.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-recipes"><span >6.3</span> — <span >Ricette</span></h3>
+      <p ><b>Cosa mostra.</b> La tua libreria di ricette, con un campo di ricerca e ordinamento, più un pulsante <b>Importa</b>.</p>
+      <p ><b>A cosa serve.</b> Per creare, archiviare e riutilizzare ricette.</p>
+      <p ><b>Come agire.</b> <b>Attiva</b> una ricetta per caricarla per la cotta. <b>Importa</b> ricette salvate altrove; <b>salva/modifica</b> le tue; <b>elimina</b> quelle che non ti servono più.</p>
+      <figure><img src="images/2.0_recipes.jpeg" alt="Ricette"><figcaption >Ricette — attiva, importa, modifica e gestisci le tue ricette.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-mash"><span >6.4</span> — <span >Editor step di ammostamento</span></h3>
+      <p ><b>Cosa mostra.</b> L'elenco degli step di ammostamento con nome, temperatura target, durata e flag per step.</p>
+      <p ><b>A cosa serve.</b> Per definire il profilo di ammostamento.</p>
+      <p ><b>Come agire.</b> Aggiungi, modifica e riordina gli step; imposta temperatura e tempo; e configura i flag: <b>Ricircolo</b> (attiva pompa), <b>Riscaldatore acceso</b>, <b>Piena potenza</b>, <b>Blocco step</b> (pausa per azione manuale).</p>
+      <figure><img src="images/2.1_mash.jpeg" alt="Editor ammostamento"><figcaption >Editor ammostamento — costruisci il tuo profilo di ammostamento, passo dopo passo.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-boil"><span >6.5</span> — <span >Editor bollitura e aggiunte</span></h3>
+      <p ><b>Cosa mostra.</b> Il programma di bollitura e le aggiunte.</p>
+      <p ><b>A cosa serve.</b> Per programmare le aggiunte di luppolo durante e dopo la bollitura.</p>
+      <p ><b>Come agire.</b> Aggiungi aggiunte e scegli come ciascuna viene attivata: <b>aggiunta temporizzata</b> (durante la bollitura), <b>aggiunta post-bollitura</b> (per temperatura), o <b>raffreddamento finale</b>.</p>
+      <figure><img src="images/2.2_boil.jpeg" alt="Editor bollitura"><figcaption >Editor bollitura — aggiunte temporizzate e attivate dalla temperatura.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-settings"><span >6.6</span> — <span >Regolazioni</span></h3>
+      <p ><b>Cosa mostra.</b> I parametri di cotta che si applicano a ogni lotto: unità, ritardo, percentuali di potenza, temperatura/tempo di bollitura, sparge, banda PID, temporizzazione pompa, assegnazione sensori e caselle di controllo.</p>
+      <p ><b>A cosa serve.</b> Per adattare il controller alla tua attrezzatura.</p>
+      <p ><b>Come agire.</b> Imposta i valori e premi <b>Salva</b>. Usa gli <b>offset</b> dei sensori per calibrare le letture rispetto a un termometro di riferimento.</p>
+      <figure><img src="images/3.0_settings.jpeg" alt="Regolazioni"><figcaption >Regolazioni — adatta il controller alla tua attrezzatura.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-system"><span >6.7</span> — <span >Sistema (rete, sicurezza, ora, backup)</span></h3>
+      <p ><b>Cosa mostra.</b> I pannelli di configurazione del dispositivo.</p>
+      <p ><b>A cosa serve.</b> Rete, login, orologio e backup.</p>
+      <p ><b>Come agire.</b> Configura la modalità <b>Wi‑Fi</b> e le credenziali, la <b>Sicurezza</b> (login on/off e password), il server <b>NTP</b> e l'offset GMT, e il <b>Backup</b> (esporta/importa la tua configurazione).</p>
+      <figure><img src="images/3.1_system.jpeg" alt="Sistema"><figcaption >Sistema — Wi‑Fi, sicurezza, ora e backup.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-about"><span >6.8</span> — <span >Informazioni</span></h3>
+      <p ><b>Cosa mostra.</b> La versione del firmware, hardware, stato della rete, ora/NTP e informazioni di sistema.</p>
+      <p ><b>A cosa serve.</b> Un controllo dello stato di salute e le informazioni da includere quando chiedi aiuto.</p>
+      <p ><b>Come agire.</b> Sola lettura — usalo per verificare che tutto funzioni.</p>
+      <figure><img src="images/3.2_about.jpeg" alt="Informazioni"><figcaption >Informazioni — versione, hardware e stato del sistema.</figcaption></figure>
+    </div>
+    <div class="screen">
+      <h3 id="screen-themes"><span >6.9</span> — <span >Temi colore (Modalità)</span></h3>
+      <p ><b>Cosa mostra.</b> L'interfaccia nei suoi diversi schemi di colore.</p>
+      <p ><b>A cosa serve.</b> Comfort e leggibilità — ad esempio un tema scuro per una sala di cotta poco illuminata.</p>
+      <p ><b>Come agire.</b> Tocca <b>Modalità</b> nel menu laterale per scorrere gli schemi di colore disponibili.</p>
+      <figure><img src="images/4.0_themes.jpeg" alt="Temi"><figcaption >Temi colore — cambia con il pulsante Modalità.</figcaption></figure>
+    </div>
+
+    <h2 id="indicators"><span class="num">7.</span> <span >Pulsanti, campi, messaggi e indicatori</span></h2>
+    <h3 >Pulsanti di controllo (Dashboard)</h3>
+    <ul>
+      <li ><kbd>Start</kbd> — avvia l'ammostamento.</li>
+      <li ><kbd>Pause</kbd> / <kbd>Resume</kbd> — mette in pausa e riprende.</li>
+      <li ><kbd>Stop</kbd> — ferma tutto.</li>
+      <li ><kbd>Skip</kbd> — salta lo step di ammostamento corrente.</li>
+      <li ><kbd>Boil</kbd> — avvia direttamente la bollitura.</li>
+      <li ><kbd>Pump</kbd> — accende/spegne la pompa.</li>
+      <li ><kbd>Prime</kbd> — esegue un ciclo di adescamento automatico.</li>
+    </ul>
+    <h3 >Indicatori di stato</h3>
+    <ul>
+      <li ><b>Wi‑Fi</b>: potenza del segnale in dBm quando connesso a una rete, o <b>AP</b> (verde) più il nome del punto di accesso quando il dispositivo funziona come punto di accesso.</li>
+      <li ><b>Punto NTP</b>: verde quando l'orologio è sincronizzato.</li>
+      <li ><b>Punto HEAP</b>: salute della memoria libera.</li>
+      <li ><b>UPTIME</b>: da quanto tempo il dispositivo è in funzione.</li>
+    </ul>
+    <h3 >Messaggi ed eventi</h3>
+    <p >La <b>cronologia degli step</b> e l'LCD mostrano eventi come <em>Brew STARTED</em>, target raggiunto, step completato, aggiunta di luppolo e completamento. Un evento <b>SAFETY</b> con allarme significa che è stata attivata una protezione.</p>
+    <h3 >Suoni (buzzer)</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th >Quando</th><th >Sentirai</th></tr></thead>
+      <tbody>
+        <tr><td >Temperatura target raggiunta</td><td >Due bip lunghi</td></tr>
+        <tr><td >Lo step di ammostamento avanza</td><td >Corto–corto–lungo</td></tr>
+        <tr><td >Inizio bollitura / aggiunta di luppolo</td><td >Due corti + due lunghi</td></tr>
+        <tr><td >Step bloccato (richiede la tua azione)</td><td >Due bip ogni 15 s</td></tr>
+        <tr><td >Cotta completata</td><td >Quattro bip lunghi</td></tr>
+        <tr><td >Sicurezza attivata</td><td >Schema di allarme</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 id="modes"><span class="num">8.</span> <span >Modalità operative</span></h2>
+    <ul>
+      <li ><b>Ammostamento</b> — esegue i tuoi step di ammostamento; per ogni step riscalda fino al target, esegue il timer, poi avanza. Dopo l'ultimo step passa automaticamente alla bollitura.</li>
+      <li ><b>Bollitura</b> — riscalda fino alla temperatura di bollitura, esegue il timer e attiva le aggiunte temporizzate. Puoi avviarla da sola.</li>
+      <li ><b>Post-bollitura</b> — il riscaldamento è spento; monitora il raffreddamento e attiva le aggiunte in base alla temperatura, poi lo step di raffreddamento finale.</li>
+      <li ><b>Manuale</b> — imposti direttamente la potenza del riscaldatore (anello aperto). Il target è solo informativo. Non viene salvato per il ripristino.</li>
+      <li ><b>Delay (avvio programmato)</b> — avvia l'ammostamento o la bollitura con un ritardo; il dispositivo fa il conto alla rovescia e parte da solo.</li>
+    </ul>
+    <h3 >Pompa e adescamento</h3>
+    <ul>
+      <li ><b>Pompa</b> — accendila/spegnila manualmente; durante uno step di ricircolo è controllata automaticamente.</li>
+      <li ><b>Adescamento</b> — un ciclo automatico (5 × 3 s acceso / 2 s spento) per riempire l'impianto idraulico prima di iniziare.</li>
+    </ul>
+
+    <h2 id="standalone"><span class="num">9.</span> <span >Uso autonomo — LCD e pulsanti fisici</span></h2>
+    <p >Puoi eseguire un'intera cotta senza l'interfaccia web.</p>
+    <h3 >Il display 20×4</h3>
+    <pre>[w] BrewBOSS 00:14:32         &lt;- icona Wi-Fi + titolo + timer dello step
+[H]  65.20&gt;66   [W] 68% [P]   &lt;- Principale: attuale&gt;target, potenza, PWM, pompa
+[S]  74.00&gt;74   100%        M &lt;- Sparge: attuale&gt;target, PWM, flag B/M/L
+Add Citra 30g@15'             &lt;- ultimo messaggio evento (o IP / AP)</pre>
+    <ul>
+      <li >Riga 1 — icona Wi‑Fi + "BrewBOSS" con il timer dello step durante la cotta; altrimenti la versione.</li>
+      <li >Riga 2 — temperatura principale (attuale>target), unità, potenza riscaldatore, PWM% e un'icona della pompa quando è accesa.</li>
+      <li >Riga 3 — temperatura sparge e il suo PWM%; un flag: <b>B</b> (bollitura in pausa), <b>M</b> (ammostamento in pausa) o <b>L</b> (step bloccato).</li>
+      <li >Riga 4 — l'ultimo messaggio evento; in idle, mostra <code>IP: &lt;indirizzo&gt;</code> o <code>AP: 192.168.4.1</code>.</li>
+    </ul>
+    <p >Dopo il completamento di una cotta, lo schermo mostra un ringraziamento per 15 s e poi il tempo totale di cotta finché non premi un pulsante qualsiasi.</p>
+
+    <h3 >I 4 pulsanti</h3>
+    <p >I quattro pulsanti del tastierino a membrana sono numerati <b>1–4</b>. Ciascuno risponde a tre durate di pressione: <b>breve</b>, <b>lunga</b> (~2 s) e <b>molto lunga</b> (~3 s). Un blocco di 1.5 s dopo l'avvio di una modalità evita un arresto accidentale.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th >Pressione</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+      <tbody>
+        <tr><td><b >Breve</b></td><td >Pompa on/off</td><td >Potenza <b>−10%</b></td><td >Potenza <b>+10%</b></td><td >Pausa / Riprendi</td></tr>
+        <tr><td><b >Lunga</b> (~2 s)</td><td ><b>Adescamento</b></td><td >Avvia <b>manuale</b> / salta step / sblocca</td><td >Avvia <b>bollitura</b></td><td >Avvia <b>ammostamento</b></td></tr>
+        <tr><td><b >Molto lunga</b> (~3 s)</td><td >—</td><td >Ferma</td><td >Ferma</td><td >Ferma</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li >Il cambio di ±10% di potenza influisce sul riscaldatore attivo per la modalità corrente.</li>
+      <li >Nell'ammostamento, una pressione lunga sul <b>pulsante 2</b> salta lo step corrente; se lo step è <b>bloccato</b>, la stessa pressione lunga lo sblocca e lo fa avanzare.</li>
+      <li >Nella schermata "tempo totale" dopo il completamento, qualsiasi pulsante torna alla schermata principale.</li>
+    </ul>
+
+    <h2 id="recovery"><span class="num">10.</span> <span >Ripristino dopo interruzione di corrente</span></h2>
+    <p >Se la corrente viene a mancare durante una cotta, al riavvio il dispositivo rileva lo stato salvato, <b>entra in PAUSA</b> e mostra <b>"RECUPERATO! RIPRENDERE?"</b> sull'LCD.</p>
+    <ol>
+      <li >Premi <b>pulsante 4 (breve)</b> per riprendere da dove si era fermato.</li>
+      <li >Se l'orologio era sincronizzato, il tempo rimanente viene regolato in base al tempo in cui il dispositivo è rimasto spento.</li>
+    </ol>
+    <div class="callout warn"><b >Nota</b><span >La modalità manuale non viene ripristinata (non ha uno stato salvato).</span></div>
+
+    <h2 id="flow"><span class="num">11.</span> <span >Flusso principale di utilizzo (riferimento rapido)</span></h2>
+    <ol>
+      <li >Accendi → connettiti a <code>BrewBOSS</code> / apri <code>192.168.4.1</code> → fai il login.</li>
+      <li ><b>Ricette</b> → Attiva la tua ricetta.</li>
+      <li ><b>Regolazioni</b> → conferma unità, temperature e sensori.</li>
+      <li ><b>Dashboard</b> → <kbd>Prime</kbd> (opzionale) → <kbd>Start</kbd>.</li>
+      <li >L'ammostamento viene eseguito e avanza → passa alla <b>Bollitura</b> → le aggiunte si attivano a tempo.</li>
+      <li ><b>Post-bollitura</b> / raffreddamento → <b>Completato</b> (viene mostrato il tempo totale).</li>
+    </ol>
+
+    <h2 id="best"><span class="num">12.</span> <span >Buone pratiche</span></h2>
+    <ul>
+      <li >Calibra gli <b>offset</b> dei sensori con un termometro affidabile prima della tua prima cotta.</li>
+      <li >Esegui <b>Adescamento</b> e verifica il flusso prima di avviare l'ammostamento.</li>
+      <li >Tieni il dispositivo su una rete <b>Wi‑Fi fidata</b> — la connessione trasmette la password in chiaro sulla rete locale.</li>
+      <li >Salva le tue cotte come <b>ricette</b> e usa il <b>log/CSV</b> di temperatura per perfezionarle per la tua attrezzatura.</li>
+      <li >Esegui un <b>Backup</b> (Esporta) dopo aver finito di configurare il dispositivo.</li>
+      <li >Mantieni l'area vicino ai riscaldatori libera; non lasciare mai una cotta attiva completamente incustodita.</li>
+    </ul>
+
+    <h2 id="trouble"><span class="num">13.</span> <span >Risoluzione dei problemi</span></h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th >Sintomo</th><th >Causa probabile e cosa fare</th></tr></thead>
+      <tbody>
+        <tr><td >Impossibile aprire <code>192.168.4.1</code></td><td >Assicurati di essere connesso alla rete <code>BrewBOSS</code>. Digita <code>http://192.168.4.1</code> (con <code>http://</code>). Su un telefono, ignora eventuali avvisi "nessuna connessione internet".</td></tr>
+        <tr><td >Il punto di accesso è instabile</td><td >In modalità MIXED mentre il dispositivo cerca di raggiungere una Wi‑Fi irraggiungibile, l'AP può lampeggiare fino a 60 s, poi torna solo AP e diventa stabile. Oppure usa la modalità solo AP.</td></tr>
+        <tr><td >Una temperatura mostra <code>---</code></td><td >Quel sensore non viene rilevato o è scollegato. Controlla il cablaggio e riassegna il sensore nelle <b>Regolazioni</b>.</td></tr>
+        <tr><td >I riscaldatori non si accendono / evento "SAFETY"</td><td >Sovratemperatura o perdita del sensore in una modalità automatica. Lascia raffreddare / ripara il sensore; il riscaldamento riprende quando è sicuro.</td></tr>
+        <tr><td >Impossibile apportare modifiche (sola lettura)</td><td >Sei in modalità sola lettura. Tocca il badge "Sola lettura — tocca per accedere" e inserisci la password.</td></tr>
+        <tr><td >Password dimenticata</td><td >Riflashare il filesystem ripristina la password a <code>brewboss</code>.</td></tr>
+        <tr><td >Ora errata nei log</td><td >L'orologio non è sincronizzato. Imposta un server <b>NTP</b> e l'offset GMT nel <b>Sistema</b>.</td></tr>
+        <tr><td >Dopo un'interruzione di corrente è in pausa</td><td >È la funzione di ripristino. Premi il <b>pulsante 4 (breve)</b> (o usa l'interfaccia) per riprendere.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 id="firmware"><span class="num">14.</span> <span >Firmware e installazione</span></h2>
+    <p >Firmware (LittleFS distribuito separatamente) per i 3 controller supportati. Le immagini del filesystem sono in formato <b>LittleFS</b>.</p>
+
+    <h3 >File e offset</h3>
+    <p >Ogni release nella cartella <b>binaries</b> include <b>due file per controller</b>: <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;.bin</code> è il <b>firmware</b> (flashalo <b>per primo</b>) e <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;_fs.bin</code> è il <b>filesystem</b> (LittleFS — flashalo <b>per secondo</b>). Il file che termina in <code>_fs</code> è sempre il filesystem; quello senza suffisso è il firmware. <code>&lt;board&gt;</code> è <code>esp12e</code> (Wemos D1 Mini / ESP8266), <code>esp32</code> (ESP32 WROOM-32) o <code>esp32c3</code> (ESP32-C3 Super Mini).</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th >Controller</th><th >File</th><th >Tipo</th><th >Offset</th><th >Dimensione</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2"><b>Wemos</b> ESP8266 (ESP12E)</td><td><code>BrewBOSS_&lt;version&gt;_esp12e.bin</code></td><td>Firmware</td><td><code>0x00000000</code></td><td>~440 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></td><td>LittleFS</td><td><code>0x00200000</code></td><td>~2,024 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32</b> esp32dev</td><td><code>BrewBOSS_&lt;version&gt;_esp32.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>~1,010 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
+        <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c3.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>~1,020 KB</td></tr>
+        <tr><td><code>BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 >Aggiornamenti OTA Firmware e Filesystem</h3>
+    <p >BrewBOSS supporta aggiornamenti <b>Over-the-Air (OTA)</b> direttamente tramite l'interfaccia web. Questo elimina la necessità di cavi USB e <code>esptool</code> per gli aggiornamenti quotidiani. Carica il file <b>firmware</b> per primo (senza suffisso <code>_fs</code>), poi il file <b>filesystem</b> (suffisso <code>_fs</code>) per secondo.</p>
+    <ul>
+      <li ><b>Come funziona:</b> Accedi a <b>Impostazioni → Sistema → Aggiornamento Firmware</b> nell'interfaccia web. Carica i nuovi file binari di firmware e filesystem. Il dispositivo gestisce la scrittura interna sulla flash e si riavvia.</li>
+      <li ><b>Vantaggi:</b></li>
+          <li ><b>Sicurezza:</b> Il bootloader include fallback automatici per garantire che il dispositivo rimanga funzionante anche se un aggiornamento viene interrotto.</li>
+          <li ><b>Efficienza:</b> Transizione senza soluzione di continuità tra versioni del firmware e strutture del filesystem senza calcolo manuale degli offset.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 >Prerequisiti</h3>
+    <ul>
+      <li >Installa esptool: <code>pip install esptool</code></li>
+      <li >Collega il controller via USB e trova la sua porta seriale (es. <code>COM5</code> su Windows, <code>/dev/ttyUSB0</code> su Linux).</li>
+      <li >Esegui i comandi dalla cartella in cui si trovano i file <code>.bin</code>.</li>
+      <li >Sostituisci <code>COMx</code> con la porta corretta. Aggiungi <code>--baud 460800</code> per un flash più veloce.</li>
+    </ul>
+
+    <h3 >Flash (aggiornamento)</h3>
+    <p >Per un controller già configurato, flasha il <b>firmware per primo</b>, poi il <b>filesystem (<code>_fs</code>) per secondo</b> — due passaggi separati (più affidabile). Sostituisci <code>&lt;version&gt;</code> con la versione scaricata:</p>
+    <p><b >Wemos / ESP8266 — firmware</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp12e.bin</code></pre>
+    <p><b >Wemos / ESP8266 — filesystem</b></p><pre><code>esptool.py --chip esp8266 --port COMx --baud 460800 write_flash 0x200000 BrewBOSS_&lt;version&gt;_esp12e_fs.bin</code></pre>
+    <p><b >ESP32 (esp32dev) — firmware</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32.bin</code></pre>
+    <p><b >ESP32 (esp32dev) — filesystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
+    <p><b >ESP32-C3 — firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+    <p><b >ESP32-C3 — filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <div class="callout note"><b >ESP8266</b> <span >il firmware include già il bootloader (eboot), quindi va scritto a <code>0x0</code>. I 2 file sono sufficienti.</span></div>
+
+    <h3 >Chip vergine / Primo flash (ESP32 / ESP32-C3)</h3>
+    <p >Dopo un <b>erase_flash</b> o su un chip nuovo, devi flashare tutti i 5 file agli offset corretti. Il bootloader, la tabella delle partizioni e boot_app0 sono già inclusi nella cartella binaries.</p>
+
+    <div class="callout warn"><b >ESP32-C3 Super Mini - Pulsante BOOT</b><span >Per il <b>primo flash</b> (bootloader a <code>0x0</code>), devi <b>tenere premuto il pulsante BOOT</b> sulla scheda mentre esegui il comando. Rilascialo dopo l'avvio del flash. I flash successivi si eseguono senza il pulsante.</span></div>
+
+    <p><b >1. Bootloader</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x0000 BrewBOSS_&lt;version&gt;_esp32c3_bootloader.bin</code></pre>
+
+    <p><b >2. Tabella delle partizioni</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x8000 BrewBOSS_&lt;version&gt;_esp32c3_partitions.bin</code></pre>
+
+    <p><b >3. Boot app</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0xe000 BrewBOSS_&lt;version&gt;_esp32c3_boot_app0.bin</code></pre>
+
+    <p><b >4. Firmware</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+
+    <p><b >5. Filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <h3 >Solo aggiornamento firmware (bootloader intatto)</h3>
+    <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
+
+    <h3 >Solo aggiornamento filesystem</h3>
+    <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+
+    <div class="callout warn"><b >Cancella tutto prima (opzionale)</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. Questo cancella anche la configurazione WiFi/ricette memorizzata in LittleFS.</span></div>
+
+    <h3 >Note</h3>
+    <ul>
+      <li >Gli offset sono validi per l'attuale tabella delle partizioni (flash 4 MB). Se la tabella cambia, gli offset cambiano.</li>
+      <li >Le immagini sono <b>LittleFS</b> (non SPIFFS) — il firmware monta il filesystem come LittleFS.</li>
+      <li >Dopo il flash, il controller avvia il server web; accedi tramite l'IP di rete o l'AP.</li>
+      <li >ESP32-C3 con USB nativa: la porta appare come dispositivo seriale Espressif (VID <code>303A</code>); il reset/boot per il flash è automatico.</li>
+    </ul>
+
+    <h2 id="pinout"><span class="num">15.</span> <span >Riferimento pinout</span></h2>
+    <p >Le mappature dei pin qui sotto sono la configurazione standard BrewBOSS per ciascun controller supportato. Sono pubblicate nella speranza che la comunità progetti <b>PCB dedicate</b> — specialmente per l'<b>ESP32-C3 Super Mini</b> e altre schede basate su ESP32 che offrono <b>più memoria, elaborazione più veloce e porte I/O aggiuntive</b> rispetto al classico ESP8266. Una scheda progettata appositamente rende il cablaggio più sicuro, l'assemblaggio più rapido e l'intero sistema più affidabile. Se ne crei una, condividila con la comunità.</p>
+
+    <h3>ESP32-C3 Super Mini</h3>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:8px;">GPIO in ordine decrescente sui pin da 4 a 8 (GPIO4 &#8594; GPIO0).</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Pin</th><th>Scheda</th><th>Funzione</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>5V</td><td>Alimentazione</td></tr>
+        <tr><td>02</td><td>GND</td><td>Massa</td></tr>
+        <tr><td>03</td><td>3V3</td><td>Alimentazione logica</td></tr>
+        <tr><td>04</td><td>GPIO4</td><td>BUZZER</td></tr>
+        <tr><td>05</td><td>GPIO3</td><td>KEYPAD / BTN4 / START</td></tr>
+        <tr><td>06</td><td>GPIO2</td><td>KEYPAD / BTN3 / BOIL</td></tr>
+        <tr><td>07</td><td>GPIO1</td><td>KEYPAD / BTN2 / MANUAL</td></tr>
+        <tr><td>08</td><td>GPIO0</td><td>KEYPAD / BTN1 / PUMP</td></tr>
+        <tr><td>09</td><td>GPIO5</td><td>Riscaldatore MASH</td></tr>
+        <tr><td>10</td><td>GPIO6</td><td>Riscaldatore SPARGE</td></tr>
+        <tr><td>11</td><td>GPIO7</td><td>Riscaldatore BOIL</td></tr>
+        <tr><td>12</td><td>GPIO8</td><td>LCD / SDA</td></tr>
+        <tr><td>13</td><td>GPIO9</td><td>LCD / SCL</td></tr>
+        <tr><td>14</td><td>GPIO10</td><td>POMPA (active-low)</td></tr>
+        <tr><td>15</td><td>GPIO20</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>16</td><td>GPIO21</td><td>DISPONIBILE</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b >Note C3</b><span >Tastierino letto direttamente dai GPIO (senza PCF8574). BTN1=GPIO0, BTN2=GPIO1, BTN3=GPIO2, BTN4=GPIO3. La pompa è active-low (<code>INVERT_PUMP=true</code>): HIGH = spenta, LOW = accesa. LCD 20×4 all'indirizzo <code>0x27</code>. WiFi SoftAP forzato sul canale 1, potenza TX 8.5 dBm.</span></div>
+
+    <h3>ESP8266 (Wemos D1 Mini)</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Pin</th><th>Scheda</th><th>Funzione</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>RST</td><td>Reset</td></tr>
+        <tr><td>02</td><td>A0 (ADC0)</td><td>Ingresso analogico (disponibile)</td></tr>
+        <tr><td>03</td><td>D0 / GPIO16</td><td>BUZZER</td></tr>
+        <tr><td>04</td><td>D5 / GPIO14</td><td>POMPA</td></tr>
+        <tr><td>05</td><td>D6 / GPIO12</td><td>DS18B20 (OneWire)</td></tr>
+        <tr><td>06</td><td>D7 / GPIO13</td><td>Riscaldatore SPARGE</td></tr>
+        <tr><td>07</td><td>D8 / GPIO15</td><td>Riscaldatore MASH</td></tr>
+        <tr><td>08</td><td>3V3</td><td>Alimentazione logica</td></tr>
+        <tr><td>09</td><td>TX / GPIO1</td><td>Seriale TX (debug)</td></tr>
+        <tr><td>10</td><td>RX / GPIO3</td><td>Seriale RX (debug)</td></tr>
+        <tr><td>11</td><td>D1 / GPIO5</td><td>I2C SCL (LCD + tastierino PCF8574)</td></tr>
+        <tr><td>12</td><td>D2 / GPIO4</td><td>I2C SDA (LCD + tastierino PCF8574)</td></tr>
+        <tr><td>13</td><td>D3 / GPIO0</td><td>Pulsante Flash (boot strap)</td></tr>
+        <tr><td>14</td><td>D4 / GPIO2</td><td>Riscaldatore BOIL (LED integrato)</td></tr>
+        <tr><td>15</td><td>GND</td><td>Massa</td></tr>
+        <tr><td>16</td><td>5V</td><td>Alimentazione</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b >Note ESP8266</b><span >PCF8574 (espansore I2C per tastierino) a <code>0x38</code> — tastierino interrogato via I2C, pin INT non utilizzato. LCD 20×4 a <code>0x27</code> (alternative: <code>0x3F</code>, <code>0x20</code>, <code>0x3E</code>). GPIO15 (D8 / pin 7) richiede pull-down esterno (boot strap). GPIO2 (D4 / pin 14) ha pull-up interno e LED integrato — si accende con il riscaldatore di bollitura. GPIO16 (D0 / pin 3) <b>non supporta PWM</b>. GPIO0 (D3 / pin 13) è un pin di boot strap: portato BASSO all'accensione entra in modalità flash. La pre-sicurezza all'avvio imposta i GPIO 0,2,4,5,12,13,14,15,16 come INPUT (alta impedenza).</span></div>
+
+    <h3 >Indirizzi I2C (entrambi i controller)</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th >Dispositivo</th><th >Indirizzo predefinito</th><th >Alternativo</th></tr></thead>
+      <tbody>
+        <tr><td>LCD 20&#215;4</td><td><code>0x27</code></td><td><code>0x3F</code>, <code>0x20</code>, <code>0x3E</code></td></tr>
+        <tr><td>Tastierino PCF8574</td><td><code>0x38</code></td><td><code>0x20</code> (solo ESP8266)</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="notes"><span class="num">16.</span> <span >Note finali</span></h2>
+    <ul>
+      <li >BrewBOSS controlla riscaldatori e liquidi caldi reali. Segui sempre pratiche sicure di elettricità e birrificazione.</li>
+      <li >L'interfaccia è servita localmente dal dispositivo e funziona offline; l'accesso in lettura è aperto, e l'accesso in scrittura può essere protetto con il login.</li>
+      <li ><b>Licenza:</b> solo per uso personale / non commerciale.</li>
+    </ul>
+
+    <section id="license">
+      <h2 >Licenza e termini di utilizzo</h2>
+      <div style="font-size:0.72rem;line-height:1.55;color:var(--dim);">
+        <p ><b>Accordo di Licenza BrewBOSS — Versione 1.0</b><br>Copyright &copy; 2026 LR</p>
+        <p ><b>1. Concessione d'Uso.</b> Questo software, denominato <b>BrewBOSS</b>, è reso disponibile <b>gratuitamente</b> esclusivamente per <b>uso personale, privato e non commerciale</b>, sotto forma di <b>binari compilati</b> — il codice sorgente non è reso disponibile. Nel rispetto dei termini, ti è consentito: scaricare e utilizzare i binari per uso personale; effettuare copie private dei binari per backup.</p>
+        <p ><b>2. Usi Proibiti.</b> Vietato senza previa autorizzazione scritta: vendere, rivendere o commercializzare; utilizzare in qualsiasi attività commerciale, industriale, aziendale o che generi ricavi; incorporare in prodotti destinati alla vendita; distribuire per scopi commerciali; utilizzare in ambienti di produzione o industriali; ispezionare, decompilare, decodificare, modificare, alterare o tentare di estrarre il codice sorgente (il codice non è reso disponibile); rimuovere questo avviso di licenza. Qualsiasi utilizzo al di fuori dell'ambito personale e non commerciale è proibito.</p>
+        <p ><b>3. Nessuna Garanzia.</b> FORNITO "COSÌ COM'È", SENZA GARANZIA DI ALCUN TIPO, ESPRESSA O IMPLICITA. Il titolare del copyright e i collaboratori non forniscono garanzie di commerciabilità, idoneità, non violazione, accuratezza, affidabilità, compatibilità, funzionamento continuo, né che il software sia privo di errori o sicuro.</p>
+        <p ><b>4. Rischio di Sicurezza e Operativo.</b> L'utente riconosce che il software può contenere difetti, può smettere di funzionare, può comportarsi in modo imprevedibile, può interagire con l'hardware in modo non sicuro, e non è certificato per operazioni critiche o di sicurezza. L'utente si assume tutti i rischi.</p>
+        <p ><b>5. Limitazione di Responsabilità.</b> IN NESSUN CASO IL TITOLARE DEL COPYRIGHT, GLI AUTORI O I COLLABORATORI SARANNO RESPONSABILI PER ALCUN RECLAMO, PERDITA, DANNO, COSTO O RESPONSABILITÀ DI QUALSIASI TIPO, SIA DIRETTO, INDIRETTO, INCIDENTALE, SPECIALE, CONSEQUENZIALE O DI ALTRA NATURA. Ciò include perdita di dati, corruzione di file, malfunzionamento dell'apparecchiatura, danni all'hardware, danni elettrici, surriscaldamento, incendio, lesioni personali, perdita di profitti, interruzione dell'attività, perdita di produzione e qualsiasi altro danno.</p>
+        <p ><b>6. Nessun Supporto.</b> Nessun obbligo di fornire supporto tecnico, aggiornamenti, correzioni di bug, manutenzione, patch di sicurezza, modifiche di compatibilità o aggiornamenti della documentazione. Qualsiasi supporto volontario non crea un obbligo continuativo.</p>
+        <p ><b>7. Cessazione.</b> Qualsiasi violazione determina automaticamente la cessazione del diritto di utilizzare il software. Alla cessazione, interrompi l'uso ed elimina tutte le copie dei binari.</p>
+        <p ><b>8. Accettazione.</b> Scaricando, installando, accedendo o utilizzando BrewBOSS, accetti di essere vincolato da questa licenza. Se non sei d'accordo, non utilizzare il software.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer><b>BrewBOSS</b> — <span >Manuale Operativo per l'Utente</span></footer>
+</div>
+
+
+</body>
+</html>
