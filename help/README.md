@@ -154,23 +154,27 @@ esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_<version>_es
 
 ### ESP32-C3 — blank chip / first flash
 
-After `erase_flash`, flash all 5 files **one at a time**:
+After `erase_flash`, flash all 5 files **one at a time**. The ESP32-C3 uses
+**DIO** flash mode (many C3 modules have XMC flash that does NOT support QIO —
+flashing in QIO leaves the board in a boot loop with the USB port flapping).
+If you flash manually, add `--flash_mode dio`; the Web Flasher already applies
+DIO automatically for the ESP32-C3.
 
 ```bash
 # 1. Bootloader — HOLD the BOOT button on ESP32-C3 Super Mini for this command
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x0000 BrewBOSS_<version>_esp32c3_bootloader.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0x0000 BrewBOSS_<version>_esp32c3_bootloader.bin
 
 # 2. Partition table
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x8000 BrewBOSS_<version>_esp32c3_partitions.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0x8000 BrewBOSS_<version>_esp32c3_partitions.bin
 
 # 3. Boot app
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0xe000 BrewBOSS_<version>_esp32c3_boot_app0.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0xe000 BrewBOSS_<version>_esp32c3_boot_app0.bin
 
 # 4. Firmware
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_<version>_esp32c3.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0x10000 BrewBOSS_<version>_esp32c3.bin
 
 # 5. Filesystem
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_<version>_esp32c3_fs.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0x290000 BrewBOSS_<version>_esp32c3_fs.bin
 ```
 
 ### Troubleshooting
@@ -347,23 +351,27 @@ esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_<versao>_esp
 
 ### ESP32-C3 — chip zerado / primeira gravação
 
-Após `erase_flash`, grave todos os 5 arquivos **um de cada vez**:
+Após `erase_flash`, grave todos os 5 arquivos **um de cada vez**. A ESP32-C3
+usa modo de flash **DIO** (muitos módulos C3 têm flash XMC que NÃO suporta QIO —
+gravar em QIO deixa a placa em boot loop com a porta USB piscando). Se gravar
+manualmente, adicione `--flash_mode dio`; o Web Flasher já aplica DIO
+automaticamente para a ESP32-C3.
 
 ```bash
 # 1. Bootloader — SEGURE o botão BOOT na ESP32-C3 Super Mini para este comando
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x0000 BrewBOSS_<versao>_esp32c3_bootloader.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0x0000 BrewBOSS_<versao>_esp32c3_bootloader.bin
 
 # 2. Tabela de partições
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x8000 BrewBOSS_<versao>_esp32c3_partitions.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0x8000 BrewBOSS_<versao>_esp32c3_partitions.bin
 
 # 3. Boot app
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0xe000 BrewBOSS_<versao>_esp32c3_boot_app0.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0xe000 BrewBOSS_<versao>_esp32c3_boot_app0.bin
 
 # 4. Firmware
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_<versao>_esp32c3.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0x10000 BrewBOSS_<versao>_esp32c3.bin
 
 # 5. Filesystem
-esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_<versao>_esp32c3_fs.bin
+esptool.py --chip esp32c3 --port COMx --baud 460800 --flash_mode dio write_flash 0x290000 BrewBOSS_<versao>_esp32c3_fs.bin
 ```
 
 ### Solução de Problemas

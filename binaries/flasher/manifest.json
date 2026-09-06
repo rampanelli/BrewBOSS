@@ -33,7 +33,7 @@
           "name": "ESP32-C3 Super Mini",
           "chip": "esp32c3",
           "flash": {
-            "mode": "qio",
+            "mode": "dio",
             "freq": "80m",
             "size": "4MB"
           },
@@ -76,7 +76,7 @@
           "name": "ESP32-C3 Super Mini",
           "chip": "esp32c3",
           "flash": {
-            "mode": "qio",
+            "mode": "dio",
             "freq": "80m",
             "size": "4MB"
           },
@@ -138,7 +138,7 @@
           "name": "ESP32-C3 Super Mini",
           "chip": "esp32c3",
           "flash": {
-            "mode": "qio",
+            "mode": "dio",
             "freq": "80m",
             "size": "4MB"
           },

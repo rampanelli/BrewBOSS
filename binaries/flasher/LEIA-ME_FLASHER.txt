@@ -35,6 +35,14 @@ As partes SEPARADAS (bootloader, partitions, boot_app0, app, filesystem) para
 gravacao manual ficam na pasta binaries (uma nivel acima), identificadas por
 modelo e versao, ex: BrewBOSS_v2.2.26b_esp32c3_bootloader.bin.
 
+FLASH MODE POR CONTROLADOR (importante ao gravar manualmente com esptool):
+  ESP12E / ESP8266:  DIO (usar --flash_mode dio)
+  ESP32-C3:          DIO (usar --flash_mode dio)  <- OBRIGATORIO: muitos modulos
+                     C3 usam flash XMC que NAO suporta QIO; gravar em QIO deixa
+                     o controlador em boot loop (porta USB piscando).
+  ESP32-C5:          QIO (usar --flash_mode qio)
+  O Web Flasher ja aplica o modo correto automaticamente por placa.
+
 ================================================================================
 1. IMAGENS COMPLETAS (_full.bin - gravar em 0x000000, uma unica operacao)
 ================================================================================

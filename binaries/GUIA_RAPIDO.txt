@@ -149,6 +149,18 @@ POR QUE OFFSETS DIFERENTES?
   NVFS e OTA). Esses offsets são definidos pelo espressif32 e não devem
   ser alterados.
 
+FLASH MODE (ao gravar manualmente com esptool.py, adicione --flash_mode):
+  ESP8266 / ESP32:     --flash_mode dio
+  ESP32-C3:            --flash_mode dio   <- OBRIGATÓRIO. Muitos ESP32-C3 usam
+                       flash XMC que NÃO aceita QIO; gravar em QIO deixa o
+                       controlador em boot loop (a porta USB fica piscando e
+                       o firmware não sobe). Se isso acontecer, regrave com DIO.
+  ESP32-C5:            --flash_mode qio
+
+O WEB FLASHER já aplica o modo correto automaticamente para cada controlador,
+então não é preciso se preocupar ao usar o site (https://rampanelli.github.io/
+BrewBOSS/flasher/).
+
 
 1.4. O que é firmware e o que é filesystem?
 

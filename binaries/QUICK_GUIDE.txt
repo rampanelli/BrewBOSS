@@ -150,6 +150,19 @@ WHY DIFFERENT OFFSETS?
   NVS and OTA partitions). These offsets are defined by espressif32 and must
   not be changed.
 
+FLASH MODE (when flashing manually with esptool.py, add --flash_mode):
+  ESP8266 / ESP32:     --flash_mode dio
+  ESP32-C3:            --flash_mode dio   <- REQUIRED. Many ESP32-C3 modules use
+                       XMC flash that does NOT support QIO; flashing in QIO
+                       leaves the controller in a boot loop (the USB port keeps
+                       disconnecting and the firmware never starts). If that
+                       happens, re-flash with DIO.
+  ESP32-C5:            --flash_mode qio
+
+The WEB FLASHER applies the correct flash mode automatically per controller,
+so there is nothing to worry about when using the site (https://rampanelli.
+github.io/BrewBOSS/flasher/).
+
 
 1.4. What is firmware and what is filesystem?
 

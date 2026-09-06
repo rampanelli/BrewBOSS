@@ -139,7 +139,7 @@ const CATALOG_DEFAULT = {
           full: { file: "BrewBOSS_v2.2.25s_esp12e_full.bin", offset: 0 },
           fw: { file: "BrewBOSS_v2.2.25s_esp12e_fw.bin", offset: 0 }, single: false },
         { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
-          flash: { mode: "qio", freq: "80m", size: "4MB" },
+          flash: { mode: "dio", freq: "80m", size: "4MB" },
           full: { file: "BrewBOSS_v2.2.25s_esp32c3_full.bin", offset: 0 },
           fw: { file: "BrewBOSS_v2.2.25s_esp32c3_fw.bin", offset: 0x10000 }, single: false }
       ]
@@ -152,7 +152,7 @@ const CATALOG_DEFAULT = {
           full: { file: "BrewBOSS_v2.2.26a_esp12e_full.bin", offset: 0 },
           fw: { file: "BrewBOSS_v2.2.26a_esp12e_fw.bin", offset: 0 }, single: false },
         { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
-          flash: { mode: "qio", freq: "80m", size: "4MB" },
+          flash: { mode: "dio", freq: "80m", size: "4MB" },
           full: { file: "BrewBOSS_v2.2.26a_esp32c3_full.bin", offset: 0 },
           fw: { file: "BrewBOSS_v2.2.26a_esp32c3_fw.bin", offset: 0x10000 }, single: false },
         { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
@@ -169,7 +169,7 @@ const CATALOG_DEFAULT = {
           full: { file: "BrewBOSS_v2.2.26b_esp12e_full.bin", offset: 0 },
           fw: { file: "BrewBOSS_v2.2.26b_esp12e_fw.bin", offset: 0 }, single: false },
         { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
-          flash: { mode: "qio", freq: "80m", size: "4MB" },
+          flash: { mode: "dio", freq: "80m", size: "4MB" },
           full: { file: "BrewBOSS_v2.2.26b_esp32c3_full.bin", offset: 0 },
           fw: { file: "BrewBOSS_v2.2.26b_esp32c3_fw.bin", offset: 0x10000 }, single: false },
         { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
