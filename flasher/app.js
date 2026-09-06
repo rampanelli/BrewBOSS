@@ -535,26 +535,6 @@ function normalizeChip(name) {
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Retorna a porta autorizada mais provavel de ser a mesma do aparelho (mesmo
-// VID/PID da porta salva, se houver). getPorts() devolve objetos ATUAIS — apos
-// um reset o chip reenumera e o objeto antigo fica obsoleto, por isso preferimos
-// sempre buscar o mais recente.
-async function bestGrantedPort() {
-  try {
-    const list = await navigator.serial.getPorts();
-    if (!list || !list.length) return null;
-    const want = savedPort && savedPort.getInfo ? savedPort.getInfo() : null;
-    const match = list.find((p) => {
-      if (!want || !p.getInfo) return false;
-      const gi = p.getInfo();
-      return gi.usbVendorId === want.usbVendorId && gi.usbProductId === want.usbProductId;
-    });
-    return match || list[list.length - 1] || list[0];
-  } catch (e) {
-    return null;
-  }
-}
-
 async function flashFlow() {
   if (busy || !selected) return;
   const board = selectedBoard();
@@ -584,49 +564,60 @@ async function flashFlow() {
   let transport = null;
   let loader = null;
   try {
-    // 1) Conexao com a porta (com ate 3 tentativas): apos gravar e resetar, o
-    // chip reenumera a USB e o objeto de porta salvo fica obsoleto; entao, se
-    // falhar ao abrir, busca-se uma porta autorizada "fresca" (getPorts) ou o
-    // modal do seletor antes de desistir.
+    // 1) Conexao: SEMPRE pede a porta no modal (escolha explicita do usuario).
+    // Se o usuario ja autorizou portas antes, elas aparecem listadas no modal e
+    // podem ser selecionadas num clique; "Escolher porta USB..." abre o seletor
+    // nativo. Nunca auto-selecionamos porta (evita gravar no controlador errado
+    // quando ha mais de um conectado).
     const terminal = {
       clean() {},
       write(data) { logLine(data); },
       writeLine(data) { logLine(data); }
     };
-    const maxTries = 3;
-    for (let attempt = 1; attempt <= maxTries; attempt++) {
-      try {
-        if (attempt > 1) {
-          const fresh = await bestGrantedPort();
-          if (fresh) { savedPort = fresh; port = fresh; }
-          else {
-            port = await acquirePort();
-            if (!port) { log("seleção de porta cancelada.", "warn"); return; }
-          }
-        } else {
+    port = await acquirePort();
+    if (!port) { log("seleção de porta cancelada.", "warn"); return; }
+    portOpen = port;
+    transport = new Transport(port, true);
+    loader = new ESPLoader({ transport, baudrate: 115200, terminal, debugLogging: false });
+    log("conectando e identificando o chip...", "sys");
+    setStatus("...");
+    try {
+      await loader.main();
+    } catch (connErr) {
+      // Apos um reset, o chip reenumera a USB e a porta recem-escolhida pode
+      // ficar momentaneamente indisponivel. Tenta reabrir a MESMA porta via
+      // getPorts() (objeto atual) algumas vezes antes de pedir nova escolha.
+      const msg = connErr && connErr.message ? String(connErr.message) : String(connErr);
+      const isOpenFail = /failed to open serial port/i.test(msg) || /Failed to open/i.test(msg);
+      if (isOpenFail) {
+        let reopened = false;
+        for (let i = 0; i < 3 && !reopened; i++) {
+          log("porta ocupada/reconectando — tentando novamente... (" + (i + 1) + "/3)", "warn");
+          await delay(1600 * (i + 1));
+          const fresh = await refreshGrantedPort(port);
+          if (!fresh) continue;
+          try {
+            if (transport) { try { await transport.disconnect(); } catch (e) { /* ignore */ } }
+            savedPort = fresh;
+            port = fresh;
+            portOpen = fresh;
+            transport = new Transport(port, true);
+            loader = new ESPLoader({ transport, baudrate: 115200, terminal, debugLogging: false });
+            await loader.main();
+            reopened = true;
+          } catch (e2) { /* tenta de novo */ }
+        }
+        if (!reopened) {
+          // Desistiu: deixa o usuario escolher outra porta no modal.
+          log("nao foi possivel reabrir a porta automaticamente — selecione novamente.", "warn");
           port = await acquirePort();
           if (!port) { log("seleção de porta cancelada.", "warn"); return; }
+          portOpen = port;
+          transport = new Transport(port, true);
+          loader = new ESPLoader({ transport, baudrate: 115200, terminal, debugLogging: false });
+          await loader.main();
         }
-        portOpen = port;
-        transport = new Transport(port, true);
-        loader = new ESPLoader({ transport, baudrate: 115200, terminal, debugLogging: false });
-        log("conectando e identificando o chip...", "sys");
-        setStatus("...");
-        await loader.main();
-        break; // conectou com sucesso
-      } catch (connErr) {
-        const msg = connErr && connErr.message ? String(connErr.message) : String(connErr);
-        const isOpenFail = /failed to open serial port/i.test(msg) || /Failed to open/i.test(msg);
-        savedPort = null;
-        portOpen = null;
-        if (transport) { try { await transport.disconnect(); } catch (e) { /* ignore */ } }
-        transport = null;
-        loader = null;
-        if (attempt < maxTries && isOpenFail) {
-          log("porta ocupada/reconectando — tentando novamente... (" + attempt + "/" + (maxTries - 1) + ")", "warn");
-          await delay(1500 * attempt);
-          continue;
-        }
+      } else {
         throw connErr;
       }
     }
@@ -729,16 +720,18 @@ function renderPortList(ports) {
     list.appendChild(empty);
     return;
   }
+  const recent = savedPort && savedPort.getInfo ? savedPort.getInfo() : null;
   ports.forEach((p) => {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "port-item";
     const info = (p && p.getInfo ? p.getInfo() : null) || {};
+    const isRecent = recent && info.usbVendorId === recent.usbVendorId && info.usbProductId === recent.usbProductId;
     const name = [info.usbVendorId, info.usbProductId].filter(Boolean).length
       ? "USB 0x" + (info.usbVendorId || 0).toString(16) + ":" + (info.usbProductId || 0).toString(16)
       : dict["fl.port.usb"] || "Porta USB";
     b.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 6h4M10 18h4"/></svg>' +
-      "<span>" + name + "</span>";
+      "<span>" + name + (isRecent ? " (recente)" : "") + "</span>";
     b.addEventListener("click", () => resolvePort(p));
     list.appendChild(b);
   });
@@ -766,19 +759,33 @@ function cancelPortPick() {
   if (pendingPortResolve) { const r = pendingPortResolve; pendingPortResolve = null; r(null); }
 }
 
-// Retorna uma porta serial (autorizada anteriormente ou escolhida no modal).
-async function acquirePort() {
-  // Sempre prefere uma porta AUTORIZADA "fresca" (getPorts) ao objeto antigo:
-  // apos um reset o chip reenumera a USB e o objeto salvo fica obsoleto.
-  const fresh = await bestGrantedPort();
-  if (fresh) { savedPort = fresh; return fresh; }
-  if (savedPort) {
-    try { return savedPort; } catch (e) { /* tenta modal */ }
-  }
+// Sempre abre o modal para o USUARIO escolher a porta (nunca auto-seleciona):
+// assim, quando ha mais de um controlador conectado, grava-se no certo.
+function acquirePort() {
   return new Promise((resolve) => {
     pendingPortResolve = resolve;
     openPortModal();
   });
+}
+
+// Apos um reset o chip reenumera a USB e o objeto de porta fica obsoleto.
+// Busca uma porta autorizada "fresca" equivalente (mesmo VID/PID) para tentar
+// reabrir sem incomodar o usuario de novo.
+async function refreshGrantedPort(like) {
+  try {
+    const list = await navigator.serial.getPorts();
+    if (!list || !list.length) return null;
+    if (!like) return list[0];
+    const gi = like.getInfo ? like.getInfo() : null;
+    const match = list.find((p) => {
+      if (!gi || !p.getInfo) return false;
+      const g = p.getInfo();
+      return g.usbVendorId === gi.usbVendorId && g.usbProductId === gi.usbProductId;
+    });
+    return match || null;
+  } catch (e) {
+    return null;
+  }
 }
 
 $("portPick").addEventListener("click", async () => {
