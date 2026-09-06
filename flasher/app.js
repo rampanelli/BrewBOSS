@@ -35,9 +35,11 @@ const I18N = {
     "fl.modeFw": "Somente firmware (preservar dados)",
     "fl.verLatest": "(última)",
     "fl.verStable": "(estável)",
-    "hw.esp12e": "Xtensa LX106 160 MHz · WiFi 802.11 b/g/n 2.4 GHz · 4 MB flash · 11 GPIO · micro-USB",
-    "hw.esp32c3": "RISC-V 160 MHz · WiFi b/g/n + Bluetooth 5 LE · 4 MB flash · ~15 GPIO · USB-C nativo",
-    "hw.esp32c5": "RISC-V 240 MHz · WiFi 6 dual-band 2,4/5 GHz · BT 5 LE · 802.15.4 · USB-C nativo",
+    "hw.esp12e": "1× Xtensa LX106 32-bit @ 160 MHz\nSRAM 160 KB · Flash 4 MB SPI\nWiFi 802.11 b/g/n · 2,4 GHz\n11 GPIO · 1× ADC 10-bit\nI²C / SPI / UART / OneWire / PWM\nmicro-USB (CH340) · alimentação 5V/3,3V",
+    "hw.esp32c3": "1× RISC-V 32-bit @ 160 MHz\nSRAM 400 KB · Flash 4 MB\nWiFi b/g/n + Bluetooth 5 LE\n~22 GPIO · 2× ADC 12-bit\nI²C / SPI / UART / OneWire / PWM / RMT\nUSB-C nativo (USB-Serial/JTAG)",
+    "hw.esp32c5": "1× RISC-V 32-bit @ 240 MHz + LP core\nSRAM 400+ KB · Flash 4 MB\nWiFi 6 (802.11ax) dual-band 2,4/5 GHz\nBluetooth 5 LE · IEEE 802.15.4\nGPIO · ADC 12-bit · I²C/SPI/UART/PWM\nUSB-C nativo (USB-Serial/JTAG)",
+    "bd.cpu": "Processador", "bd.ram": "Memória", "bd.net": "Conectividade",
+    "bd.rel": "índice comparado ao Wemos (base 100%)",
     "fl.term": "console • esptool.js", "fl.cta": "Conectar e gravar",
     "fl.needMode": "Selecione um modo de gravação para habilitar o botão",
     "fl.fullHint": "Imagem única — grava tudo na flash",
@@ -83,9 +85,11 @@ const I18N = {
     "fl.modeFw": "Firmware only (keep data)",
     "fl.verLatest": "(latest)",
     "fl.verStable": "(stable)",
-    "hw.esp12e": "Xtensa LX106 160 MHz · WiFi 802.11 b/g/n 2.4 GHz · 4 MB flash · 11 GPIO · micro-USB",
-    "hw.esp32c3": "RISC-V 160 MHz · WiFi b/g/n + Bluetooth 5 LE · 4 MB flash · ~15 GPIO · native USB-C",
-    "hw.esp32c5": "RISC-V 240 MHz · WiFi 6 dual-band 2.4/5 GHz · BT 5 LE · 802.15.4 · native USB-C",
+    "hw.esp12e": "1× Xtensa LX106 32-bit @ 160 MHz\nSRAM 160 KB · Flash 4 MB SPI\nWiFi 802.11 b/g/n · 2.4 GHz\n11 GPIO · 1× ADC 10-bit\nI²C / SPI / UART / OneWire / PWM\nmicro-USB (CH340) · 5V/3.3V power",
+    "hw.esp32c3": "1× RISC-V 32-bit @ 160 MHz\nSRAM 400 KB · Flash 4 MB\nWiFi b/g/n + Bluetooth 5 LE\n~22 GPIO · 2× ADC 12-bit\nI²C / SPI / UART / OneWire / PWM / RMT\nnative USB-C (USB-Serial/JTAG)",
+    "hw.esp32c5": "1× RISC-V 32-bit @ 240 MHz + LP core\nSRAM 400+ KB · Flash 4 MB\nWiFi 6 (802.11ax) dual-band 2.4/5 GHz\nBluetooth 5 LE · IEEE 802.15.4\nGPIO · ADC 12-bit · I²C/SPI/UART/PWM\nnative USB-C (USB-Serial/JTAG)",
+    "bd.cpu": "Processor", "bd.ram": "Memory", "bd.net": "Connectivity",
+    "bd.rel": "index vs the Wemos (baseline 100%)",
     "fl.term": "console • esptool.js", "fl.cta": "Connect and flash",
     "fl.needMode": "Select a flash mode to enable the button",
     "fl.fullHint": "Single image — flashes the whole flash",
@@ -192,6 +196,19 @@ const boardIcons = {
     '</svg>'
 };
 
+// Indice comparativo de cada controlador em relacao ao Wemos D1 Mini
+// (ESP8266 = base 100). Valores aproximados para divulgacao/comparacao.
+const BOARD_PERF = {
+  esp12e: { cpu: 100, ram: 100, net: 100 },
+  esp32c3: { cpu: 180, ram: 650, net: 200 },
+  esp32c5: { cpu: 420, ram: 900, net: 600 }
+};
+const PERF_METRICS = [
+  { key: "cpu", i18n: "bd.cpu" },
+  { key: "ram", i18n: "bd.ram" },
+  { key: "net", i18n: "bd.net" }
+];
+
 let catalog = CATALOG_DEFAULT;
 let currentLang = (location.search.match(/[?&]lang=(en|pt-BR)/) || [])[1] || "pt-BR";
 let currentVersion = null;
@@ -286,6 +303,12 @@ function renderVersions() {
     if (v.version === currentVersion) o.selected = true;
     sel.appendChild(o);
   });
+  // Agrupa as versoes sob o rotulo do software em destaque no topo do
+  // combobox (preparado para que outros softwares possam ser oferecidos aqui).
+  const og = document.createElement("optgroup");
+  og.label = "BrewBOSS";
+  while (sel.firstChild) og.appendChild(sel.firstChild);
+  sel.appendChild(og);
 }
 
 function selectVersion(ver) {
@@ -304,12 +327,33 @@ function renderBoards() {
     const label = document.createElement("button");
     label.type = "button";
     label.className = "board" + (selected === b.id ? " sel" : "");
+    const specs = String(dict["hw." + b.id] || "").split("\n");
+    const perf = BOARD_PERF[b.id] || { cpu: 0, ram: 0, net: 0 };
+    const maxPerf = { cpu: 1, ram: 1, net: 1 };
+    ["cpu", "ram", "net"].forEach((k) => {
+      Object.keys(BOARD_PERF).forEach((id) => {
+        if (BOARD_PERF[id][k] > maxPerf[k]) maxPerf[k] = BOARD_PERF[id][k];
+      });
+    });
+    const bars = PERF_METRICS.map((m) => {
+      const v = perf[m.key];
+      const w = Math.max(2, Math.round((v / maxPerf[m.key]) * 100));
+      return (
+        '<span class="pbar-row">' +
+        '<span class="pbar-l">' + (dict[m.i18n] || m.key) + "</span>" +
+        '<span class="pbar-track"><span class="pbar-fill" style="width:' + w + '%"></span></span>' +
+        '<span class="pbar-v">' + v + "%</span>" +
+        "</span>"
+      );
+    }).join("");
     label.innerHTML =
       '<span class="b-chip">' + b.id + "</span>" +
       '<div class="b-ico" aria-hidden="true">' + (boardIcons[b.id] || "") + "</div>" +
       "<h4>" + b.name + "</h4>" +
       '<p class="b-sub">' + b.chip.toUpperCase() + "</p>" +
-      '<p class="b-hw">' + (dict["hw." + b.id] || "") + "</p>";
+      '<div class="b-specs">' + specs.map((s) => "<span>" + s + "</span>").join("") + "</div>" +
+      '<div class="pbar-wrap" title="' + (dict["bd.rel"] || "") + '">' + bars + "</div>" +
+      '<p class="b-rel">' + (dict["bd.rel"] || "") + "</p>";
     label.addEventListener("click", () => selectBoard(b.id));
     wrap.appendChild(label);
   });
