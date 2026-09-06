@@ -106,6 +106,7 @@
         <li><a href="#trouble" >故障排除</a></li>
         <li><a href="#firmware" >固件与安装</a></li>
         <li><a href="#pinout" >引脚参考</a></li>
+    <li><a href="#esp32c5">ESP32-C5 Mini</a></li>
         <li><a href="#notes" >最终说明</a></li>
         <li><a href="#license" >许可与使用条款</a></li>
       </ol>
@@ -400,6 +401,7 @@ Add Citra 30g@15'             &lt;- 最后事件消息（或IP / AP）</pre>
         <tr><td><code>BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>约1,408 KB</td></tr>
         <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c3.bin</code></td><td>固件</td><td><code>0x00010000</code></td><td>约1,020 KB</td></tr>
         <tr><td><code>BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>约1,408 KB</td></tr>
+        <tr><td><b>ESP32-C5 Mini</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c5.bin</code></td><td>固件（factory：引导程序 + 分区 + 应用）</td><td><code>0x00000000</code></td><td>~1,400 KB</td></tr>
       </tbody>
     </table></div>
 
@@ -531,7 +533,31 @@ Add Citra 30g@15'             &lt;- 最后事件消息（或IP / AP）</pre>
     </table>
     </div>
 
-    <h2 id="notes"><span class="num">16.</span> <span >最终说明</span></h2>
+    <h2 id="esp32c5"><span class="num">16.</span> <span>ESP32-C5 Mini（固件 2.2.26a 或更高）</span></h2>
+    <p><b>ESP32-C5 Mini V1.0</b> 是 RISC-V 控制器，支持 <b>双频 Wi-Fi 6（2.4 + 5 GHz）</b>、Bluetooth 5 (LE) 和 IEEE 802.15.4（Zigbee/Thread），240 MHz、384 KB SRAM、4 MB 闪存（含 OTA）。BrewBOSS 将其作为一级目标支持。以下 GPIO→功能映射已在真实 Mini V1.0 板上验证：</p>
+        <div class="tablewrap">
+    <table>
+      <thead><tr><th>GPIO</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>GPIO0</td><td>KEYPAD / BTN1 / PUMP</td></tr>
+        <tr><td>GPIO1</td><td>KEYPAD / BTN2 / MANUAL</td></tr>
+        <tr><td>GPIO2</td><td>KEYPAD / BTN3 / BOIL</td></tr>
+        <tr><td>GPIO3</td><td>KEYPAD / BTN4 / START</td></tr>
+        <tr><td>GPIO4</td><td>BUZZER</td></tr>
+        <tr><td>GPIO5</td><td>MASH Heater (PWM)</td></tr>
+        <tr><td>GPIO6</td><td>SPARGE Heater (PWM)</td></tr>
+        <tr><td>GPIO7</td><td>BOIL Heater (PWM)</td></tr>
+        <tr><td>GPIO8</td><td>LCD 20x4 I2C - SDA</td></tr>
+        <tr><td>GPIO9</td><td>LCD 20x4 I2C - SCL</td></tr>
+        <tr><td>GPIO10</td><td>PUMP</td></tr>
+        <tr><td>GPIO12</td><td>DS18B20 (OneWire)</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b>ESP32-C5 说明</b><span>键盘直接从 GPIO 读取（无 PCF8574）。水泵和加热器为<b>高电平有效</b>（<code>INVERT_PUMP</code>/<code>INVERT_HEAT</code> 关闭）- 空闲 LOW = 关闭。LCD 20x4 地址 <code>0x27</code>。请勿将 GPIO 13/14（USB-Serial/JTAG）、27（模块 RGB）或 16,17,18,20,21,22 用作输出（会导致 CPU_LOCKUP）。实测安全输出：0-12, 15, 19, 23-26, 28, 29。串口控制台位于原生 USB。加热器使用 <code>esp_timer</code> 实现的 1 kHz PWM（当前内核的 LEDC 会锁死芯片）。</span></div>
+    <div class="callout tip"><b>ESP32-C5 的 Wi-Fi（高级）</b><span>默认模式 <b>MIXED</b>：AP <code>BrewBOSS</code>（2.4 GHz，192.168.4.1）+ 站点。驱动为双频 <b>AUTO</b>：AP 保持在 2.4 GHz 时，站点可连接 <b>5 GHz</b> 网络。它保存<b>网络列表</b>（SSID+密码），并连接可见的<b>最强</b>网络；断线后重新扫描两个频段并连接最佳网络。<b>Fast-connect</b> 记住最后使用的频段（启动约 4 秒，站点约 8 秒）。在 <b>Scan</b> 中可查看/修改已存密码，<b>CONNECT</b> 保存并连接，<b>DELETE</b> 删除；✓ 标记曾连接的网络。没有可达网络时 AP 仍保持运行并自动重试。</span></div>
+
+    <h2 id="notes"><span class="num">17.</span> <span >最终说明</span></h2>
     <ul>
       <li >BrewBOSS控制真实的加热器和热液体。请始终遵循安全的电气和酿造操作规范。</li>
       <li >界面由设备本地提供，可离线工作；读取权限开放，写入权限可通过登录保护。</li>

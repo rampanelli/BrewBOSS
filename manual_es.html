@@ -106,6 +106,7 @@
         <li><a href="#trouble" >Solución de problemas</a></li>
         <li><a href="#firmware" >Firmware e instalación</a></li>
         <li><a href="#pinout" >Referencia de pines</a></li>
+    <li><a href="#esp32c5">ESP32-C5 Mini</a></li>
         <li><a href="#notes" >Notas finales</a></li>
         <li><a href="#license" >Licencia y términos de uso</a></li>
       </ol>
@@ -400,6 +401,7 @@ Add Citra 30g@15'             &lt;- último mensaje de evento (o IP / AP)</pre>
         <tr><td><code>BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
         <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c3.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>~1,020 KB</td></tr>
         <tr><td><code>BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
+        <tr><td><b>ESP32-C5 Mini</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c5.bin</code></td><td>Firmware (factory: bootloader + particiones + app)</td><td><code>0x00000000</code></td><td>~1,400 KB</td></tr>
       </tbody>
     </table></div>
 
@@ -531,7 +533,31 @@ Add Citra 30g@15'             &lt;- último mensaje de evento (o IP / AP)</pre>
     </table>
     </div>
 
-    <h2 id="notes"><span class="num">16.</span> <span >Notas finales</span></h2>
+    <h2 id="esp32c5"><span class="num">16.</span> <span>ESP32-C5 Mini (firmware 2.2.26a o posterior)</span></h2>
+    <p>El <b>ESP32-C5 Mini V1.0</b> es un controlador RISC-V con <b>Wi-Fi 6 de doble banda (2,4 + 5 GHz)</b>, Bluetooth 5 (LE) e IEEE 802.15.4 (Zigbee/Thread), 240 MHz, 384 KB de SRAM y 4 MB de flash (con OTA). BrewBOSS lo soporta como objetivo de primera clase. Mapeo GPIO&rarr;funci&oacute;n validado en la placa Mini V1.0 real:</p>
+        <div class="tablewrap">
+    <table>
+      <thead><tr><th>GPIO</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>GPIO0</td><td>KEYPAD / BTN1 / PUMP</td></tr>
+        <tr><td>GPIO1</td><td>KEYPAD / BTN2 / MANUAL</td></tr>
+        <tr><td>GPIO2</td><td>KEYPAD / BTN3 / BOIL</td></tr>
+        <tr><td>GPIO3</td><td>KEYPAD / BTN4 / START</td></tr>
+        <tr><td>GPIO4</td><td>BUZZER</td></tr>
+        <tr><td>GPIO5</td><td>MASH Heater (PWM)</td></tr>
+        <tr><td>GPIO6</td><td>SPARGE Heater (PWM)</td></tr>
+        <tr><td>GPIO7</td><td>BOIL Heater (PWM)</td></tr>
+        <tr><td>GPIO8</td><td>LCD 20x4 I2C - SDA</td></tr>
+        <tr><td>GPIO9</td><td>LCD 20x4 I2C - SCL</td></tr>
+        <tr><td>GPIO10</td><td>PUMP</td></tr>
+        <tr><td>GPIO12</td><td>DS18B20 (OneWire)</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b>Notas del ESP32-C5</b><span>Teclado le&iacute;do directo de los GPIOs (sin PCF8574). Bomba y calentadores son <b>activo-alto</b> (<code>INVERT_PUMP</code>/<code>INVERT_HEAT</code> desactivados) - idle LOW = OFF. LCD 20x4 en <code>0x27</code>. No use como salida los GPIOs 13/14 (USB-Serial/JTAG), 27 (RGB del m&oacute;dulo) ni 16,17,18,20,21,22 (causan CPU_LOCKUP). Salidas seguras medidas: 0-12, 15, 19, 23-26, 28, 29. Consola serie en el USB nativo. Los calentadores usan PWM de 1 kHz v&iacute;a <code>esp_timer</code> (el LEDC del core actual bloquea el chip).</span></div>
+    <div class="callout tip"><b>Wi-Fi del ESP32-C5 (avanzado)</b><span>Modo predeterminado <b>MIXED</b>: AP <code>BrewBOSS</code> (2,4 GHz, 192.168.4.1) + estaci&oacute;n. Driver dual-band <b>AUTO</b>: la estaci&oacute;n puede unirse a redes de <b>5 GHz</b> mientras el AP queda en 2,4 GHz. Guarda una <b>lista de redes guardadas</b> (SSID+contrase&ntilde;a) y conecta a la <b>m&aacute;s fuerte</b> visible; si cae, escanea ambas bandas y reconecta a la mejor. <b>Fast-connect</b> recuerda la &uacute;ltima banda (boot ~4 s, estaci&oacute;n ~8 s). En el <b>Scan</b> puede ver/editar la contrase&ntilde;a guardada, <b>CONNECT</b> guarda y conecta, <b>DELETE</b> elimina; &#10003; marca redes ya conectadas. Sin red alcanzable el AP sigue activo y reintenta solo.</span></div>
+
+    <h2 id="notes"><span class="num">17.</span> <span >Notas finales</span></h2>
     <ul>
       <li >BrewBOSS controla calentadores y líquidos calientes reales. Siga siempre prácticas seguras de electricidad y cocción.</li>
       <li >La interfaz se sirve localmente desde el dispositivo y funciona sin conexión; el acceso de lectura es abierto, y el acceso de escritura puede protegerse con el inicio de sesión.</li>

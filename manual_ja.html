@@ -106,6 +106,7 @@
         <li><a href="#trouble" >トラブルシューティング</a></li>
         <li><a href="#firmware" >ファームウェアとインストール</a></li>
         <li><a href="#pinout" >ピン配置リファレンス</a></li>
+    <li><a href="#esp32c5">ESP32-C5 Mini</a></li>
         <li><a href="#notes" >最終注意事項</a></li>
         <li><a href="#license" >ライセンスと利用規約</a></li>
       </ol>
@@ -400,6 +401,7 @@ Add Citra 30g@15'             &lt;- 最後のイベントメッセージ (また
         <tr><td><code>BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>約1,408 KB</td></tr>
         <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c3.bin</code></td><td>ファームウェア</td><td><code>0x00010000</code></td><td>約1,020 KB</td></tr>
         <tr><td><code>BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>約1,408 KB</td></tr>
+        <tr><td><b>ESP32-C5 Mini</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c5.bin</code></td><td>ファームウェア（factory：ブートローダ＋パーティション＋アプリ）</td><td><code>0x00000000</code></td><td>~1,400 KB</td></tr>
       </tbody>
     </table></div>
 
@@ -531,7 +533,31 @@ Add Citra 30g@15'             &lt;- 最後のイベントメッセージ (また
     </table>
     </div>
 
-    <h2 id="notes"><span class="num">16.</span> <span >最終注意事項</span></h2>
+    <h2 id="esp32c5"><span class="num">16.</span> <span>ESP32-C5 Mini（ファームウェア 2.2.26a 以降）</span></h2>
+    <p><b>ESP32-C5 Mini V1.0</b> は、<b>Wi-Fi 6 デュアルバンド（2.4 + 5 GHz）</b>、Bluetooth 5（LE）、IEEE 802.15.4（Zigbee/Thread）を備えた RISC-V コントローラです（240 MHz、SRAM 384 KB、OTA対応フラッシュ 4 MB）。BrewBOSS はこれを第一級のターゲットとしてサポートします。実際の Mini V1.0 基板で検証した GPIO→機能マッピング：</p>
+        <div class="tablewrap">
+    <table>
+      <thead><tr><th>GPIO</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>GPIO0</td><td>KEYPAD / BTN1 / PUMP</td></tr>
+        <tr><td>GPIO1</td><td>KEYPAD / BTN2 / MANUAL</td></tr>
+        <tr><td>GPIO2</td><td>KEYPAD / BTN3 / BOIL</td></tr>
+        <tr><td>GPIO3</td><td>KEYPAD / BTN4 / START</td></tr>
+        <tr><td>GPIO4</td><td>BUZZER</td></tr>
+        <tr><td>GPIO5</td><td>MASH Heater (PWM)</td></tr>
+        <tr><td>GPIO6</td><td>SPARGE Heater (PWM)</td></tr>
+        <tr><td>GPIO7</td><td>BOIL Heater (PWM)</td></tr>
+        <tr><td>GPIO8</td><td>LCD 20x4 I2C - SDA</td></tr>
+        <tr><td>GPIO9</td><td>LCD 20x4 I2C - SCL</td></tr>
+        <tr><td>GPIO10</td><td>PUMP</td></tr>
+        <tr><td>GPIO12</td><td>DS18B20 (OneWire)</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b>ESP32-C5 ノート</b><span>キーパッドは GPIO 直接読み取り（PCF8574なし）。ポンプとヒーターは<b>アクティブハイ</b>（<code>INVERT_PUMP</code>/<code>INVERT_HEAT</code> オフ）‐ idle LOW = OFF。LCD 20x4 は <code>0x27</code>。出力に使わないでください：GPIO 13/14（USB-Serial/JTAG）、27（モジュールRGB）、16,17,18,20,21,22（CPU_LOCKUP）。実測の安全な出力：0-12, 15, 19, 23-26, 28, 29。コンソールはネイティブUSB。ヒーターは <code>esp_timer</code> による 1 kHz PWM を使用します（現行コアの LEDC はチップをロックします）。</span></div>
+    <div class="callout tip"><b>ESP32-C5 のWi-Fi（上級）</b><span>デフォルトは <b>MIXED</b>: AP <code>BrewBOSS</code>（2.4 GHz, 192.168.4.1）+ ステーション。デュアルバンド <b>AUTO</b> で、ステーションは AP が 2.4 GHz のまま <b>5 GHz</b> のネットワークに接続できます。保存した<b>ネットワークリスト</b>（SSID+パスワード）を持ち、見える中で<b>最も強い</b>ものに接続。切断時は両バンドを再スキャンして最良へ再接続。<b>Fast-connect</b> は最後のバンドを記憶（起動約4秒、STA約8秒）。<b>Scan</b> 画面で保存済みパスワードの表示・編集が可能で、<b>CONNECT</b> で保存・接続、<b>DELETE</b> で削除。✓ は接続済みネットワークを示します。到達可能なネットワークが無い場合も AP は稼働し自動リトライします。</span></div>
+
+    <h2 id="notes"><span class="num">17.</span> <span >最終注意事項</span></h2>
     <ul>
       <li >BrewBOSSは実際のヒーターと高温の液体を制御します。安全な電気および醸造の慣行に常に従ってください。</li>
       <li >インターフェースはデバイスによってローカルに提供され、オフラインで動作します。読み取りアクセスはオープンで、書き込みアクセスはログインで保護できます。</li>
