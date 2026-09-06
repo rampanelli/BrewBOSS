@@ -31,6 +31,9 @@ const I18N = {
     "fl.step1": "1. Selecione a placa", "fl.term": "console • esptool.js", "fl.cta": "Conectar e gravar",
     "fl.n1t": "Compatível com:", "fl.n1": "Chrome, Edge, Opera e Firefox (desktop) no Windows, Linux e macOS.",
     "fl.n2t": "Atenção:", "fl.n2": "use um cabo de dados (não só de carga). O Safari e celulares não suportam gravação serial pelo navegador.",
+    "fl.ok": "Entendi",
+    "fl.done.t": "Gravação concluída!",
+    "fl.done.d": "Desligue e ligue o microcontrolador novamente para que o firmware inicie corretamente.",
     "foot.manual": "Manual", "foot.guide": "Guia rápido",
     "foot.legal": "BrewBOSS é gratuito para uso pessoal e não comercial. Não é open-source — veja a licença completa no repositório."
   },
@@ -64,6 +67,9 @@ const I18N = {
     "fl.step1": "1. Select your board", "fl.term": "console • esptool.js", "fl.cta": "Connect and flash",
     "fl.n1t": "Compatible with:", "fl.n1": "Chrome, Edge, Opera and Firefox (desktop) on Windows, Linux and macOS.",
     "fl.n2t": "Heads up:", "fl.n2": "use a data cable (not a charge-only one). Safari and phones don't support browser-based serial flashing.",
+    "fl.ok": "Got it",
+    "fl.done.t": "Flashing complete!",
+    "fl.done.d": "Power the controller off and back on so the firmware boots correctly.",
     "foot.manual": "Manual", "foot.guide": "Quick guide",
     "foot.legal": "BrewBOSS is free for personal, non-commercial use. It is not open-source — see the full license in the repository."
   }
@@ -256,8 +262,10 @@ async function flashFlow() {
     setProgress(100);
     log("gravacao concluida com sucesso!", "ok");
     log("reiniciando o controlador...", "sys");
-    await loader.after("hard_reset");
-    log("pronto! Acesse a rede WiFi 'BrewBOSS' e abra http://192.168.4.1", "ok");
+    try { await loader.after("hard_reset"); } catch (e) { log("reset por software nao disponivel — religue manualmente.", "warn"); }
+    log("pronto! Se o firmware nao iniciar sozinho, desligue e ligue o controlador.", "ok");
+    hideDoneModal();
+    scheduleDoneModal();
   } catch (err) {
     setStatus("erro");
     log("erro: " + (err && err.message ? err.message : err), "err");
@@ -271,6 +279,29 @@ async function flashFlow() {
 }
 
 $("flashBtn").addEventListener("click", flashFlow);
+
+let doneTimer = null;
+
+function showDoneModal() {
+  const m = $("doneModal");
+  if (m) m.hidden = false;
+}
+
+function hideDoneModal() {
+  const m = $("doneModal");
+  if (m) m.hidden = true;
+  if (doneTimer) { clearTimeout(doneTimer); doneTimer = null; }
+}
+
+$("doneOk").addEventListener("click", hideDoneModal);
+
+// Apos a gravacao, muitos chips/adaptadores nao resetam de forma confiavel por
+// software (ex: CH340 + ESP8266). Mostramos um aviso 5s depois dos 100% para o
+// usuario religar o controlador manualmente.
+function scheduleDoneModal() {
+  if (doneTimer) clearTimeout(doneTimer);
+  doneTimer = setTimeout(showDoneModal, 5000);
+}
 
 setLang(currentLang);
 loadManifest().then(() => {

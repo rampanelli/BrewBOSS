@@ -170,6 +170,19 @@ footer{padding:40px 22px;border-top:1px solid var(--line);color:var(--dim);font-
 .foot-links a{color:var(--muted)}.foot-links a:hover{color:var(--amber)}
 .legal{max-width:1120px;margin:0 auto;line-height:1.6}
 
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;
+  background:rgba(4,7,13,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:fadeIn .2s ease}
+.modal[hidden]{display:none}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-card{max-width:430px;width:100%;text-align:center;padding:36px 30px;border-radius:22px;
+  border:1px solid var(--line2);background:linear-gradient(180deg,#0c1322,#0a101d);
+  box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal-card svg{color:var(--amber);margin-bottom:14px}
+.modal-card h3{font-size:24px;font-weight:800;letter-spacing:-.4px;margin-bottom:10px}
+.modal-card p{color:var(--muted);font-size:15px;margin-bottom:24px}
+.modal-card .btn{width:100%}
+
 @media (max-width:640px){
   .nav-links a{display:none}
   .nav-links a.nav-cta{display:inline-flex}
