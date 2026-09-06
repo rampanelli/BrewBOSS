@@ -51,6 +51,29 @@ UPDATE ORDER: flash the firmware FIRST; the _fs file (filesystem) must
 ALWAYS be the SECOND one to be flashed.
 
 
+WEB FLASHER (recommended, nothing to install):
+  https://rampanelli.github.io/BrewBOSS/flasher/
+
+  On the site, "1. Choose the firmware version" (the newest is "latest"),
+  then "2. Select your board", then in "3. Flash mode" pick:
+
+    - "Full (firmware + filesystem)"  -> fresh install or full reset.
+       WARNING: ERASES the filesystem (current configs, recipes, WiFi).
+    - "Firmware only (keep data)"     -> update that KEEPS the filesystem
+       (configs, recipes, sensors and WiFi stay intact).
+
+  If the controller is already in use, always prefer "Firmware only (keep
+  data)" so you don't lose your setup. The flash button only enables after
+  you pick a flash mode.
+
+  Files used by the site (in binaries/flasher):
+    *_full.bin -> full image (firmware + filesystem), flash at 0x000000.
+    *_fw.bin   -> firmware app only, flashes over preserving the filesystem
+                  (C5: 0x00E000; C3: 0x010000; ESP8266: 0x0).
+    The C5 (ESP32-C5) now also supports "Firmware only", preserving its
+    LittleFS filesystem located at 0x310000 in flash.
+
+
 1.1. Recommended method: PlatformIO (via PowerShell / Terminal)
 
 Requirements: Python 3.7+ installed, PlatformIO installed (pip install platformio)

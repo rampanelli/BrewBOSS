@@ -103,8 +103,11 @@
             "file": "BrewBOSS_v2.2.26a_esp32c5_full.bin",
             "offset": 0
           },
-          "fw": null,
-          "single": true
+          "fw": {
+            "file": "BrewBOSS_v2.2.26a_esp32c5_fw.bin",
+            "offset": 57344
+          },
+          "single": false
         }
       ]
     },
@@ -162,8 +165,11 @@
             "file": "BrewBOSS_v2.2.26b_esp32c5_full.bin",
             "offset": 0
           },
-          "fw": null,
-          "single": true
+          "fw": {
+            "file": "BrewBOSS_v2.2.26b_esp32c5_fw.bin",
+            "offset": 57344
+          },
+          "single": false
         }
       ]
     }

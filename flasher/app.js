@@ -35,7 +35,11 @@ const I18N = {
     "fl.modeFw": "Somente firmware (preservar dados)",
     "fl.verLatest": "(última)",
     "fl.verStable": "(estável)",
+    "hw.esp12e": "Xtensa LX106 160 MHz · WiFi 802.11 b/g/n 2.4 GHz · 4 MB flash · 11 GPIO · micro-USB",
+    "hw.esp32c3": "RISC-V 160 MHz · WiFi b/g/n + Bluetooth 5 LE · 4 MB flash · ~15 GPIO · USB-C nativo",
+    "hw.esp32c5": "RISC-V 240 MHz · WiFi 6 dual-band 2,4/5 GHz · BT 5 LE · 802.15.4 · USB-C nativo",
     "fl.term": "console • esptool.js", "fl.cta": "Conectar e gravar",
+    "fl.needMode": "Selecione um modo de gravação para habilitar o botão",
     "fl.fullHint": "Imagem única — grava tudo na flash",
     "fl.n1t": "Compatível com:", "fl.n1": "Chrome, Edge, Opera e Firefox (desktop) no Windows, Linux e macOS.",
     "fl.n2t": "Atenção:", "fl.n2": "use um cabo de dados (não só de carga). O Safari e celulares não suportam gravação serial pelo navegador.",
@@ -79,7 +83,11 @@ const I18N = {
     "fl.modeFw": "Firmware only (keep data)",
     "fl.verLatest": "(latest)",
     "fl.verStable": "(stable)",
+    "hw.esp12e": "Xtensa LX106 160 MHz · WiFi 802.11 b/g/n 2.4 GHz · 4 MB flash · 11 GPIO · micro-USB",
+    "hw.esp32c3": "RISC-V 160 MHz · WiFi b/g/n + Bluetooth 5 LE · 4 MB flash · ~15 GPIO · native USB-C",
+    "hw.esp32c5": "RISC-V 240 MHz · WiFi 6 dual-band 2.4/5 GHz · BT 5 LE · 802.15.4 · native USB-C",
     "fl.term": "console • esptool.js", "fl.cta": "Connect and flash",
+    "fl.needMode": "Select a flash mode to enable the button",
     "fl.fullHint": "Single image — flashes the whole flash",
     "fl.n1t": "Compatible with:", "fl.n1": "Chrome, Edge, Opera and Firefox (desktop) on Windows, Linux and macOS.",
     "fl.n2t": "Heads up:", "fl.n2": "use a data cable (not a charge-only one). Safari and phones don't support browser-based serial flashing.",
@@ -130,7 +138,7 @@ const CATALOG_DEFAULT = {
         { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
           flash: { mode: "qio", freq: "80m", size: "4MB" },
           full: { file: "BrewBOSS_v2.2.26a_esp32c5_full.bin", offset: 0 },
-          fw: null, single: true }
+          fw: { file: "BrewBOSS_v2.2.26a_esp32c5_fw.bin", offset: 0xE000 }, single: false }
       ]
     },
     {
@@ -147,23 +155,48 @@ const CATALOG_DEFAULT = {
         { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
           flash: { mode: "qio", freq: "80m", size: "4MB" },
           full: { file: "BrewBOSS_v2.2.26b_esp32c5_full.bin", offset: 0 },
-          fw: null, single: true }
+          fw: { file: "BrewBOSS_v2.2.26b_esp32c5_fw.bin", offset: 0xE000 }, single: false }
       ]
     }
   ]
 };
 
 const boardIcons = {
-  esp12e: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="7" width="16" height="11" rx="2"/><path d="M8 7V4.5a1.5 1.5 0 0 1 3 0V7M13 7V4.5a1.5 1.5 0 0 1 3 0V7"/><path d="M8 13h8M8 16h5"/></svg>',
-  esp32c3: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="6" width="14" height="12" rx="2"/><path d="M9 6v12M15 6v12"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="14" r="1"/></svg>',
-  esp32c5: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="6" width="14" height="12" rx="2"/><path d="M8 6V4M12 6V4M16 6V4"/><circle cx="12" cy="12" r="2.4"/></svg>'
+  // ESP-12E / Wemos D1 Mini: modulo com shield metalico e antena serrilhada exposta.
+  esp12e: '<svg viewBox="0 0 46 62" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<rect x="3" y="2" width="40" height="58" rx="3"/>' +
+    '<path d="M9 4v10M15 4v10M21 4v10M27 4v10M33 4v10M39 4v10"/>' +
+    '<rect x="7" y="20" width="32" height="30" rx="2"/>' +
+    '<path d="M7 27h32M7 35h32M7 43h32"/>' +
+    '<path d="M12 58v2M19 58v2M26 58v2M33 58v2"/>' +
+    '</svg>',
+  // ESP32-C3 Super Mini: placa compacta, chip central quadrado e USB-C na borda.
+  esp32c3: '<svg viewBox="0 0 46 56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<rect x="3" y="2" width="40" height="52" rx="3"/>' +
+    '<rect x="14" y="2" width="18" height="7" rx="2"/>' +
+    '<rect x="12" y="22" width="22" height="20" rx="2"/>' +
+    '<path d="M12 29h22M12 35h22"/>' +
+    '<circle cx="23" cy="26" r="1.1"/>' +
+    '<path d="M3 20v6M3 32v6M43 20v6M43 32v6"/>' +
+    '<path d="M14 46h4M28 46h4"/>' +
+    '</svg>',
+  // ESP32-C5 MINI: placa com chip maior, USB-C e antena de banda dupla.
+  esp32c5: '<svg viewBox="0 0 46 56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<rect x="3" y="2" width="40" height="52" rx="3"/>' +
+    '<rect x="15" y="2" width="16" height="7" rx="2"/>' +
+    '<path d="M7 12l3 5 3-5 3 5 3-5 3 5"/>' +
+    '<rect x="10" y="24" width="26" height="20" rx="2"/>' +
+    '<path d="M10 30h26M10 36h26M10 42h26"/>' +
+    '<circle cx="23" cy="27" r="1.1"/>' +
+    '<path d="M3 24v6M3 38v4M43 24v6M43 38v4"/>' +
+    '</svg>'
 };
 
 let catalog = CATALOG_DEFAULT;
 let currentLang = (location.search.match(/[?&]lang=(en|pt-BR)/) || [])[1] || "pt-BR";
 let currentVersion = null;
 let selected = null;
-let mode = "full";
+let mode = null;
 let busy = false;
 let portOpen = null;
 
@@ -266,21 +299,23 @@ function selectVersion(ver) {
 function renderBoards() {
   const wrap = $("boards");
   wrap.innerHTML = "";
+  const dict = I18N[currentLang] || I18N["pt-BR"];
   currentBoards().forEach((b) => {
     const label = document.createElement("button");
     label.type = "button";
     label.className = "board" + (selected === b.id ? " sel" : "");
     label.innerHTML =
       '<span class="b-chip">' + b.id + "</span>" +
-      '<div style="width:44px;height:44px;margin:8px 0;color:var(--amber)">' + (boardIcons[b.id] || "") + "</div>" +
-      "<h4>" + b.name + "</h4><p>" + b.chip.toUpperCase() + "</p>";
+      '<div class="b-ico" aria-hidden="true">' + (boardIcons[b.id] || "") + "</div>" +
+      "<h4>" + b.name + "</h4>" +
+      '<p class="b-sub">' + b.chip.toUpperCase() + "</p>" +
+      '<p class="b-hw">' + (dict["hw." + b.id] || "") + "</p>";
     label.addEventListener("click", () => selectBoard(b.id));
     wrap.appendChild(label);
   });
   const hint = $("versionHint");
   hint.textContent = "BrewBOSS v" + currentVersion + " — " +
-    (currentLang === "pt-BR" ? "firmware + filesystem em imagem única; modo 'somente firmware' preserva seus dados" : "single-image full flash; 'firmware only' keeps your data");
-  $("flashBtn").disabled = !selected;
+    (currentLang === "pt-BR" ? "defina o modo de gravação no passo 3 antes de clicar em gravar" : "pick the flash mode in step 3 before flashing");
 }
 
 function selectedBoard() {
@@ -289,34 +324,59 @@ function selectedBoard() {
 
 function selectBoard(id) {
   selected = id;
+  mode = null;
   renderBoards();
   renderMode();
+}
+
+function isSingleImage(board) {
+  return !board || board.single || !board.fw;
+}
+
+function updateFlashBtn() {
+  const board = selectedBoard();
+  $("flashBtn").disabled = !board || (!isSingleImage(board) && !mode);
 }
 
 function renderMode() {
   const board = selectedBoard();
   const wrap = $("modeWrap");
-  if (!wrap) return;
-  const onlyFull = !board || board.single || !board.fw;
-  if (onlyFull) {
+  const alert = $("modeAlert");
+  const radios = Array.from(document.querySelectorAll('input[name="flashMode"]'));
+  const dict = I18N[currentLang] || I18N["pt-BR"];
+  const note = wrap && wrap.querySelector(".mode-note");
+
+  if (isSingleImage(board)) {
     mode = "full";
-    const radios = document.querySelectorAll('input[name="flashMode"]');
-    radios.forEach((r) => { r.disabled = true; if (r.value === "full") r.checked = true; });
-    const note = document.createElement("div");
-    note.className = "mode-note";
-    note.textContent = (I18N[currentLang] || I18N["pt-BR"])["fl.fullHint"];
-    if (!wrap.querySelector(".mode-note")) wrap.appendChild(note);
+    radios.forEach((r) => { r.disabled = true; r.checked = r.value === "full"; });
+    if (wrap) wrap.classList.remove("need-mode");
+    if (alert) alert.hidden = true;
+    if (board && wrap && !note) {
+      const n = document.createElement("div");
+      n.className = "mode-note";
+      n.textContent = dict["fl.fullHint"];
+      wrap.appendChild(n);
+    }
   } else {
-    const radios = document.querySelectorAll('input[name="flashMode"]');
     radios.forEach((r) => { r.disabled = false; });
-    const n = wrap.querySelector(".mode-note");
-    if (n) n.remove();
+    if (note) note.remove();
+    if (mode === "full" || mode === "fw") {
+      radios.forEach((r) => { r.checked = r.value === mode; });
+      if (wrap) wrap.classList.remove("need-mode");
+      if (alert) alert.hidden = true;
+    } else {
+      mode = null;
+      radios.forEach((r) => { r.checked = false; });
+      if (wrap) wrap.classList.add("need-mode");
+      if (alert) { alert.hidden = false; alert.textContent = dict["fl.needMode"]; }
+    }
   }
+  updateFlashBtn();
 }
 
 function activeRadio() {
   const r = document.querySelector('input[name="flashMode"]:checked');
-  return r ? r.value : "full";
+  return r ? r.value : null;
 }
 
 document.addEventListener("change", (e) => {
@@ -359,6 +419,10 @@ async function flashFlow() {
 
   const onlyFull = board.single || !board.fw;
   mode = onlyFull ? "full" : activeRadio();
+  if (!mode) {
+    log("selecione o modo de gravação (passo 3) antes de gravar.", "warn");
+    return;
+  }
 
   busy = true;
   $("flashBtn").disabled = true;
@@ -438,7 +502,7 @@ async function flashFlow() {
     try { if (transport) await transport.disconnect(); } catch (e) { /* ignore */ }
     portOpen = null;
     busy = false;
-    $("flashBtn").disabled = !selected;
+    updateFlashBtn();
     $("flashBtnLabel").textContent = currentLang === "pt-BR" ? "Conectar e gravar" : "Connect and flash";
   }
 }

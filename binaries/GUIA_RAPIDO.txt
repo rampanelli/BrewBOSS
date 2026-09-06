@@ -50,6 +50,30 @@ ORDEM DE ATUALIZAÇÃO: grave PRIMEIRO o firmware; o arquivo _fs (filesystem)
 deve ser SEMPRE o SEGUNDO a ser gravado.
 
 
+WEB FLASHER (recomendado, sem instalar nada):
+  https://rampanelli.github.io/BrewBOSS/flasher/
+
+  No site, em "1. Selecione a versão" escolha a versão (a mais nova é a
+  "última"); em "2. Selecione a placa" escolha seu controlador; em "3. Modo
+  de gravação" escolha:
+
+    - "Completo (firmware + filesystem)"  -> instalação nova ou reset total.
+       ATENÇÃO: APAGA o filesystem (configs, receitas e WiFi atuais).
+    - "Somente firmware (preservar dados)"-> atualização que MANTÉM o
+       filesystem (configs, receitas, sensores e WiFi continuam intactos).
+
+  Se o controlador JÁ está em uso, prefira SEMPRE "Somente firmware
+  (preservar dados)" para não perder sua configuração. O botão de gravar só
+  libera depois que você escolhe o modo de gravação.
+
+  Arquivos usados pelo site (em binaries/flasher):
+    *_full.bin -> imagem completa (firmware + filesystem), grava em 0x000000.
+    *_fw.bin   -> somente o app do firmware, grava por cima preservando o
+                  filesystem (no C5: 0x00E000; no C3: 0x010000; no ESP8266: 0x0).
+    O C5 (ESP32-C5) agora também aceita "Somente firmware", preservando o
+    filesystem LittleFS que fica em 0x310000 na flash dele.
+
+
 1.1. Método recomendado: PlatformIO (via PowerShell / Terminal)
 
 Requisitos: Python 3.7+ instalado, PlatformIO instalado (pip install platformio)

@@ -166,7 +166,10 @@
 
     <div class="flash-body">
       <div class="board-list">
-        <h4 data-i18n="fl.step0">1. Selecione a versão do firmware</h4>
+        <h4>
+          <span class="prod-badge"><span class="prod-dot" aria-hidden="true"></span><span id="prodName">BrewBOSS</span></span>
+          <span data-i18n="fl.step0">1. Selecione a versão do firmware</span>
+        </h4>
         <select id="versionSel" class="ver-sel"></select>
         <h4 data-i18n="fl.step1">2. Selecione a placa</h4>
         <div id="boards" class="boards"></div>
@@ -174,7 +177,7 @@
           <h4 data-i18n="fl.stepMode">3. Modo de gravação</h4>
           <div class="mode-options">
             <label class="mode-opt">
-              <input type="radio" name="flashMode" value="full" checked>
+              <input type="radio" name="flashMode" value="full">
               <span data-i18n="fl.modeFull">Completo (firmware + filesystem)</span>
             </label>
             <label class="mode-opt">
@@ -182,6 +185,7 @@
               <span data-i18n="fl.modeFw">Somente firmware (preservar dados)</span>
             </label>
           </div>
+          <p id="modeAlert" class="mode-alert" hidden></p>
         </div>
         <p class="hint" id="versionHint"></p>
       </div>
@@ -189,7 +193,7 @@
       <div class="flash-console">
         <div class="console-head">
           <span class="traffic"><i></i><i></i><i></i></span>
-          <span data-i18n="fl.term">console • esptool.js</span>
+          <span>CONSOLE</span>
           <span id="connStatus" class="status">--</span>
         </div>
         <div id="log" class="log" aria-live="polite"></div>
