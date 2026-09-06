@@ -42,6 +42,7 @@ const I18N = {
     "bd.cpu": "Processador", "bd.ram": "Memória", "bd.net": "Conectividade",
     "bd.rel": "índice comparado ao Wemos (base 100%)",
     "fl.term": "console • esptool.js", "fl.cta": "Conectar e gravar",
+    "fl.clear": "Limpar",
     "fl.needMode": "Selecione um modo de gravação para habilitar o botão",
     "fl.fullHint": "Imagem única — grava tudo na flash",
     "fl.n1t": "Compatível com:", "fl.n1": "Chrome, Edge, Opera e Firefox (desktop) no Windows, Linux e macOS.",
@@ -99,6 +100,7 @@ const I18N = {
     "bd.cpu": "Processor", "bd.ram": "Memory", "bd.net": "Connectivity",
     "bd.rel": "index vs the Wemos (baseline 100%)",
     "fl.term": "console • esptool.js", "fl.cta": "Connect and flash",
+    "fl.clear": "Clear",
     "fl.needMode": "Select a flash mode to enable the button",
     "fl.fullHint": "Single image — flashes the whole flash",
     "fl.n1t": "Compatible with:", "fl.n1": "Chrome, Edge, Opera and Firefox (desktop) on Windows, Linux and macOS.",
@@ -271,6 +273,11 @@ function log(msg, cls) {
   el.scrollTop = el.scrollHeight;
   const cap = 400;
   while (el.childElementCount > cap) el.removeChild(el.firstChild);
+}
+
+function clearLog() {
+  const el = $("log");
+  if (el) el.innerHTML = "";
 }
 
 function setStatus(state) {
@@ -569,6 +576,7 @@ async function flashFlow() {
   $("flashBtn").disabled = true;
   $("flashBtnLabel").textContent = "Gravando...";
   setProgress(0);
+  clearLog();
   log("== BrewBOSS Web Flasher v" + currentVersion + " ==", "sys");
   log("placa selecionada: " + board.name);
 
@@ -682,6 +690,7 @@ async function flashFlow() {
 
 $("flashBtn").addEventListener("click", flashFlow);
 $("versionSel").addEventListener("change", (e) => selectVersion(e.target.value));
+$("clearLog").addEventListener("click", clearLog);
 
 // ---- Selecao de porta USB em modal estilizado ----
 // requestPort() so pode ser chamado dentro de um clique do usuario (gesto);

@@ -189,7 +189,10 @@ button{font-family:inherit}
 .traffic{display:flex;gap:6px}
 .traffic i{width:11px;height:11px;border-radius:50%}
 .traffic i:nth-child(1){background:#ff5f56}.traffic i:nth-child(2){background:#ffbd2e}.traffic i:nth-child(3){background:#27c93f}
-.status{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--dim)}
+.clear-btn{margin-left:auto;padding:4px 12px;border-radius:8px;border:1px solid var(--line2);
+  background:transparent;color:var(--dim);font-size:11px;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:.5px}
+.clear-btn:hover{color:var(--amber);border-color:var(--amber)}
+.status{font-family:var(--mono);font-size:12px;color:var(--dim)}
 .status.on{color:#27c93f}.status.err{color:#ff5f56}
 .log{height:420px;overflow-y:auto;padding:14px 16px;font-family:var(--mono);font-size:12.6px;line-height:1.7;color:#bfe6ff}
 .log .ok{color:#27c93f}.log .warn{color:#ffbd2e}.log .err{color:#ff5f56}.log .sys{color:#8b96ad}
