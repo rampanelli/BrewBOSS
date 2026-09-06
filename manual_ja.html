@@ -131,7 +131,7 @@
       <li ><b>安全システム</b>（過温度遮断およびセンサー喪失遮断）でバッチを保護します。</li>
       <li ><b>オンラインまたはオフライン</b>で動作。20×4 LCDにステータスを表示します。</li>
     </ul>
-    <div class="callout note"><b >ハードウェア互換性</b><span >ESP8266 (Wemos)、ESP32、ESP32-C3ボードで動作し、<b>BrewManiac</b>や<b>BrewUNO</b>などの他のプロジェクトで使用されている配線と100%互換性があります — フラッシュするだけですぐに使用できます。</span></div>
+    <div class="callout note"><b >ハードウェア互換性</b><span >ESP8266 (Wemos)、ESP32、ESP32-C3ボードで動作し、<b>BrewManiac</b>や<b>BrewUNO</b>などの他のプロジェクトで使用されている配線と100%互換性があります — フラッシュするだけですぐに使用できます。 追加サポート: <b>ESP32-C5 Mini V1.0</b>（Wi-Fi 6 デュアルバンド）— <a href="#esp32c5">ESP32-C5 Mini</a> の節を参照。<!--C5SUPPORT--></span></div>
 
     <h2 id="prerequisites"><span class="num">2.</span> <span >前提条件とインストール</span></h2>
     <p >BrewBOSSを操作するには以下が必要です：</p>
@@ -557,7 +557,12 @@ Add Citra 30g@15'             &lt;- 最後のイベントメッセージ (また
     <div class="callout note"><b>ESP32-C5 ノート</b><span>キーパッドは GPIO 直接読み取り（PCF8574なし）。ポンプとヒーターは<b>アクティブハイ</b>（<code>INVERT_PUMP</code>/<code>INVERT_HEAT</code> オフ）‐ idle LOW = OFF。LCD 20x4 は <code>0x27</code>。出力に使わないでください：GPIO 13/14（USB-Serial/JTAG）、27（モジュールRGB）、16,17,18,20,21,22（CPU_LOCKUP）。実測の安全な出力：0-12, 15, 19, 23-26, 28, 29。コンソールはネイティブUSB。ヒーターは <code>esp_timer</code> による 1 kHz PWM を使用します（現行コアの LEDC はチップをロックします）。</span></div>
     <div class="callout tip"><b>ESP32-C5 のWi-Fi（上級）</b><span>デフォルトは <b>MIXED</b>: AP <code>BrewBOSS</code>（2.4 GHz, 192.168.4.1）+ ステーション。デュアルバンド <b>AUTO</b> で、ステーションは AP が 2.4 GHz のまま <b>5 GHz</b> のネットワークに接続できます。保存した<b>ネットワークリスト</b>（SSID+パスワード）を持ち、見える中で<b>最も強い</b>ものに接続。切断時は両バンドを再スキャンして最良へ再接続。<b>Fast-connect</b> は最後のバンドを記憶（起動約4秒、STA約8秒）。<b>Scan</b> 画面で保存済みパスワードの表示・編集が可能で、<b>CONNECT</b> で保存・接続、<b>DELETE</b> で削除。✓ は接続済みネットワークを示します。到達可能なネットワークが無い場合も AP は稼働し自動リトライします。</span></div>
 
-    <h2 id="notes"><span class="num">17.</span> <span >最終注意事項</span></h2>
+        <h3>書き込み（ファームウェア）</h3>
+    <pre><code>esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <p style="font-size:13px;color:var(--dim)"><b>factory</b> イメージ（ブートローダ＋パーティション＋アプリ）。Web 画面は内蔵のため、別のファイルシステム イメージは不要です。</p>
+    <!--C5FLASH-->
+
+<h2 id="notes"><span class="num">17.</span> <span >最終注意事項</span></h2>
     <ul>
       <li >BrewBOSSは実際のヒーターと高温の液体を制御します。安全な電気および醸造の慣行に常に従ってください。</li>
       <li >インターフェースはデバイスによってローカルに提供され、オフラインで動作します。読み取りアクセスはオープンで、書き込みアクセスはログインで保護できます。</li>

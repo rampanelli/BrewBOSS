@@ -131,12 +131,12 @@
       <li >Protéger le lot avec un <b>système de sécurité</b> (coupure pour surtempérature et coupure pour perte de capteur).</li>
       <li >Fonctionner <b>en ligne ou hors ligne</b> ; afficher l'état sur un LCD 20×4.</li>
     </ul>
-    <div class="callout note"><b >Compatibilité matérielle</b><span >Il fonctionne sur les cartes ESP8266 (Wemos), ESP32 et ESP32-C3 et est 100% compatible avec le câblage utilisé par d'autres projets tels que <b>BrewManiac</b> et <b>BrewUNO</b> — il suffit de flasher et d'utiliser.</span></div>
+    <div class="callout note"><b >Compatibilité matérielle</b><span >Il fonctionne sur les cartes ESP8266 (Wemos), ESP32 et ESP32-C3 et est 100% compatible avec le câblage utilisé par d'autres projets tels que <b>BrewManiac</b> et <b>BrewUNO</b> — il suffit de flasher et d'utiliser. Prise en charge supplémentaire : <b>ESP32-C5 Mini V1.0</b> (Wi-Fi 6 double bande) — voir la section <a href="#esp32c5">ESP32-C5 Mini</a>.<!--C5SUPPORT--></span></div>
 
     <h2 id="prerequisites"><span class="num">2.</span> <span >Prérequis et installation</span></h2>
     <p >Pour utiliser BrewBOSS, vous avez besoin de :</p>
     <ul>
-      <li >Une carte contrôleur compatible (Wemos/ESP8266, ESP32 ou ESP32-C3) avec le firmware BrewBOSS installé.</li>
+      <li >Une carte contrôleur compatible (Wemos/ESP8266, ESP32 ou ESP32-C3 / ESP32-C5 Mini) avec le firmware BrewBOSS installé.</li>
       <li >Le matériel de brassage câblé : résistance(s) chauffante(s) via SSR, une pompe, et un ou plusieurs capteurs de température <b>DS18B20</b>. Un LCD I²C 20×4 optionnel et 4 boutons permettent l'utilisation autonome.</li>
       <li >Un téléphone, une tablette ou un ordinateur avec un navigateur web.</li>
       <li >Optionnellement, votre réseau Wi‑Fi domestique (sinon l'appareil crée son propre point d'accès).</li>
@@ -557,7 +557,12 @@ Add Citra 30g@15'             &lt;- dernier message d'événement (ou IP / AP)</
     <div class="callout note"><b>Notes sur l'ESP32-C5</b><span>Clavier lu directement depuis les GPIO (sans PCF8574). Pompe et r&eacute;chauffeurs sont <b>actifs-haut</b> (<code>INVERT_PUMP</code>/<code>INVERT_HEAT</code> d&eacute;sactiv&eacute;s) - idle LOW = OFF. LCD 20x4 en <code>0x27</code>. N'utilisez pas en sortie les GPIO 13/14 (USB-Serial/JTAG), 27 (RGB du module) ni 16,17,18,20,21,22 (provoquent un CPU_LOCKUP). Sorties s&ucirc;res mesur&eacute;es : 0-12, 15, 19, 23-26, 28, 29. Console s&eacute;rie sur USB natif. Les r&eacute;chauffeurs utilisent une PWM 1 kHz via <code>esp_timer</code> (le LEDC du core actuel bloque la puce).</span></div>
     <div class="callout tip"><b>Wi-Fi de l'ESP32-C5 (avanc&eacute;)</b><span>Mode par d&eacute;faut <b>MIXED</b> : AP <code>BrewBOSS</code> (2,4 GHz, 192.168.4.1) + station. Driver double bande <b>AUTO</b> : la station peut rejoindre des r&eacute;seaux <b>5 GHz</b> pendant que l'AP reste en 2,4 GHz. Il garde une <b>liste de r&eacute;seaux enregistr&eacute;s</b> (SSID+mot de passe) et se connecte au <b>plus fort</b> visible ; en cas de chute, il scanne les deux bandes et se reconnecte au meilleur. <b>Fast-connect</b> m&eacute;morise la derni&egrave;re bande (boot ~4 s, station ~8 s). Dans le <b>Scan</b> vous pouvez voir/modifier le mot de passe enregistr&eacute;, <b>CONNECT</b> enregistre et connecte, <b>DELETE</b> supprime ; &#10003; marque les r&eacute;seaux d&eacute;j&agrave; connect&eacute;s. Sans r&eacute;seau joignable l'AP reste actif et r&eacute;essaie seul.</span></div>
 
-    <h2 id="notes"><span class="num">17.</span> <span >Notes finales</span></h2>
+        <h3>Gravure (firmware)</h3>
+    <pre><code>esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <p style="font-size:13px;color:var(--dim)">Image <b>factory</b> (bootloader + partitions + app) ; l'interface web est intégrée, aucune image filesystem séparée.</p>
+    <!--C5FLASH-->
+
+<h2 id="notes"><span class="num">17.</span> <span >Notes finales</span></h2>
     <ul>
       <li >BrewBOSS contrôle de vraies résistances chauffantes et des liquides chauds. Respectez toujours les pratiques de sécurité électrique et de brassage.</li>
       <li >L'interface est servie localement par l'appareil et fonctionne hors ligne ; l'accès en lecture est ouvert, l'accès en écriture peut être protégé par la connexion.</li>

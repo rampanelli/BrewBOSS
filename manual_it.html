@@ -131,12 +131,12 @@
       <li >Proteggere il lotto con un <b>sistema di sicurezza</b> (arresto per sovratemperatura e arresto per perdita del sensore).</li>
       <li >Funzionare <b>online o offline</b>; mostrare lo stato su un LCD 20×4.</li>
     </ul>
-    <div class="callout note"><b >Compatibilità hardware</b><span >Funziona su schede ESP8266 (Wemos), ESP32 e ESP32-C3 ed è compatibile al 100% con il cablaggio usato da altri progetti come <b>BrewManiac</b> e <b>BrewUNO</b> — basta flashare e usare.</span></div>
+    <div class="callout note"><b >Compatibilità hardware</b><span >Funziona su schede ESP8266 (Wemos), ESP32 e ESP32-C3 ed è compatibile al 100% con il cablaggio usato da altri progetti come <b>BrewManiac</b> e <b>BrewUNO</b> — basta flashare e usare. Supporto aggiuntivo: <b>ESP32-C5 Mini V1.0</b> (Wi-Fi 6 dual-band) — vedi la sezione <a href="#esp32c5">ESP32-C5 Mini</a>.<!--C5SUPPORT--></span></div>
 
     <h2 id="prerequisites"><span class="num">2.</span> <span >Prerequisiti e installazione</span></h2>
     <p >Per utilizzare BrewBOSS ti servono:</p>
     <ul>
-      <li >Una scheda controller supportata (Wemos/ESP8266, ESP32 o ESP32-C3) con il firmware BrewBOSS installato.</li>
+      <li >Una scheda controller supportata (Wemos/ESP8266, ESP32 o ESP32-C3 / ESP32-C5 Mini) con il firmware BrewBOSS installato.</li>
       <li >L'hardware di birrificazione cablato: riscaldatore/i via SSR, una pompa, e uno o più sensori di temperatura <b>DS18B20</b>. Un LCD I²C 20×4 opzionale e 4 pulsanti consentono l'uso autonomo.</li>
       <li >Un telefono, tablet o computer con un browser web.</li>
       <li >Opzionalmente, la tua rete Wi‑Fi domestica (altrimenti il dispositivo crea il proprio punto di accesso).</li>
@@ -557,7 +557,12 @@ Add Citra 30g@15'             &lt;- ultimo messaggio evento (o IP / AP)</pre>
     <div class="callout note"><b>Note ESP32-C5</b><span>Tastiera letta direttamente dai GPIO (senza PCF8574). Pompa e riscaldatori sono <b>attivi-alti</b> (<code>INVERT_PUMP</code>/<code>INVERT_HEAT</code> disattivati) - idle LOW = OFF. LCD 20x4 a <code>0x27</code>. Non usare come uscita i GPIO 13/14 (USB-Serial/JTAG), 27 (RGB del modulo) n&eacute; 16,17,18,20,21,22 (causano CPU_LOCKUP). Uscite sicure misurate: 0-12, 15, 19, 23-26, 28, 29. Console seriale sull'USB nativo. I riscaldatori usano PWM 1 kHz via <code>esp_timer</code> (il LEDC del core attuale blocca il chip).</span></div>
     <div class="callout tip"><b>Wi-Fi ESP32-C5 (avanzato)</b><span>Modalit&agrave; predefinita <b>MIXED</b>: AP <code>BrewBOSS</code> (2,4 GHz, 192.168.4.1) + stazione. Driver dual-band <b>AUTO</b>: la stazione pu&ograve; unirsi a reti <b>5 GHz</b> mentre l'AP resta su 2,4 GHz. Salva una <b>lista di reti salvate</b> (SSID+password) e si connette alla <b>pi&ugrave; forte</b> visibile; in caso di caduta, esegue una scansione delle due bande e si riconnette alla migliore. <b>Fast-connect</b> ricorda l'ultima banda (boot ~4 s, stazione ~8 s). Nel <b>Scan</b> puoi vedere/modificare la password salvata, <b>CONNECT</b> salva e connette, <b>DELETE</b> rimuove; &#10003; segna le reti gi&agrave; collegate. Senza rete raggiungibile l'AP resta attivo e ritenta da solo.</span></div>
 
-    <h2 id="notes"><span class="num">17.</span> <span >Note finali</span></h2>
+        <h3>Flashing (firmware)</h3>
+    <pre><code>esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <p style="font-size:13px;color:var(--dim)">Immagine <b>factory</b> (bootloader + partizioni + app); l'interfaccia web è incorporata, nessuna immagine filesystem separata.</p>
+    <!--C5FLASH-->
+
+<h2 id="notes"><span class="num">17.</span> <span >Note finali</span></h2>
     <ul>
       <li >BrewBOSS controlla riscaldatori e liquidi caldi reali. Segui sempre pratiche sicure di elettricità e birrificazione.</li>
       <li >L'interfaccia è servita localmente dal dispositivo e funziona offline; l'accesso in lettura è aperto, e l'accesso in scrittura può essere protetto con il login.</li>

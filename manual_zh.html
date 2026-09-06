@@ -131,7 +131,7 @@
       <li >通过<b>安全系统</b>（过温切断和传感器丢失切断）保护批次。</li>
       <li ><b>在线或离线</b>工作；在20×4 LCD上显示状态。</li>
     </ul>
-    <div class="callout note"><b >硬件兼容性</b><span >它运行在ESP8266 (Wemos)、ESP32和ESP32-C3开发板上，与<b>BrewManiac</b>和<b>BrewUNO</b>等其他项目使用的接线100%兼容 — 只需刷写即可使用。</span></div>
+    <div class="callout note"><b >硬件兼容性</b><span >它运行在ESP8266 (Wemos)、ESP32和ESP32-C3开发板上，与<b>BrewManiac</b>和<b>BrewUNO</b>等其他项目使用的接线100%兼容 — 只需刷写即可使用。 附加支持：<b>ESP32-C5 Mini V1.0</b>（双频 Wi-Fi 6）— 请参阅 <a href="#esp32c5">ESP32-C5 Mini</a> 部分。<!--C5SUPPORT--></span></div>
 
     <h2 id="prerequisites"><span class="num">2.</span> <span >前提条件与安装</span></h2>
     <p >操作BrewBOSS需要：</p>
@@ -557,7 +557,12 @@ Add Citra 30g@15'             &lt;- 最后事件消息（或IP / AP）</pre>
     <div class="callout note"><b>ESP32-C5 说明</b><span>键盘直接从 GPIO 读取（无 PCF8574）。水泵和加热器为<b>高电平有效</b>（<code>INVERT_PUMP</code>/<code>INVERT_HEAT</code> 关闭）- 空闲 LOW = 关闭。LCD 20x4 地址 <code>0x27</code>。请勿将 GPIO 13/14（USB-Serial/JTAG）、27（模块 RGB）或 16,17,18,20,21,22 用作输出（会导致 CPU_LOCKUP）。实测安全输出：0-12, 15, 19, 23-26, 28, 29。串口控制台位于原生 USB。加热器使用 <code>esp_timer</code> 实现的 1 kHz PWM（当前内核的 LEDC 会锁死芯片）。</span></div>
     <div class="callout tip"><b>ESP32-C5 的 Wi-Fi（高级）</b><span>默认模式 <b>MIXED</b>：AP <code>BrewBOSS</code>（2.4 GHz，192.168.4.1）+ 站点。驱动为双频 <b>AUTO</b>：AP 保持在 2.4 GHz 时，站点可连接 <b>5 GHz</b> 网络。它保存<b>网络列表</b>（SSID+密码），并连接可见的<b>最强</b>网络；断线后重新扫描两个频段并连接最佳网络。<b>Fast-connect</b> 记住最后使用的频段（启动约 4 秒，站点约 8 秒）。在 <b>Scan</b> 中可查看/修改已存密码，<b>CONNECT</b> 保存并连接，<b>DELETE</b> 删除；✓ 标记曾连接的网络。没有可达网络时 AP 仍保持运行并自动重试。</span></div>
 
-    <h2 id="notes"><span class="num">17.</span> <span >最终说明</span></h2>
+        <h3>烧录（固件）</h3>
+    <pre><code>esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <p style="font-size:13px;color:var(--dim)"><b>factory</b> 镜像（引导程序 + 分区 + 应用）；网页界面已内置，因此无需单独的 filesystem 镜像。</p>
+    <!--C5FLASH-->
+
+<h2 id="notes"><span class="num">17.</span> <span >最终说明</span></h2>
     <ul>
       <li >BrewBOSS控制真实的加热器和热液体。请始终遵循安全的电气和酿造操作规范。</li>
       <li >界面由设备本地提供，可离线工作；读取权限开放，写入权限可通过登录保护。</li>
