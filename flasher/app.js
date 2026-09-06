@@ -526,6 +526,28 @@ function normalizeChip(name) {
   return String(name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
+const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Retorna a porta autorizada mais provavel de ser a mesma do aparelho (mesmo
+// VID/PID da porta salva, se houver). getPorts() devolve objetos ATUAIS — apos
+// um reset o chip reenumera e o objeto antigo fica obsoleto, por isso preferimos
+// sempre buscar o mais recente.
+async function bestGrantedPort() {
+  try {
+    const list = await navigator.serial.getPorts();
+    if (!list || !list.length) return null;
+    const want = savedPort && savedPort.getInfo ? savedPort.getInfo() : null;
+    const match = list.find((p) => {
+      if (!want || !p.getInfo) return false;
+      const gi = p.getInfo();
+      return gi.usbVendorId === want.usbVendorId && gi.usbProductId === want.usbProductId;
+    });
+    return match || list[list.length - 1] || list[0];
+  } catch (e) {
+    return null;
+  }
+}
+
 async function flashFlow() {
   if (busy || !selected) return;
   const board = selectedBoard();
@@ -554,25 +576,53 @@ async function flashFlow() {
   let transport = null;
   let loader = null;
   try {
-    port = await acquirePort();
-    if (!port) {
-      log("seleção de porta cancelada.", "warn");
-      return;
-    }
-    portOpen = port;
-
+    // 1) Conexao com a porta (com ate 3 tentativas): apos gravar e resetar, o
+    // chip reenumera a USB e o objeto de porta salvo fica obsoleto; entao, se
+    // falhar ao abrir, busca-se uma porta autorizada "fresca" (getPorts) ou o
+    // modal do seletor antes de desistir.
     const terminal = {
       clean() {},
       write(data) { logLine(data); },
       writeLine(data) { logLine(data); }
     };
+    const maxTries = 3;
+    for (let attempt = 1; attempt <= maxTries; attempt++) {
+      try {
+        if (attempt > 1) {
+          const fresh = await bestGrantedPort();
+          if (fresh) { savedPort = fresh; port = fresh; }
+          else {
+            port = await acquirePort();
+            if (!port) { log("seleção de porta cancelada.", "warn"); return; }
+          }
+        } else {
+          port = await acquirePort();
+          if (!port) { log("seleção de porta cancelada.", "warn"); return; }
+        }
+        portOpen = port;
+        transport = new Transport(port, true);
+        loader = new ESPLoader({ transport, baudrate: 115200, terminal, debugLogging: false });
+        log("conectando e identificando o chip...", "sys");
+        setStatus("...");
+        await loader.main();
+        break; // conectou com sucesso
+      } catch (connErr) {
+        const msg = connErr && connErr.message ? String(connErr.message) : String(connErr);
+        const isOpenFail = /failed to open serial port/i.test(msg) || /Failed to open/i.test(msg);
+        savedPort = null;
+        portOpen = null;
+        if (transport) { try { await transport.disconnect(); } catch (e) { /* ignore */ } }
+        transport = null;
+        loader = null;
+        if (attempt < maxTries && isOpenFail) {
+          log("porta ocupada/reconectando — tentando novamente... (" + attempt + "/" + (maxTries - 1) + ")", "warn");
+          await delay(1500 * attempt);
+          continue;
+        }
+        throw connErr;
+      }
+    }
 
-    transport = new Transport(port, true);
-    loader = new ESPLoader({ transport, baudrate: 115200, terminal, debugLogging: false });
-
-    log("conectando e identificando o chip...", "sys");
-    setStatus("...");
-    await loader.main();
     const chipName = loader.chip ? loader.chip.CHIP_NAME : "?";
     const detected = chipName;
 
@@ -709,7 +759,10 @@ function cancelPortPick() {
 
 // Retorna uma porta serial (autorizada anteriormente ou escolhida no modal).
 async function acquirePort() {
-  // Se ja temos uma porta desta sessao, tenta reutiliza-la direto.
+  // Sempre prefere uma porta AUTORIZADA "fresca" (getPorts) ao objeto antigo:
+  // apos um reset o chip reenumera a USB e o objeto salvo fica obsoleto.
+  const fresh = await bestGrantedPort();
+  if (fresh) { savedPort = fresh; return fresh; }
   if (savedPort) {
     try { return savedPort; } catch (e) { /* tenta modal */ }
   }
