@@ -26,7 +26,20 @@ BrewBOSS is a controller for electric brewing equipment. It manages heaters, pum
 - **Safety system** — over-temperature and sensor-loss cut-off.
 - **Online or offline** operation with 20×4 LCD status display.
 
-**Hardware:** ESP8266 (Wemos), ESP32 and ESP32-C3. 100% compatible with BrewManiac / BrewUNO wiring.
+**Hardware:** ESP8266 (Wemos), ESP32, ESP32-C3 and **ESP32-C5 Mini V1.0**. 100% compatible with BrewManiac / BrewUNO wiring.
+
+### ESP32-C5 Mini V1.0 (v2.2.26a)
+
+- **Chip:** RISC-V 240 MHz, Wi-Fi 6 dual-band (2.4 + 5 GHz), Bluetooth 5 (LE), IEEE 802.15.4.
+- **Default GPIO map:**
+  GPIO0-3 → Keypad (BTN1 PUMP / BTN2 MANUAL / BTN3 BOIL / BTN4 START) ·
+  GPIO4 → Buzzer · GPIO5/6/7 → MASH/SPARGE/BOIL heaters · GPIO10 → Pump ·
+  GPIO8/9 → LCD I2C SDA/SCL (20x4 @0x27) · GPIO12 → DS18B20.
+- **Wi-Fi (C5 only, advanced):** default **MIXED** (AP `BrewBOSS` 192.168.4.1 + STA),
+  **dual-band AUTO** (STA on 5 GHz while AP stays on 2.4 GHz), saved networks list
+  (SSID + password), connects to the **best-signal** saved network and re-scans on
+  drop, **fast-connect** on last band (~4 s boot / ~8 s STA), Scan password manager
+  (CONNECT saves & connects, DELETE), self-healing AP fallback.
 
 ### Accessing the System
 

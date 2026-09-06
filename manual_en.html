@@ -106,6 +106,7 @@
         <li><a href="#trouble" >Troubleshooting</a></li>
         <li><a href="#firmware" >Firmware & installation</a></li>
         <li><a href="#pinout" >Pinout reference</a></li>
+    <li><a href="#esp32c5" >ESP32-C5 Mini</a></li>
         <li><a href="#notes" >Final notes</a></li>
         <li><a href="#license" >License & terms of use</a></li>
       </ol>
@@ -130,12 +131,12 @@
       <li >Protect the batch with a <b>safety system</b> (over-temperature cut-off and sensor-loss cut-off).</li>
       <li >Work <b>online or offline</b>; show status on a 20×4 LCD.</li>
     </ul>
-    <div class="callout note"><b >Hardware compatibility</b><span >It runs on ESP8266 (Wemos), ESP32 and ESP32-C3 boards and is 100% compatible with the wiring used by other projects such as <b>BrewManiac</b> and <b>BrewUNO</b> — just flash it and use.</span></div>
+    <div class="callout note"><b >Hardware compatibility</b><span >It runs on ESP8266 (Wemos), ESP32, ESP32-C3 and ESP32-C5 Mini V1.0 boards (the ESP32-C5 adds dual-band Wi-Fi 6 and advanced Wi-Fi features - see the <a href="#esp32c5">ESP32-C5 section</a>) and is 100% compatible with the wiring used by other projects such as <b>BrewManiac</b> and <b>BrewUNO</b> — just flash it and use.</span></div>
 
     <h2 id="prerequisites"><span class="num">2.</span> <span >Prerequisites & installation</span></h2>
     <p >To operate BrewBOSS you need:</p>
     <ul>
-      <li >A supported controller board (Wemos/ESP8266, ESP32 or ESP32-C3) with the BrewBOSS firmware installed.</li>
+      <li >A supported controller board (Wemos/ESP8266, ESP32, ESP32-C3 or ESP32-C5 Mini) with the BrewBOSS firmware installed.</li>
       <li >The brewing hardware wired to it: heater(s) via SSR, a pump, and one or more <b>DS18B20</b> temperature sensors. An optional 20×4 I²C LCD and 4 buttons enable stand-alone use.</li>
       <li >A phone, tablet or computer with a web browser.</li>
       <li >Optionally, your home Wi-Fi network (otherwise the device runs its own access point).</li>
@@ -390,7 +391,7 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     <p >Firmware (LittleFS shipped separately) for the 3 supported controllers. Filesystem images are in <b>LittleFS</b> format.</p>
 
     <h3 >Files and offsets</h3>
-    <p >Each release in the <b>binaries</b> folder ships <b>two files per controller</b>: <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;.bin</code> is the <b>firmware</b> (flash it <b>first</b>) and <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;_fs.bin</code> is the <b>filesystem</b> (LittleFS — flash it <b>second</b>). The file ending in <code>_fs</code> is always the filesystem; the one without the suffix is the firmware. <code>&lt;board&gt;</code> is <code>esp12e</code> (Wemos D1 Mini / ESP8266), <code>esp32</code> (ESP32 WROOM-32) or <code>esp32c3</code> (ESP32-C3 Super Mini).</p>
+    <p >Each release in the <b>binaries</b> folder ships <b>two files per controller</b>: <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;.bin</code> is the <b>firmware</b> (flash it <b>first</b>) and <code>BrewBOSS_&lt;version&gt;_&lt;board&gt;_fs.bin</code> is the <b>filesystem</b> (LittleFS — flash it <b>second</b>). The file ending in <code>_fs</code> is always the filesystem; the one without the suffix is the firmware. <code>&lt;board&gt;</code> is <code>esp12e</code> (Wemos D1 Mini / ESP8266), <code>esp32</code> (ESP32 WROOM-32) or <code>esp32c3</code> (ESP32-C3 Super Mini). The <b>ESP32-C5 Mini</b> ships a single <b>factory</b> file (the web UI is embedded, so there is no separate filesystem image).</p>
     <div class="tablewrap"><table>
       <thead><tr><th >Controller</th><th >File</th><th >Type</th><th >Offset</th><th >Size</th></tr></thead>
       <tbody>
@@ -400,6 +401,7 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
         <tr><td><code>BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
         <tr><td rowspan="2"><b>ESP32-C3</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c3.bin</code></td><td>Firmware</td><td><code>0x00010000</code></td><td>~1,020 KB</td></tr>
         <tr><td><code>BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></td><td>LittleFS</td><td><code>0x00290000</code></td><td>~1,408 KB</td></tr>
+        <tr><td><b>ESP32-C5 Mini</b></td><td><code>BrewBOSS_&lt;version&gt;_esp32c5.bin</code></td><td>Firmware (factory: bootloader + partitions + app)</td><td><code>0x00000000</code></td><td>~1,400 KB</td></tr>
       </tbody>
     </table></div>
 
@@ -430,6 +432,7 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     <p><b >ESP32 (esp32dev) — filesystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
     <p><b >ESP32-C3 — firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
     <p><b >ESP32-C3 — filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+    <p><b >ESP32-C5 Mini - firmware</b> (factory image: bootloader + partitions + app; no filesystem file needed)</p><pre><code>esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
 
     <div class="callout note"><b >ESP8266</b> <span >the firmware already includes the bootloader (eboot), so it is written at <code>0x0</code>. The 2 files are enough.</span></div>
 
@@ -447,6 +450,8 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     <p><b >4. Firmware</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
 
     <p><b >5. Filesystem</b></p><pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+    <p><b >ESP32-C5 Mini - first flash / blank chip</b></p><pre><code>esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <p style="font-size:13px;color:var(--dim)">The ESP32-C5 file is a <b>factory image</b> (bootloader + partition table + firmware); the web UI is embedded, so no filesystem image is needed.</p>
 
     <h3 >Firmware update only (bootloader intact)</h3>
     <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
@@ -454,7 +459,7 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     <h3 >Filesystem update only</h3>
     <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
 
-    <div class="callout warn"><b >Erase everything first (optional)</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. This also wipes the WiFi/recipes config stored in LittleFS.</span></div>
+    <div class="callout warn"><b >Erase everything first (optional)</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp32c5|esp8266&gt; --port COMx erase_flash</code>. This also wipes the WiFi/recipes config stored in LittleFS.</span></div>
 
     <h3 >Notes</h3>
     <ul>
@@ -520,7 +525,7 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     </div>
     <div class="callout note"><b >ESP8266 notes</b><span >PCF8574 (I2C keypad expander) at <code>0x38</code> — keypad polled via I2C, INT pin unused. LCD 20×4 at <code>0x27</code> (fallback: <code>0x3F</code>, <code>0x20</code>, <code>0x3E</code>). GPIO15 (D8 / pin 7) requires external pull-down (boot strap). GPIO2 (D4 / pin 14) has internal pull-up and built-in LED — lights up with boil heater. GPIO16 (D0 / pin 3) <b>does not support PWM</b>. GPIO0 (D3 / pin 13) is a boot-strap pin: pulled LOW at power-on enters flash mode. Boot pre-safety sets GPIOs 0,2,4,5,12,13,14,15,16 as INPUT (high impedance).</span></div>
 
-    <h3 >I2C Addresses (both controllers)</h3>
+    <h3 >I2C Addresses (all controllers)</h3>
     <div class="tablewrap">
     <table>
       <thead><tr><th >Device</th><th >Default address</th><th >Fallback</th></tr></thead>
@@ -531,7 +536,31 @@ Add Citra 30g@15'             &lt;- last event message (or IP / AP)</pre>
     </table>
     </div>
 
-    <h2 id="notes"><span class="num">16.</span> <span >Final notes</span></h2>
+    <h2 id="esp32c5"><span class="num">16.</span> <span >ESP32-C5 Mini (firmware 2.2.26a or later)</span></h2>
+    <p >The <b>ESP32-C5 Mini V1.0</b> is a RISC-V controller with <b>Wi-Fi 6 dual-band (2.4 + 5 GHz)</b>, Bluetooth 5 (LE) and IEEE 802.15.4 (Zigbee/Thread), 240 MHz, 384 KB SRAM and 4 MB flash (with OTA). BrewBOSS supports it as a first-class target. GPIO&rarr;function mapping validated on the actual Mini V1.0 board:</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>GPIO</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>GPIO0</td><td>KEYPAD / BTN1 / PUMP</td></tr>
+        <tr><td>GPIO1</td><td>KEYPAD / BTN2 / MANUAL</td></tr>
+        <tr><td>GPIO2</td><td>KEYPAD / BTN3 / BOIL</td></tr>
+        <tr><td>GPIO3</td><td>KEYPAD / BTN4 / START</td></tr>
+        <tr><td>GPIO4</td><td>BUZZER</td></tr>
+        <tr><td>GPIO5</td><td>MASH Heater (PWM)</td></tr>
+        <tr><td>GPIO6</td><td>SPARGE Heater (PWM)</td></tr>
+        <tr><td>GPIO7</td><td>BOIL Heater (PWM)</td></tr>
+        <tr><td>GPIO8</td><td>LCD 20x4 I2C - SDA</td></tr>
+        <tr><td>GPIO9</td><td>LCD 20x4 I2C - SCL</td></tr>
+        <tr><td>GPIO10</td><td>PUMP</td></tr>
+        <tr><td>GPIO12</td><td>DS18B20 (OneWire)</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout note"><b >ESP32-C5 notes</b><span >Keypad read directly from GPIOs (no PCF8574). Pump and heaters are <b>active-high</b> (<code>INVERT_PUMP</code>/<code>INVERT_HEAT</code> OFF) - idle LOW = OFF. LCD 20x4 at <code>0x27</code>. Do <b>not</b> drive GPIO 13/14 (USB-Serial/JTAG), 27 (module RGB) or 16, 17, 18, 20, 21, 22 as outputs (CPU_LOCKUP on this module). Safe outputs measured: 0-12, 15, 19, 23-26, 28, 29. Serial console is the native USB. The board uses a 1 kHz PWM driven by <code>esp_timer</code> (the LEDC driver of the current Arduino core locks up this chip).</span></div>
+    <div class="callout tip"><b >ESP32-C5 Wi-Fi (advanced)</b><span >Default mode is <b>MIXED</b>: AP <code>BrewBOSS</code> (2.4 GHz, 192.168.4.1) plus a station. The driver runs in dual-band <b>AUTO</b>, so the station can join <b>5 GHz</b> networks while the AP stays on 2.4 GHz. BrewBOSS keeps a <b>list of saved networks</b> (SSID + password) and connects to the <b>strongest</b> one it can see, re-scanning both bands and re-connecting on a drop. <b>Fast-connect</b> remembers the last used band (boot ~4 s, station ~8 s). In the Wi-Fi <b>Scan</b> dialog you can tap a network to show/edit its saved password, press <b>CONNECT</b> (saves and joins), or <b>DELETE</b> it; a &#10003; marks networks that already connected. If no network is reachable the AP stays available and BrewBOSS retries automatically.</span></div>
+
+    <h2 id="notes"><span class="num">17.</span> <span >Final notes</span></h2>
     <ul>
       <li >BrewBOSS controls real heaters and hot liquids. Always follow safe electrical and brewing practices.</li>
       <li >The interface is served locally by the device and works offline; read access is open, and write access can be protected with the login.</li>
