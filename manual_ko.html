@@ -432,6 +432,8 @@ Add Citra 30g@15'             &lt;- 마지막 이벤트 메시지 (또는 IP / A
     <p><b >ESP32 (esp32dev) — 파일 시스템</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
     <p><b >ESP32-C3 — 펌웨어</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
     <p><b >ESP32-C3 — 파일 시스템</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+    <p><b>ESP32-C5 Mini - firmware</b></p><pre><code>esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <!--C5UPD-->
 
     <div class="callout note"><b >ESP8266</b> <span >펌웨어에 이미 부트로더 (eboot)가 포함되어 있으므로 <code>0x0</code>에 기록됩니다. 2개의 파일이면 충분합니다.</span></div>
 

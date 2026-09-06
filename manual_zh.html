@@ -432,6 +432,8 @@ Add Citra 30g@15'             &lt;- 最后事件消息（或IP / AP）</pre>
     <p><b >ESP32 (esp32dev) — 文件系统</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
     <p><b >ESP32-C3 — 固件</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
     <p><b >ESP32-C3 — 文件系统</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+    <p><b>ESP32-C5 Mini - firmware</b></p><pre><code>esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <!--C5UPD-->
 
     <div class="callout note"><b >ESP8266</b> <span >固件已包含引导程序（eboot），因此写入地址<code>0x0</code>。2个文件就足够了。</span></div>
 

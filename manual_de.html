@@ -432,6 +432,8 @@ Add Citra 30g@15'             &lt;- letzte Ereignismeldung (oder IP / AP)</pre>
     <p><b >ESP32 (esp32dev) — Dateisystem</b></p><pre><code>esptool.py --chip esp32 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32_fs.bin</code></pre>
     <p><b >ESP32-C3 — Firmware</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_&lt;version&gt;_esp32c3.bin</code></pre>
     <p><b >ESP32-C3 — Dateisystem</b></p><pre><code>esptool.py --chip esp32c3 --port COMx --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+    <p><b>ESP32-C5 Mini - firmware</b></p><pre><code>esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <!--C5UPD-->
 
     <div class="callout note"><b >ESP8266</b> <span >die Firmware enthält bereits den Bootloader (eboot), daher wird sie unter <code>0x0</code> geschrieben. Die 2 Dateien sind ausreichend.</span></div>
 
