@@ -28,9 +28,10 @@ const I18N = {
     "s3.t": "Clique e grave", "s3.d": "A página detecta o chip, baixa o firmware do GitHub e grava direto no seu controlador.",
     "fl.kicker": "Web Flasher", "fl.title": "Grave o firmware direto no seu controlador.",
     "fl.sub": "Tudo acontece no seu navegador — o firmware vem daqui do GitHub e vai para o chip pela porta USB. Nada de arquivos, nada de drivers.",
-    "fl.step0": "1. Selecione a versão do firmware",
-    "fl.step1": "2. Selecione a placa",
+    "fl.step0": "2. Selecione a versão",
+    "fl.step1": "1. Selecione o controlador",
     "fl.stepMode": "3. Modo de gravação",
+    "fl.hintMode": "selecione o modo de gravação antes de gravar",
     "fl.modeFull": "Completo (firmware + filesystem)",
     "fl.modeFw": "Somente firmware (preservar dados)",
     "fl.verLatest": "(última)",
@@ -46,6 +47,12 @@ const I18N = {
     "fl.n1t": "Compatível com:", "fl.n1": "Chrome, Edge, Opera e Firefox (desktop) no Windows, Linux e macOS.",
     "fl.n2t": "Atenção:", "fl.n2": "use um cabo de dados (não só de carga). O Safari e celulares não suportam gravação serial pelo navegador.",
     "fl.ok": "Entendi",
+    "fl.port.t": "Conectar a porta USB",
+    "fl.port.d": "Conecte o controlador ao computador e escolha a porta USB que ele usa.",
+    "fl.port.pick": "Escolher porta USB…",
+    "fl.port.cancel": "Cancelar",
+    "fl.port.none": "Nenhuma porta encontrada — confira o cabo e o driver do controlador.",
+    "fl.port.reconnect": "Conecte novamente a porta USB para continuar.",
     "fl.done.t": "Gravação concluída!",
     "fl.done.d": "Desligue e ligue o microcontrolador novamente para que o firmware inicie corretamente.",
     "foot.manual": "Manual", "foot.guide": "Guia rápido",
@@ -78,9 +85,10 @@ const I18N = {
     "s3.t": "Click and flash", "s3.d": "The page detects the chip, downloads the firmware from GitHub and flashes it straight to your controller.",
     "fl.kicker": "Web Flasher", "fl.title": "Flash the firmware straight into your controller.",
     "fl.sub": "Everything happens in your browser — the firmware comes from this GitHub page and goes to the chip over USB. No files, no drivers.",
-    "fl.step0": "1. Choose the firmware version",
-    "fl.step1": "2. Select your board",
+    "fl.step0": "2. Choose the version",
+    "fl.step1": "1. Select the controller",
     "fl.stepMode": "3. Flash mode",
+    "fl.hintMode": "select the flash mode before flashing",
     "fl.modeFull": "Full (firmware + filesystem)",
     "fl.modeFw": "Firmware only (keep data)",
     "fl.verLatest": "(latest)",
@@ -96,6 +104,12 @@ const I18N = {
     "fl.n1t": "Compatible with:", "fl.n1": "Chrome, Edge, Opera and Firefox (desktop) on Windows, Linux and macOS.",
     "fl.n2t": "Heads up:", "fl.n2": "use a data cable (not a charge-only one). Safari and phones don't support browser-based serial flashing.",
     "fl.ok": "Got it",
+    "fl.port.t": "Connect to the USB port",
+    "fl.port.d": "Plug the controller into the computer and pick the USB port it is using.",
+    "fl.port.pick": "Choose USB port…",
+    "fl.port.cancel": "Cancel",
+    "fl.port.none": "No port found — check the cable and the controller driver.",
+    "fl.port.reconnect": "Reconnect the USB port to continue.",
     "fl.done.t": "Flashing complete!",
     "fl.done.d": "Power the controller off and back on so the firmware boots correctly.",
     "foot.manual": "Manual", "foot.guide": "Quick guide",
@@ -204,18 +218,34 @@ const BOARD_PERF = {
   esp32c5: { cpu: 420, ram: 900, net: 600 }
 };
 const PERF_METRICS = [
-  { key: "cpu", i18n: "bd.cpu" },
-  { key: "ram", i18n: "bd.ram" },
-  { key: "net", i18n: "bd.net" }
+  { key: "cpu", label: "PROC" },
+  { key: "ram", label: "MEM" },
+  { key: "net", label: "CONECT" }
 ];
 
 let catalog = CATALOG_DEFAULT;
+let boardIndex = {};            // boardId -> { id,name,chip,flash, versions: { version -> {full,fw,single} } }
 let currentLang = (location.search.match(/[?&]lang=(en|pt-BR)/) || [])[1] || "pt-BR";
 let currentVersion = null;
 let selected = null;
 let mode = null;
 let busy = false;
 let portOpen = null;
+let savedPort = null;           // porta USB ja autorizada (reusa em gravacoes seguidas)
+let portResolve = null;         // resolve da promessa do modal de porta
+
+function rebuildBoardIndex() {
+  const idx = {};
+  (catalog.versions || []).forEach((v) => {
+    (v.boards || []).forEach((b) => {
+      let e = idx[b.id];
+      if (!e) e = idx[b.id] = { id: b.id, name: b.name, chip: b.chip, flash: b.flash, versions: {} };
+      e.versions[v.version] = { full: b.full, fw: b.fw, single: !!b.single };
+    });
+  });
+  boardIndex = idx;
+  return idx;
+}
 
 const $ = (id) => document.getElementById(id);
 
@@ -269,9 +299,17 @@ function logLine(data) {
   log(s, "sys");
 }
 
-function currentBoards() {
-  const v = (catalog.versions || []).find((x) => x.version === currentVersion);
-  return v ? v.boards || [] : [];
+function boardIds() {
+  return Object.keys(boardIndex);
+}
+
+function boardVersions(id) {
+  const e = boardIndex[id];
+  return e ? Object.keys(e.versions) : [];
+}
+
+function availableVersions() {
+  return (catalog.versions || []).map((v) => v.version);
 }
 
 function versionLabel(v) {
@@ -287,35 +325,45 @@ async function loadCatalog() {
       const r = await fetch(url, { cache: "no-store" });
       if (!r.ok) continue;
       catalog = await r.json();
+      rebuildBoardIndex();
       return;
     } catch (e) { /* next */ }
   }
   catalog = CATALOG_DEFAULT;
+  rebuildBoardIndex();
 }
 
 function renderVersions() {
   const sel = $("versionSel");
   sel.innerHTML = "";
-  (catalog.versions || []).forEach((v) => {
+  // So mostra versoes que suportam a placa escolhida.
+  const vers = selected ? boardVersions(selected) : [];
+  if (vers.length === 0) {
     const o = document.createElement("option");
-    o.value = v.version;
-    o.textContent = versionLabel(v.version);
-    if (v.version === currentVersion) o.selected = true;
+    o.value = "";
+    o.textContent = "—";
+    o.disabled = true;
     sel.appendChild(o);
-  });
-  // Agrupa as versoes sob o rotulo do software em destaque no topo do
-  // combobox (preparado para que outros softwares possam ser oferecidos aqui).
+    return;
+  }
   const og = document.createElement("optgroup");
   og.label = "BrewBOSS";
-  while (sel.firstChild) og.appendChild(sel.firstChild);
+  vers.forEach((v) => {
+    const o = document.createElement("option");
+    o.value = v;
+    o.textContent = versionLabel(v);
+    if (v === currentVersion) o.selected = true;
+    og.appendChild(o);
+  });
   sel.appendChild(og);
 }
 
 function selectVersion(ver) {
-  currentVersion = ver || currentVersion || catalog.latest;
-  selected = null;
+  if (!selected || !ver) return;
+  if (boardVersions(selected).indexOf(ver) < 0) return;
+  currentVersion = ver;
+  mode = null;
   renderVersions();
-  renderBoards();
   renderMode();
 }
 
@@ -323,7 +371,8 @@ function renderBoards() {
   const wrap = $("boards");
   wrap.innerHTML = "";
   const dict = I18N[currentLang] || I18N["pt-BR"];
-  currentBoards().forEach((b) => {
+  boardIds().forEach((bid) => {
+    const b = boardIndex[bid];
     const label = document.createElement("button");
     label.type = "button";
     label.className = "board" + (selected === b.id ? " sel" : "");
@@ -340,36 +389,61 @@ function renderBoards() {
       const w = Math.max(2, Math.round((v / maxPerf[m.key]) * 100));
       return (
         '<span class="pbar-row">' +
-        '<span class="pbar-l">' + (dict[m.i18n] || m.key) + "</span>" +
+        '<span class="pbar-l">' + m.label + "</span>" +
         '<span class="pbar-track"><span class="pbar-fill" style="width:' + w + '%"></span></span>' +
         '<span class="pbar-v">' + v + "%</span>" +
         "</span>"
       );
     }).join("");
     label.innerHTML =
-      '<span class="b-chip">' + b.id + "</span>" +
-      '<div class="b-ico" aria-hidden="true">' + (boardIcons[b.id] || "") + "</div>" +
-      "<h4>" + b.name + "</h4>" +
-      '<p class="b-sub">' + b.chip.toUpperCase() + "</p>" +
+      '<div class="b-head">' +
+        '<div class="b-ico" aria-hidden="true">' + (boardIcons[b.id] || "") + "</div>" +
+        '<div class="b-model">' +
+          "<h4>" + b.name + "</h4>" +
+          '<p class="b-sub">' + (b.chip || b.id).toUpperCase() + "</p>" +
+        "</div>" +
+      "</div>" +
       '<div class="b-specs">' + specs.map((s) => "<span>" + s + "</span>").join("") + "</div>" +
       '<div class="pbar-wrap" title="' + (dict["bd.rel"] || "") + '">' + bars + "</div>" +
       '<p class="b-rel">' + (dict["bd.rel"] || "") + "</p>";
     label.addEventListener("click", () => selectBoard(b.id));
     wrap.appendChild(label);
   });
+  renderHint();
+}
+
+function renderHint() {
   const hint = $("versionHint");
-  hint.textContent = "BrewBOSS v" + currentVersion + " — " +
-    (currentLang === "pt-BR" ? "defina o modo de gravação no passo 3 antes de clicar em gravar" : "pick the flash mode in step 3 before flashing");
+  if (!hint) return;
+  const dict = I18N[currentLang] || I18N["pt-BR"];
+  const board = selectedBoard();
+  const need = board && !isSingleImage(board) && !mode;
+  hint.innerHTML = '<span class="ver-tag">BrewBOSS v' + (currentVersion || "—") + "</span>" +
+    (need ? '<span class="hint-warn">' + (dict["fl.hintMode"] || "") + "</span>" : "");
 }
 
 function selectedBoard() {
-  return currentBoards().find((b) => b.id === selected) || null;
+  if (!selected || !currentVersion) return null;
+  const b = boardIndex[selected];
+  if (!b) return null;
+  const entry = b.versions[currentVersion];
+  if (!entry) return null;
+  return { id: b.id, name: b.name, chip: b.chip, flash: b.flash, full: entry.full, fw: entry.fw, single: entry.single };
 }
 
 function selectBoard(id) {
   selected = id;
   mode = null;
+  // Mantem a versao escolhida se a nova placa ainda a suporta; senao, usa a
+  // ultima versao disponivel para ela (evita "a versao muda sozinha").
+  const vers = boardVersions(id);
+  const keep = currentVersion && vers.indexOf(currentVersion) >= 0;
+  currentVersion = keep ? currentVersion
+    : (catalog.latest && vers.indexOf(catalog.latest) >= 0)
+      ? catalog.latest
+      : vers[vers.length - 1] || null;
   renderBoards();
+  renderVersions();
   renderMode();
 }
 
@@ -416,6 +490,7 @@ function renderMode() {
     }
   }
   updateFlashBtn();
+  renderHint();
 }
 
 function activeRadio() {
@@ -479,7 +554,11 @@ async function flashFlow() {
   let transport = null;
   let loader = null;
   try {
-    port = await navigator.serial.requestPort();
+    port = await acquirePort();
+    if (!port) {
+      log("seleção de porta cancelada.", "warn");
+      return;
+    }
     portOpen = port;
 
     const terminal = {
@@ -554,6 +633,103 @@ async function flashFlow() {
 $("flashBtn").addEventListener("click", flashFlow);
 $("versionSel").addEventListener("change", (e) => selectVersion(e.target.value));
 
+// ---- Selecao de porta USB em modal estilizado ----
+// requestPort() so pode ser chamado dentro de um clique do usuario (gesto);
+// chama-lo apos awaits faz o navegador rejeitar com "No port selected".
+// Por isso abrimos um modal proprio: o clique em "Escolher porta USB..." dispara
+// o seletor nativo na hora, e a porta escolhida fica salva para as proximas
+// gravacoes (evita o erro na 2a gravacao sem refresh).
+
+let pendingPortResolve = null;
+
+function hidePortModal() {
+  const m = $("portModal");
+  if (m) m.hidden = true;
+}
+
+function showPortMsg(keyOrText, asText) {
+  const el = $("portMsg");
+  if (!el) return;
+  if (asText) { el.textContent = keyOrText; }
+  else {
+    const dict = I18N[currentLang] || I18N["pt-BR"];
+    el.textContent = dict[keyOrText] || keyOrText;
+  }
+  el.hidden = false;
+}
+
+function renderPortList(ports) {
+  const list = $("portList");
+  if (!list) return;
+  list.innerHTML = "";
+  const dict = I18N[currentLang] || I18N["pt-BR"];
+  if (!ports || !ports.length) {
+    const empty = document.createElement("div");
+    empty.className = "port-empty";
+    empty.textContent = dict["fl.port.none"] || "Nenhuma porta encontrada.";
+    list.appendChild(empty);
+    return;
+  }
+  ports.forEach((p) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "port-item";
+    const info = (p && p.getInfo ? p.getInfo() : null) || {};
+    const name = [info.usbVendorId, info.usbProductId].filter(Boolean).length
+      ? "USB 0x" + (info.usbVendorId || 0).toString(16) + ":" + (info.usbProductId || 0).toString(16)
+      : dict["fl.port.usb"] || "Porta USB";
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 6h4M10 18h4"/></svg>' +
+      "<span>" + name + "</span>";
+    b.addEventListener("click", () => resolvePort(p));
+    list.appendChild(b);
+  });
+}
+
+function openPortModal() {
+  const m = $("portModal");
+  if (!m) return;
+  const msg = $("portMsg");
+  if (msg) msg.hidden = true;
+  m.hidden = false;
+  navigator.serial.getPorts()
+    .then((ports) => renderPortList(ports || []))
+    .catch(() => renderPortList([]));
+}
+
+function resolvePort(p) {
+  savedPort = p;
+  hidePortModal();
+  if (pendingPortResolve) { const r = pendingPortResolve; pendingPortResolve = null; r(p); }
+}
+
+function cancelPortPick() {
+  hidePortModal();
+  if (pendingPortResolve) { const r = pendingPortResolve; pendingPortResolve = null; r(null); }
+}
+
+// Retorna uma porta serial (autorizada anteriormente ou escolhida no modal).
+async function acquirePort() {
+  // Se ja temos uma porta desta sessao, tenta reutiliza-la direto.
+  if (savedPort) {
+    try { return savedPort; } catch (e) { /* tenta modal */ }
+  }
+  return new Promise((resolve) => {
+    pendingPortResolve = resolve;
+    openPortModal();
+  });
+}
+
+$("portPick").addEventListener("click", async () => {
+  try {
+    const p = await navigator.serial.requestPort();
+    resolvePort(p);
+  } catch (e) {
+    // Usuario cancelou o seletor nativo — mantem o modal aberto com aviso.
+    showPortMsg("fl.port.reconnect");
+  }
+});
+$("portCancel").addEventListener("click", cancelPortPick);
+
 let doneTimer = null;
 
 function showDoneModal() {
@@ -579,5 +755,11 @@ function scheduleDoneModal() {
 
 setLang(currentLang);
 loadCatalog().then(() => {
-  selectVersion(catalog.latest || (catalog.versions && catalog.versions[0] && catalog.versions[0].version) || "2.2.26b");
+  // Novo fluxo: seleciona-se primeiro o controlador; o combo de versao passa a
+  // mostrar somente as versoes que suportam aquela placa (sem troca automatica).
+  const latest = catalog.latest ||
+    (catalog.versions && catalog.versions[0] && catalog.versions[0].version) || null;
+  const ids = boardIds();
+  const first = ids.find((id) => latest && boardVersions(id).indexOf(latest) >= 0) || ids[0];
+  selectBoard(first);
 });
