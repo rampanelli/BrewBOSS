@@ -35,7 +35,7 @@
 </nav>
 
 <header class="hero">
-  <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">Web Flasher oficial • v2.2.26a</span></span>
+  <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">Web Flasher oficial</span></span>
   <h1><span data-i18n="hero.title1">Sua brassagem.</span><br><span class="grad" data-i18n="hero.title2">No comando absoluto.</span></h1>
   <p class="lede" data-i18n="hero.sub">BrewBOSS é um controlador de brassagem de precisão que roda em ESP8266, ESP32-C3 e ESP32-C5 — com PID inteligente, sensores DS18B20, receitas profissionais e uma interface web embutida no próprio firmware.</p>
 
@@ -166,8 +166,23 @@
 
     <div class="flash-body">
       <div class="board-list">
-        <h4 data-i18n="fl.step1">1. Selecione a placa</h4>
+        <h4 data-i18n="fl.step0">1. Selecione a versão do firmware</h4>
+        <select id="versionSel" class="ver-sel"></select>
+        <h4 data-i18n="fl.step1">2. Selecione a placa</h4>
         <div id="boards" class="boards"></div>
+        <div id="modeWrap" class="mode-wrap">
+          <h4 data-i18n="fl.stepMode">3. Modo de gravação</h4>
+          <div class="mode-options">
+            <label class="mode-opt">
+              <input type="radio" name="flashMode" value="full" checked>
+              <span data-i18n="fl.modeFull">Completo (firmware + filesystem)</span>
+            </label>
+            <label class="mode-opt">
+              <input type="radio" name="flashMode" value="fw">
+              <span data-i18n="fl.modeFw">Somente firmware (preservar dados)</span>
+            </label>
+          </div>
+        </div>
         <p class="hint" id="versionHint"></p>
       </div>
 

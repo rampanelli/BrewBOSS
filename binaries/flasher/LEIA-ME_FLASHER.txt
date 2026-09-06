@@ -4,22 +4,36 @@
                     SOMENTE USO PESSOAL - NAO COMERCIAL
 ================================================================================
 
-Esta pasta (binaries/flasher) contem os binarios MERGEADOS (imagem unica)
-prontos para gravacao pelo Web Flasher. Grave cada arquivo UMA unica vez no
-endereco 0x000000 (a imagem ja contem todas as partes posicionadas nos offsets
-corretos: bootloader, partitions, boot_app0/otadata, firmware e filesystem).
+Esta pasta (binaries/flasher) alimenta o Web Flasher
+(https://rampanelli.github.io/BrewBOSS/flasher/). Aqui ficam, por VERSAO do
+firmware, dois tipos de imagem por controlador:
 
-As partes SEPARADAS (bootloader, partitions, boot_app0, firmware, filesystem)
-para gravacao manual ficam na pasta binarios (uma nivel acima), identificadas
-por modelo, ex: BrewBOSS_v<ver>_esp32c3_bootloader.bin.
+  *_full.bin  -> imagem COMPLETA (firmware + filesystem), gravar em 0x000000
+                 uma unica vez (1a instalacao ou reset total).
+  *_fw.bin    -> SOMENTE firmware (app isolado). Preserva o filesystem
+                 (configs, receitas e WiFi) - ideal para atualizar.
+
+O proprio site pergunta qual versao instalar e o modo desejado
+("Completo (firmware + filesystem)" ou "Somente firmware (preservar dados)").
+
+Versoes disponiveis (as antigas 2.2.25s e 2.2.26a ficam disponiveis para sempre;
+a mais nova - hoje 2.2.26b - e sempre a "ultima"):
+
+  2.2.25s (estavel)
+  2.2.26a (estavel)
+  2.2.26b (ultima)
+
+As partes SEPARADAS (bootloader, partitions, boot_app0, app, filesystem) para
+gravacao manual ficam na pasta binarios (uma nivel acima), identificadas por
+modelo e versao, ex: BrewBOSS_v2.2.26b_esp32c3_bootloader.bin.
 
 ================================================================================
-1. IMAGENS MERGEADAS (gravar em 0x000000, uma unica operacao)
+1. IMAGENS FULL (_full.bin - gravar em 0x000000, uma unica operacao)
 ================================================================================
 
-  BrewBOSS_v2.2.26a_esp12e_full.bin   -> Wemos D1 Mini / ESP8266 (ESP12E)
-  BrewBOSS_v2.2.26a_esp32c3_full.bin  -> ESP32-C3 Super Mini
-  BrewBOSS_v2.2.26a_esp32c5_full.bin  -> ESP32-C5 MINI V1.0
+  BrewBOSS_v2.2.26b_esp12e_full.bin   -> Wemos D1 Mini / ESP8266 (ESP12E)
+  BrewBOSS_v2.2.26b_esp32c3_full.bin  -> ESP32-C3 Super Mini
+  BrewBOSS_v2.2.26b_esp32c5_full.bin  -> ESP32-C5 MINI V1.0  (imagem unica)
 
   ESP12E  (ESP8266):  firmware (incl. bootloader) @ 0x000000
                       filesystem (LittleFS)        @ 0x200000
@@ -32,41 +46,31 @@ por modelo, ex: BrewBOSS_v<ver>_esp32c3_bootloader.bin.
                       partitions                    @ 0x008000
                       boot_app0 / otadata           @ 0x00E000
                       firmware (factory image)      @ 0x010000
-                      (sem filesystem: a UI e os configs padrao sao criados
-                       no primeiro boot pelo proprio firmware)
+                      (sem filesystem separado: a UI e os configs padrao sao
+                       criados no primeiro boot pelo proprio firmware)
 
   Observacoes:
-  - A imagem mergeada ja inclui TODAS as partes; NAO grave outro binario por cima.
-  - Apos gravar, o controlador reinicia sozinho no BrewBOSS.
-  - C5: interface web embutida no firmware; configs criados automaticamente.
+  - O arquivo _full ja inclui TODAS as partes posicionadas nos offsets corretos.
+  - Use _full na 1a gravacao ou quando quiser apagar tudo e comecar do zero.
 
 ================================================================================
-2. PARTES SEPARADAS (pasta binaries/, gravacao manual com esptool.py)
+2. IMAGENS SOMENTE FIRMWARE (_fw.bin - preserva os dados do filesystem)
 ================================================================================
 
-  ESP12E:
-    esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_v2.2.26a_esp12e.bin
-    esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_v2.2.26a_esp12e_fs.bin
+  BrewBOSS_v2.2.26b_esp12e_fw.bin     -> app do ESP8266,  gravar em 0x000000
+  BrewBOSS_v2.2.26b_esp32c3_fw.bin    -> app do ESP32-C3, gravar em 0x010000
+  (ESP32-C5 usa imagem unica _full - sem modo separado)
 
-  ESP32-C3:
-    esptool.py --chip esp32c3 --port COMx write_flash 0x0 BrewBOSS_v2.2.26a_esp32c3_bootloader.bin
-    esptool.py --chip esp32c3 --port COMx write_flash 0x8000 BrewBOSS_v2.2.26a_esp32c3_partitions.bin
-    esptool.py --chip esp32c3 --port COMx write_flash 0xe000 BrewBOSS_v2.2.26a_esp32c3_boot_app0.bin
-    esptool.py --chip esp32c3 --port COMx write_flash 0x10000 BrewBOSS_v2.2.26a_esp32c3.bin
-    esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_v2.2.26a_esp32c3_fs.bin
-
-  ESP32-C5 (equivalente ao mergeado, porem em partes):
-    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x2000 BrewBOSS_v2.2.26a_esp32c5_bootloader.bin
-    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x8000 BrewBOSS_v2.2.26a_esp32c5_partitions.bin
-    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0xe000 BrewBOSS_v2.2.26a_esp32c5_boot_app0.bin
-    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_v2.2.26a_esp32c5_app.bin
-    (sem arquivo _fs: configs e UI sao criados/embutidos no boot)
+  Use este modo para ATUALIZAR a versao do firmware mantendo configs, receitas
+  e redes WiFi gravadas no LittleFS. Equivale ao OTA de firmware do painel
+  (que tambem preserva o filesystem - rota /rest/ota).
 
 ================================================================================
-3. VERIFICACAO (apos gravar o mergeado, opcional)
+3. VERIFICACAO (apos gravar, opcional)
 ================================================================================
 
-  O log do esptool mostra progresso e "Hash of data verified".
-  Abra a serial em 115200: deve aparecer o boot do BrewBOSS.
+  O log mostra o progresso e "Hash of data verified". Abra a serial em 115200:
+  deve aparecer o boot do BrewBOSS. No modo "somente firmware", confirme que
+  suas configs/receitas continuam (rede WiFi salva, sensores etc).
 
 Referencias: GUIA_RAPIDO.txt / QUICK_GUIDE.txt em binaries/.

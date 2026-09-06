@@ -4,7 +4,7 @@ const I18N = {
   "pt-BR": {
     "nav.features": "Recursos", "nav.innovation": "Inovação", "nav.how": "Como funciona",
     "nav.flash": "Web Flasher",
-    "hero.pill": "Web Flasher oficial • v2.2.26a",
+    "hero.pill": "Web Flasher oficial",
     "hero.title1": "Sua brassagem.", "hero.title2": "No comando absoluto.",
     "hero.sub": "BrewBOSS é um controlador de brassagem de precisão que roda em ESP8266, ESP32-C3 e ESP32-C5 — com PID inteligente, sensores DS18B20, receitas profissionais e uma interface web embutida no próprio firmware.",
     "hero.cta": "Gravar o firmware agora", "hero.cta2": "Explorar o projeto",
@@ -28,7 +28,15 @@ const I18N = {
     "s3.t": "Clique e grave", "s3.d": "A página detecta o chip, baixa o firmware do GitHub e grava direto no seu controlador.",
     "fl.kicker": "Web Flasher", "fl.title": "Grave o firmware direto no seu controlador.",
     "fl.sub": "Tudo acontece no seu navegador — o firmware vem daqui do GitHub e vai para o chip pela porta USB. Nada de arquivos, nada de drivers.",
-    "fl.step1": "1. Selecione a placa", "fl.term": "console • esptool.js", "fl.cta": "Conectar e gravar",
+    "fl.step0": "1. Selecione a versão do firmware",
+    "fl.step1": "2. Selecione a placa",
+    "fl.stepMode": "3. Modo de gravação",
+    "fl.modeFull": "Completo (firmware + filesystem)",
+    "fl.modeFw": "Somente firmware (preservar dados)",
+    "fl.verLatest": "(última)",
+    "fl.verStable": "(estável)",
+    "fl.term": "console • esptool.js", "fl.cta": "Conectar e gravar",
+    "fl.fullHint": "Imagem única — grava tudo na flash",
     "fl.n1t": "Compatível com:", "fl.n1": "Chrome, Edge, Opera e Firefox (desktop) no Windows, Linux e macOS.",
     "fl.n2t": "Atenção:", "fl.n2": "use um cabo de dados (não só de carga). O Safari e celulares não suportam gravação serial pelo navegador.",
     "fl.ok": "Entendi",
@@ -40,7 +48,7 @@ const I18N = {
   "en": {
     "nav.features": "Features", "nav.innovation": "Innovation", "nav.how": "How it works",
     "nav.flash": "Web Flasher",
-    "hero.pill": "Official Web Flasher • v2.2.26a",
+    "hero.pill": "Official Web Flasher",
     "hero.title1": "Your brew day.", "hero.title2": "Under absolute command.",
     "hero.sub": "BrewBOSS is a precision brewing controller that runs on ESP8266, ESP32-C3 and ESP32-C5 — with smart PID, DS18B20 sensors, pro recipes and a web UI embedded right in the firmware.",
     "hero.cta": "Flash the firmware now", "hero.cta2": "Explore the project",
@@ -64,7 +72,15 @@ const I18N = {
     "s3.t": "Click and flash", "s3.d": "The page detects the chip, downloads the firmware from GitHub and flashes it straight to your controller.",
     "fl.kicker": "Web Flasher", "fl.title": "Flash the firmware straight into your controller.",
     "fl.sub": "Everything happens in your browser — the firmware comes from this GitHub page and goes to the chip over USB. No files, no drivers.",
-    "fl.step1": "1. Select your board", "fl.term": "console • esptool.js", "fl.cta": "Connect and flash",
+    "fl.step0": "1. Choose the firmware version",
+    "fl.step1": "2. Select your board",
+    "fl.stepMode": "3. Flash mode",
+    "fl.modeFull": "Full (firmware + filesystem)",
+    "fl.modeFw": "Firmware only (keep data)",
+    "fl.verLatest": "(latest)",
+    "fl.verStable": "(stable)",
+    "fl.term": "console • esptool.js", "fl.cta": "Connect and flash",
+    "fl.fullHint": "Single image — flashes the whole flash",
     "fl.n1t": "Compatible with:", "fl.n1": "Chrome, Edge, Opera and Firefox (desktop) on Windows, Linux and macOS.",
     "fl.n2t": "Heads up:", "fl.n2": "use a data cable (not a charge-only one). Safari and phones don't support browser-based serial flashing.",
     "fl.ok": "Got it",
@@ -75,17 +91,65 @@ const I18N = {
   }
 };
 
-const MANIFEST_CANDIDATES = [
+const CATALOG_CANDIDATES = [
   "../binaries/flasher/manifest.json",
   "./manifest.json",
   "https://raw.githubusercontent.com/rampanelli/BrewBOSS/main/binaries/flasher/manifest.json"
 ];
-const MANIFEST_DEFAULT = {
-  version: "2.2.26a",
-  boards: [
-    { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266", flash: { mode: "dio", freq: "40m", size: "4MB" }, file: "BrewBOSS_v2.2.26a_esp12e_full.bin", offset: 0 },
-    { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3", flash: { mode: "qio", freq: "80m", size: "4MB" }, file: "BrewBOSS_v2.2.26a_esp32c3_full.bin", offset: 0 },
-    { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5", flash: { mode: "qio", freq: "80m", size: "4MB" }, file: "BrewBOSS_v2.2.26a_esp32c5_full.bin", offset: 0 }
+
+// Catalogo fallback (mesma estrutura do manifest.json publicado).
+const CATALOG_DEFAULT = {
+  home: "https://github.com/rampanelli/BrewBOSS",
+  latest: "2.2.26b",
+  stable: ["2.2.25s", "2.2.26a"],
+  versions: [
+    {
+      version: "2.2.25s",
+      boards: [
+        { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266",
+          flash: { mode: "dio", freq: "40m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.25s_esp12e_full.bin", offset: 0 },
+          fw: { file: "BrewBOSS_v2.2.25s_esp12e_fw.bin", offset: 0 }, single: false },
+        { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
+          flash: { mode: "qio", freq: "80m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.25s_esp32c3_full.bin", offset: 0 },
+          fw: { file: "BrewBOSS_v2.2.25s_esp32c3_fw.bin", offset: 0x10000 }, single: false }
+      ]
+    },
+    {
+      version: "2.2.26a",
+      boards: [
+        { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266",
+          flash: { mode: "dio", freq: "40m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.26a_esp12e_full.bin", offset: 0 },
+          fw: { file: "BrewBOSS_v2.2.26a_esp12e_fw.bin", offset: 0 }, single: false },
+        { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
+          flash: { mode: "qio", freq: "80m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.26a_esp32c3_full.bin", offset: 0 },
+          fw: { file: "BrewBOSS_v2.2.26a_esp32c3_fw.bin", offset: 0x10000 }, single: false },
+        { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
+          flash: { mode: "qio", freq: "80m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.26a_esp32c5_full.bin", offset: 0 },
+          fw: null, single: true }
+      ]
+    },
+    {
+      version: "2.2.26b",
+      boards: [
+        { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266",
+          flash: { mode: "dio", freq: "40m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.26b_esp12e_full.bin", offset: 0 },
+          fw: { file: "BrewBOSS_v2.2.26b_esp12e_fw.bin", offset: 0 }, single: false },
+        { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
+          flash: { mode: "qio", freq: "80m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.26b_esp32c3_full.bin", offset: 0 },
+          fw: { file: "BrewBOSS_v2.2.26b_esp32c3_fw.bin", offset: 0x10000 }, single: false },
+        { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
+          flash: { mode: "qio", freq: "80m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.26b_esp32c5_full.bin", offset: 0 },
+          fw: null, single: true }
+      ]
+    }
   ]
 };
 
@@ -95,9 +159,11 @@ const boardIcons = {
   esp32c5: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="6" width="14" height="12" rx="2"/><path d="M8 6V4M12 6V4M16 6V4"/><circle cx="12" cy="12" r="2.4"/></svg>'
 };
 
-let manifest = MANIFEST_DEFAULT;
+let catalog = CATALOG_DEFAULT;
 let currentLang = (location.search.match(/[?&]lang=(en|pt-BR)/) || [])[1] || "pt-BR";
+let currentVersion = null;
 let selected = null;
+let mode = "full";
 let busy = false;
 let portOpen = null;
 
@@ -138,10 +204,8 @@ function setProgress(p) {
   $("pct").textContent = p.toFixed(0) + "%";
 }
 
-// Filtra saida do esptool-js. No ESP32-C3/C5 (USB-Serial/JTAG nativo) a leitura
-// do Flash ID retorna 0 e o esptool emite um WARNING de "flash nao responde" —
-// aviso FALSO: o erase/write funcionam normalmente (validado em hardware). Em
-// vez de alarmar o usuario, mostramos uma nota tranquilizadora.
+// Filtra saida do esptool-js: no C3/C5 (USB-Serial/JTAG nativo) a leitura do
+// Flash ID retorna 0 e o esptool emite um WARNING falso ("flash nao responde").
 function logLine(data) {
   let s = String(data == null ? "" : data).trimEnd();
   if (/WARNING:\s*Failed to communicate with the flash chip/i.test(s)) {
@@ -155,22 +219,54 @@ function logLine(data) {
   log(s, "sys");
 }
 
-async function loadManifest() {
-  for (const url of MANIFEST_CANDIDATES) {
+function currentBoards() {
+  const v = (catalog.versions || []).find((x) => x.version === currentVersion);
+  return v ? v.boards || [] : [];
+}
+
+function versionLabel(v) {
+  const dict = I18N[currentLang] || I18N["pt-BR"];
+  const tag = v === catalog.latest ? " " + dict["fl.verLatest"]
+            : (catalog.stable || []).indexOf(v) >= 0 ? " " + dict["fl.verStable"] : "";
+  return v + tag;
+}
+
+async function loadCatalog() {
+  for (const url of CATALOG_CANDIDATES) {
     try {
       const r = await fetch(url, { cache: "no-store" });
       if (!r.ok) continue;
-      manifest = await r.json();
+      catalog = await r.json();
       return;
     } catch (e) { /* next */ }
   }
-  manifest = MANIFEST_DEFAULT;
+  catalog = CATALOG_DEFAULT;
+}
+
+function renderVersions() {
+  const sel = $("versionSel");
+  sel.innerHTML = "";
+  (catalog.versions || []).forEach((v) => {
+    const o = document.createElement("option");
+    o.value = v.version;
+    o.textContent = versionLabel(v.version);
+    if (v.version === currentVersion) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+function selectVersion(ver) {
+  currentVersion = ver || currentVersion || catalog.latest;
+  selected = null;
+  renderVersions();
+  renderBoards();
+  renderMode();
 }
 
 function renderBoards() {
   const wrap = $("boards");
   wrap.innerHTML = "";
-  (manifest.boards || []).forEach((b) => {
+  currentBoards().forEach((b) => {
     const label = document.createElement("button");
     label.type = "button";
     label.className = "board" + (selected === b.id ? " sel" : "");
@@ -181,17 +277,63 @@ function renderBoards() {
     label.addEventListener("click", () => selectBoard(b.id));
     wrap.appendChild(label);
   });
-  $("versionHint").textContent = "BrewBOSS v" + manifest.version + " — firmware + filesystem em uma única imagem";
+  const hint = $("versionHint");
+  hint.textContent = "BrewBOSS v" + currentVersion + " — " +
+    (currentLang === "pt-BR" ? "firmware + filesystem em imagem única; modo 'somente firmware' preserva seus dados" : "single-image full flash; 'firmware only' keeps your data");
   $("flashBtn").disabled = !selected;
+}
+
+function selectedBoard() {
+  return currentBoards().find((b) => b.id === selected) || null;
 }
 
 function selectBoard(id) {
   selected = id;
   renderBoards();
+  renderMode();
+}
+
+function renderMode() {
+  const board = selectedBoard();
+  const wrap = $("modeWrap");
+  if (!wrap) return;
+  const onlyFull = !board || board.single || !board.fw;
+  if (onlyFull) {
+    mode = "full";
+    const radios = document.querySelectorAll('input[name="flashMode"]');
+    radios.forEach((r) => { r.disabled = true; if (r.value === "full") r.checked = true; });
+    const note = document.createElement("div");
+    note.className = "mode-note";
+    note.textContent = (I18N[currentLang] || I18N["pt-BR"])["fl.fullHint"];
+    if (!wrap.querySelector(".mode-note")) wrap.appendChild(note);
+  } else {
+    const radios = document.querySelectorAll('input[name="flashMode"]');
+    radios.forEach((r) => { r.disabled = false; });
+    const n = wrap.querySelector(".mode-note");
+    if (n) n.remove();
+  }
+}
+
+function activeRadio() {
+  const r = document.querySelector('input[name="flashMode"]:checked');
+  return r ? r.value : "full";
+}
+
+document.addEventListener("change", (e) => {
+  if (e.target && e.target.name === "flashMode") {
+    mode = e.target.value;
+    renderMode();
+  }
+});
+
+function flashTarget(board) {
+  if (mode === "fw" && board && !board.single && board.fw) return board.fw;
+  return board.full;
 }
 
 function flashPath(board) {
-  return "../binaries/flasher/" + board.file;
+  const t = flashTarget(board);
+  return "../binaries/flasher/" + t.file;
 }
 
 async function fetchBin(url) {
@@ -207,7 +349,7 @@ function normalizeChip(name) {
 
 async function flashFlow() {
   if (busy || !selected) return;
-  const board = (manifest.boards || []).find((b) => b.id === selected);
+  const board = selectedBoard();
   if (!board) return;
 
   if (!navigator.serial) {
@@ -215,11 +357,14 @@ async function flashFlow() {
     return;
   }
 
+  const onlyFull = board.single || !board.fw;
+  mode = onlyFull ? "full" : activeRadio();
+
   busy = true;
   $("flashBtn").disabled = true;
   $("flashBtnLabel").textContent = "Gravando...";
   setProgress(0);
-  log("== BrewBOSS Web Flasher v" + manifest.version + " ==", "sys");
+  log("== BrewBOSS Web Flasher v" + currentVersion + " ==", "sys");
   log("placa selecionada: " + board.name);
 
   let port = null;
@@ -255,20 +400,23 @@ async function flashFlow() {
       return;
     }
 
-    log("baixando firmware do GitHub...", "sys");
+    const target = flashTarget(board);
+    log((mode === "fw" ? "baixando firmware (somente app, preserva dados)" : "baixando imagem completa do GitHub") + "...", "sys");
     const data = await fetchBin(flashPath(board));
     log("recebido " + (data.length / 1024).toFixed(0) + " KB", "ok");
     setStatus("OK");
 
     const fm = board.flash || { mode: "qio", freq: "80m", size: "4MB" };
-    log("gravando em 0x" + (board.offset || 0).toString(16).padStart(6, "0") + " (" + fm.size + ", " + fm.mode + ") ...", "sys");
+    const off = target ? (target.offset || 0) : 0;
+    const eraseAll = mode !== "fw";
+    log("gravando em 0x" + off.toString(16).padStart(6, "0") + " (" + fm.size + ", " + fm.mode + ")" + (eraseAll ? " [erase all]" : " [preserva dados]") + " ...", "sys");
 
     await loader.writeFlash({
-      fileArray: [{ data, address: board.offset || 0 }],
+      fileArray: [{ data, address: off }],
       flashMode: fm.mode,
       flashFreq: fm.freq,
       flashSize: fm.size,
-      eraseAll: true,
+      eraseAll: eraseAll,
       compress: true,
       reportProgress(fi, written, total) {
         const p = total ? (written / total) * 100 : 0;
@@ -296,6 +444,7 @@ async function flashFlow() {
 }
 
 $("flashBtn").addEventListener("click", flashFlow);
+$("versionSel").addEventListener("change", (e) => selectVersion(e.target.value));
 
 let doneTimer = null;
 
@@ -321,6 +470,6 @@ function scheduleDoneModal() {
 }
 
 setLang(currentLang);
-loadManifest().then(() => {
-  renderBoards();
+loadCatalog().then(() => {
+  selectVersion(catalog.latest || (catalog.versions && catalog.versions[0] && catalog.versions[0].version) || "2.2.26b");
 });
