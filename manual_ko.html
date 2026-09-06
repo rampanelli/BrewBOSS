@@ -455,8 +455,11 @@ Add Citra 30g@15'             &lt;- 마지막 이벤트 메시지 (또는 IP / A
 
     <h3 >파일 시스템만 업데이트</h3>
     <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+    <p><b>ESP32-C5 Mini - 최초 플래싱 / 빈 칩</b></p><pre><code>esptool.py --chip esp32c5 --port &lt;port&gt; --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <p style="font-size:13px;color:var(--dim)"><b>factory</b> 파일(부트로더 + 파티션 테이블 + 펌웨어). 웹 UI 내장: filesystem 이미지 불필요.</p>
+    <!--C5FIRST-->
 
-    <div class="callout warn"><b >먼저 모두 지우기 (선택 사항)</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. 이렇게 하면 LittleFS에 저장된 WiFi/레시피 구성도 지워집니다.</span></div>
+    <div class="callout warn"><b >먼저 모두 지우기 (선택 사항)</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp32c5|esp8266&gt; --port COMx erase_flash</code>. 이렇게 하면 LittleFS에 저장된 WiFi/레시피 구성도 지워집니다.</span></div>
 
     <h3 >참고 사항</h3>
     <ul>

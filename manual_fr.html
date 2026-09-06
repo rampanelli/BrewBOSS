@@ -455,8 +455,11 @@ Add Citra 30g@15'             &lt;- dernier message d'événement (ou IP / AP)</
 
     <h3 >Mise à jour du système de fichiers uniquement</h3>
     <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+    <p><b>ESP32-C5 Mini - première gravure / puce vierge</b></p><pre><code>esptool.py --chip esp32c5 --port &lt;port&gt; --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <p style="font-size:13px;color:var(--dim)">Fichier <b>factory</b> (bootloader + table de partitions + firmware). Interface web intégrée : aucune image filesystem requise.</p>
+    <!--C5FIRST-->
 
-    <div class="callout warn"><b >Tout effacer d'abord (optionnel)</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>. Cela efface également la configuration WiFi/recettes stockée dans LittleFS.</span></div>
+    <div class="callout warn"><b >Tout effacer d'abord (optionnel)</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp32c5|esp8266&gt; --port COMx erase_flash</code>. Cela efface également la configuration WiFi/recettes stockée dans LittleFS.</span></div>
 
     <h3 >Remarques</h3>
     <ul>

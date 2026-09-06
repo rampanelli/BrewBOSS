@@ -136,7 +136,7 @@
     <h2 id="prerequisites"><span class="num">2.</span> <span >前提条件与安装</span></h2>
     <p >操作BrewBOSS需要：</p>
     <ul>
-      <li >一块已安装BrewBOSS固件的支持控制器板（Wemos/ESP8266、ESP32或ESP32-C3）。</li>
+      <li >一块已安装BrewBOSS固件的支持控制器板（Wemos/ESP8266、ESP32或ESP32-C3或ESP32-C5 Mini）。</li>
       <li >连接的酿造硬件：通过SSR连接的加热器、一个泵，以及一个或多个<b>DS18B20</b>温度传感器。可选的20×4 I²C LCD和4个按钮可实现独立使用。</li>
       <li >一部带有Web浏览器的手机、平板或电脑。</li>
       <li >可选的家用Wi‑Fi网络（否则设备会创建自己的接入点）。</li>
@@ -455,8 +455,11 @@ Add Citra 30g@15'             &lt;- 最后事件消息（或IP / AP）</pre>
 
     <h3 >仅更新文件系统</h3>
     <pre><code>esptool.py --chip esp32c3 --port &lt;port&gt; --baud 460800 write_flash 0x290000 BrewBOSS_&lt;version&gt;_esp32c3_fs.bin</code></pre>
+    <p><b>ESP32-C5 Mini - 首次烧录 / 空芯片</b></p><pre><code>esptool.py --chip esp32c5 --port &lt;port&gt; --baud 460800 write_flash 0x0 BrewBOSS_&lt;version&gt;_esp32c5.bin</code></pre>
+    <p style="font-size:13px;color:var(--dim)"><b>factory</b> 文件（引导程序 + 分区表 + 固件）。网页界面已内置：无需 filesystem 镜像。</p>
+    <!--C5FIRST-->
 
-    <div class="callout warn"><b >先擦除全部（可选）</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp8266&gt; --port COMx erase_flash</code>。这也会擦除存储在LittleFS中的WiFi/配方配置。</span></div>
+    <div class="callout warn"><b >先擦除全部（可选）</b> <span ><code>esptool.py --chip &lt;esp32|esp32c3|esp32c5|esp8266&gt; --port COMx erase_flash</code>。这也会擦除存储在LittleFS中的WiFi/配方配置。</span></div>
 
     <h3 >注意事项</h3>
     <ul>
