@@ -213,7 +213,7 @@ async function flashFlow() {
     };
 
     transport = new Transport(port, true);
-    loader = new ESPLoader({ transport, baudrate: 460800, terminal, debugLogging: false });
+    loader = new ESPLoader({ transport, baudrate: 115200, terminal, debugLogging: false });
 
     log("conectando e identificando o chip...", "sys");
     setStatus("...");
