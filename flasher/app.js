@@ -138,6 +138,23 @@ function setProgress(p) {
   $("pct").textContent = p.toFixed(0) + "%";
 }
 
+// Filtra saida do esptool-js. No ESP32-C3/C5 (USB-Serial/JTAG nativo) a leitura
+// do Flash ID retorna 0 e o esptool emite um WARNING de "flash nao responde" —
+// aviso FALSO: o erase/write funcionam normalmente (validado em hardware). Em
+// vez de alarmar o usuario, mostramos uma nota tranquilizadora.
+function logLine(data) {
+  let s = String(data == null ? "" : data).trimEnd();
+  if (/WARNING:\s*Failed to communicate with the flash chip/i.test(s)) {
+    log("Flash ID nao legivel por USB nativo (esperado no C3/C5) - aviso falso do esptool. A gravacao prossegue normalmente.", "ok");
+    return;
+  }
+  if (/^Flash ID:\s*0/i.test(s)) {
+    log("Flash ID: via USB nativo (nao exposto)", "sys");
+    return;
+  }
+  log(s, "sys");
+}
+
 async function loadManifest() {
   for (const url of MANIFEST_CANDIDATES) {
     try {
@@ -214,8 +231,8 @@ async function flashFlow() {
 
     const terminal = {
       clean() {},
-      write(data) { log(String(data).trimEnd(), "sys"); },
-      writeLine(data) { log(String(data).trimEnd(), "sys"); }
+      write(data) { logLine(data); },
+      writeLine(data) { logLine(data); }
     };
 
     transport = new Transport(port, true);
