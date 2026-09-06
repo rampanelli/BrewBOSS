@@ -1,0 +1,42 @@
+{
+  "version": "2.2.26a",
+  "home": "https://github.com/rampanelli/BrewBOSS",
+  "boards": [
+    {
+      "id": "esp12e",
+      "name": "ESP8266 / Wemos D1 Mini (ESP12E)",
+      "chip": "esp8266",
+      "file": "BrewBOSS_v2.2.26a_esp12e_full.bin",
+      "offset": 0,
+      "flash": {
+        "mode": "dio",
+        "freq": "40m",
+        "size": "4MB"
+      }
+    },
+    {
+      "id": "esp32c3",
+      "name": "ESP32-C3 Super Mini",
+      "chip": "esp32c3",
+      "file": "BrewBOSS_v2.2.26a_esp32c3_full.bin",
+      "offset": 0,
+      "flash": {
+        "mode": "qio",
+        "freq": "80m",
+        "size": "4MB"
+      }
+    },
+    {
+      "id": "esp32c5",
+      "name": "ESP32-C5 MINI V1.0",
+      "chip": "esp32c5",
+      "file": "BrewBOSS_v2.2.26a_esp32c5_full.bin",
+      "offset": 0,
+      "flash": {
+        "mode": "qio",
+        "freq": "80m",
+        "size": "4MB"
+      }
+    }
+  ]
+}

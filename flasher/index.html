@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrewBOSS — Grave o firmware direto no seu controlador</title>
+<meta name="description" content="BrewBOSS Web Flasher: conecte seu ESP8266, ESP32-C3 ou ESP32-C5 via USB e grave o firmware BrewBOSS direto do navegador — Windows, Linux e macOS.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23080d18'/%3E%3Cpath d='M7 22h18l-2-9a5 5 0 0 0-9.9 0z' fill='%23ffb020'/%3E%3Cpath d='M13 8h6' stroke='%23ffb020' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bgfx" aria-hidden="true">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="grid"></div>
+  <div class="scanline"></div>
+</div>
+
+<nav class="nav">
+  <a class="brand" href="../index.html">
+    <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#0a1020"/><path d="M7 22h18l-2-9a5 5 0 0 0-9.9 0z" fill="#ffb020"/><path d="M13 8h6" stroke="#ffb020" stroke-width="2"/></svg>
+    <strong>BrewBOSS</strong>
+  </a>
+  <div class="nav-links">
+    <a href="#recursos" data-i18n="nav.features">Recursos</a>
+    <a href="#inovacao" data-i18n="nav.innovation">Inovação</a>
+    <a href="#como" data-i18n="nav.how">Como funciona</a>
+    <a href="#flash" class="nav-cta" data-i18n="nav.flash">Web Flasher</a>
+    <button id="langBtn" class="lang-btn" type="button">EN</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">Web Flasher oficial • v2.2.26a</span></span>
+  <h1><span data-i18n="hero.title1">Sua brassagem.</span><br><span class="grad" data-i18n="hero.title2">No comando absoluto.</span></h1>
+  <p class="lede" data-i18n="hero.sub">BrewBOSS é um controlador de brassagem de precisão que roda em ESP8266, ESP32-C3 e ESP32-C5 — com PID inteligente, sensores DS18B20, receitas profissionais e uma interface web embutida no próprio firmware.</p>
+
+  <div class="hero-actions">
+    <a href="#flash" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+      <span data-i18n="hero.cta">Gravar o firmware agora</span>
+    </a>
+    <a href="#recursos" class="btn btn-ghost" data-i18n="hero.cta2">Explorar o projeto</a>
+  </div>
+
+  <div class="chips">
+    <div class="chip"><b data-count="4">4</b><span data-i18n="hero.c1">controladores</span></div>
+    <div class="chip"><b data-count="9">9</b><span data-i18n="hero.c2">idiomas</span></div>
+    <div class="chip"><b data-count="6">6</b><span data-i18n="hero.c3">sensores</span></div>
+    <div class="chip"><b data-count="0">0</b><span data-i18n="hero.c4">drivers extras</span></div>
+  </div>
+</header>
+
+<main>
+
+<section class="strip" aria-hidden="true">
+  <div class="strip-inner">
+    <span>ESP8266</span><i>•</i><span>ESP32-C3</span><i>•</i><span>ESP32-C5</span><i>•</i><span>PID</span><i>•</i><span>DS18B20</span><i>•</i><span>LittleFS</span><i>•</i><span>WiFi</span><i>•</i><span>OTA</span><i>•</i>
+    <span>ESP8266</span><i>•</i><span>ESP32-C3</span><i>•</i><span>ESP32-C5</span><i>•</i><span>PID</span><i>•</i><span>DS18B20</span><i>•</i><span>LittleFS</span><i>•</i><span>WiFi</span><i>•</i><span>OTA</span><i>•</i>
+  </div>
+</section>
+
+<section class="wrap" id="recursos">
+  <div class="sec-head">
+    <span class="kicker" data-i18n="feat.kicker">Feito para cervejeiros</span>
+    <h2 data-i18n="feat.title">Todo o controle da sua brassagem, num chip pequeno.</h2>
+    <p data-i18n="feat.sub">Cada recurso foi pensado para quem leva a precisão a sério — sem abrir mão da simplicidade.</p>
+  </div>
+
+  <div class="grid-feat">
+    <article class="card">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3c3 3 4 5 4 8a4 4 0 0 1-8 0c0-3 1-5 4-8z"/><path d="M8 17h8M9 20h6"/></svg></div>
+      <h3 data-i18n="feat1.t">PID inteligente</h3>
+      <p data-i18n="feat1.d">Mantém a temperatura alvo com precisão, ajustando a potência do aquecedor em tempo real durante mostura e fervura.</p>
+    </article>
+    <article class="card">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v13H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 0 2 2h13"/><path d="M8 8h6M8 12h8"/></svg></div>
+      <h3 data-i18n="feat2.t">Receitas profissionais</h3>
+      <p data-i18n="feat2.d">Importa BeerXML, Brewfather e BeerSmith. Passos de mostura, fervura e adições de lúpulo organizados e editáveis.</p>
+    </article>
+    <article class="card">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2v20M12 6c-3 0-3 2-6 2M12 12c-3 0-3 2-6 2M12 18c-3 0-3 2-6 2M12 6c3 0 3 2 6 2M12 12c3 0 3 2 6 2M12 18c3 0 3 2 6 2"/></svg></div>
+      <h3 data-i18n="feat3.t">Sensores DS18B20</h3>
+      <p data-i18n="feat3.d">Múltiplos sensores de temperatura com endereçamento automático e calibração por offset — mostura, água e fervura.</p>
+    </article>
+    <article class="card">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+      <h3 data-i18n="feat4.t">Interface web embutida</h3>
+      <p data-i18n="feat4.d">Painel completo dentro do firmware. Controle por WiFi, receitas, logs e configurações — sem instalar nada.</p>
+    </article>
+    <article class="card">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="4"/></svg></div>
+      <h3 data-i18n="feat5.t">Atuadores e alarmes</h3>
+      <p data-i18n="feat5.d">Aquecedor com controle de potência, bomba de recirculação, buzzer e botões de PAUSE, RESUME e SKIP na palma da mão.</p>
+    </article>
+    <article class="card">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 12a8 8 0 1 1-8-8"/><path d="M20 4v5h-5"/></svg></div>
+      <h3 data-i18n="feat6.t">Recuperação inteligente</h3>
+      <p data-i18n="feat6.d">Se a energia cair no meio da brassagem, o BrewBOSS retoma o passo exato onde parou. Seus dados sobrevivem a quedas.</p>
+    </article>
+  </div>
+</section>
+
+<section class="wrap alt" id="inovacao">
+  <div class="sec-head">
+    <span class="kicker" data-i18n="inno.kicker">Engenharia</span>
+    <h2 data-i18n="inno.title">Um firmware de laboratório, feito artesanalmente.</h2>
+    <p data-i18n="inno.sub">Arquitetura em camadas, código enxuto e um detalhe raro: otimização obsessiva de memória e estabilidade.</p>
+  </div>
+
+  <div class="grid-inno">
+    <article class="card big">
+      <div class="num">01</div>
+      <h3 data-i18n="in1.t">Multi-plataforma de verdade</h3>
+      <p data-i18n="in1.d">Um único código, quatro alvos. ESP8266, ESP32, ESP32-C3 e o novíssimo ESP32-C5 — com pinos e periféricos isolados por camada, cada um no seu hardware.</p>
+    </article>
+    <article class="card big">
+      <div class="num">02</div>
+      <h3 data-i18n="in2.t">Memória sob vigilância</h3>
+      <p data-i18n="in2.d">Semanas rodando sem vazamentos. Heap monitorado a cada ciclo, logs de eventos em LittleFS e retomada segura mesmo após crash.</p>
+    </article>
+    <article class="card big">
+      <div class="num">03</div>
+      <h3 data-i18n="in3.t">Web no chip</h3>
+      <p data-i18n="in3.d">A interface completa vive comprimida dentro do firmware. É por isso que você vai gravá-la agora em um único arquivo.</p>
+    </article>
+  </div>
+</section>
+
+<section class="wrap" id="como">
+  <div class="sec-head">
+    <span class="kicker" data-i18n="how.kicker">Simples assim</span>
+    <h2 data-i18n="how.title">Três passos. Zero complicação.</h2>
+  </div>
+  <ol class="steps">
+    <li>
+      <span class="step-n">1</span>
+      <h3 data-i18n="s1.t">Escolha seu controlador</h3>
+      <p data-i18n="s1.d">ESP8266 (Wemos D1 Mini), ESP32-C3 Super Mini ou ESP32-C5 MINI V1.0.</p>
+    </li>
+    <li>
+      <span class="step-n">2</span>
+      <h3 data-i18n="s2.t">Conecte pelo USB</h3>
+      <p data-i18n="s2.d">Ligue o cabo de dados ao computador. Sem drivers extras no Windows, Linux ou macOS.</p>
+    </li>
+    <li>
+      <span class="step-n">3</span>
+      <h3 data-i18n="s3.t">Clique e grave</h3>
+      <p data-i18n="s3.d">A página detecta o chip, baixa o firmware do GitHub e grava direto no seu controlador.</p>
+    </li>
+  </ol>
+</section>
+
+<section class="wrap flash-wrap" id="flash">
+  <div class="flash-glow" aria-hidden="true"></div>
+  <div class="flash-box">
+    <div class="sec-head">
+      <span class="kicker grad-kicker" data-i18n="fl.kicker">Web Flasher</span>
+      <h2 data-i18n="fl.title">Grave o firmware direto no seu controlador.</h2>
+      <p data-i18n="fl.sub">Tudo acontece no seu navegador — o firmware vem daqui do GitHub e vai para o chip pela porta USB. Nada de arquivos, nada de drivers.</p>
+    </div>
+
+    <div class="flash-body">
+      <div class="board-list">
+        <h4 data-i18n="fl.step1">1. Selecione a placa</h4>
+        <div id="boards" class="boards"></div>
+        <p class="hint" id="versionHint"></p>
+      </div>
+
+      <div class="flash-console">
+        <div class="console-head">
+          <span class="traffic"><i></i><i></i><i></i></span>
+          <span data-i18n="fl.term">console • esptool.js</span>
+          <span id="connStatus" class="status">--</span>
+        </div>
+        <div id="log" class="log" aria-live="polite"></div>
+        <div class="console-foot">
+          <div class="progress"><div id="bar" class="bar"></div></div>
+          <span id="pct" class="pct">0%</span>
+        </div>
+      </div>
+
+      <button id="flashBtn" class="btn btn-primary big" type="button" disabled>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        <span id="flashBtnLabel" data-i18n="fl.cta">Conectar e gravar</span>
+      </button>
+    </div>
+
+    <div class="notes">
+      <p><b data-i18n="fl.n1t">Compatível com:</b> <span data-i18n="fl.n1">Chrome, Edge, Opera e Firefox (desktop) no Windows, Linux e macOS.</span></p>
+      <p><b data-i18n="fl.n2t">Atenção:</b> <span data-i18n="fl.n2">use um cabo de dados (não só de carga). O Safari e celulares não suportam gravação serial pelo navegador.</span></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-top">
+    <a class="brand" href="../index.html"><strong>BrewBOSS</strong></a>
+    <div class="foot-links">
+      <a href="../manual_pt-BR.html" data-i18n="foot.manual">Manual</a>
+      <a href="../binaries/GUIA_RAPIDO.txt" data-i18n="foot.guide">Guia rápido</a>
+      <a href="https://github.com/rampanelli/BrewBOSS">GitHub</a>
+    </div>
+  </div>
+  <p class="legal" data-i18n="foot.legal">BrewBOSS é gratuito para uso pessoal e não comercial. Não é open-source — veja a licença completa no repositório.</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
