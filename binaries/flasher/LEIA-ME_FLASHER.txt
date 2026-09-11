@@ -4,54 +4,22 @@
                     SOMENTE USO PESSOAL - NAO COMERCIAL
 ================================================================================
 
-Esta pasta (binaries/flasher) alimenta o Web Flasher
-(https://rampanelli.github.io/BrewBOSS/flasher/). Aqui ficam, por VERSAO e por
-controlador, DOIS tipos de imagem:
+Esta pasta (binaries/flasher) contem os binarios MERGEADOS (imagem unica)
+prontos para gravacao pelo Web Flasher. Grave cada arquivo UMA unica vez no
+endereco 0x000000 (a imagem ja contem todas as partes posicionadas nos offsets
+corretos: bootloader, partitions, boot_app0/otadata, firmware e filesystem).
 
-  *_full.bin  -> imagem COMPLETA (firmware + filesystem). Gravar em 0x000000
-                 em uma unica operacao. Serve para a 1a instalacao ou para um
-                 reset total (APAGA os dados do filesystem).
-  *_fw.bin    -> SOMENTE firmware (app isolado). PRESERVA o filesystem
-                 (configs, receitas, WiFi e logs) - ideal para atualizar de
-                 uma versao para outra sem perder nada.
-
-O proprio site pergunta a versao e o modo de gravacao:
-  - "Completo (firmware + filesystem)"  -> usa o *_full.bin (apaga dados)
-  - "Somente firmware (preservar dados)" -> usa o *_fw.bin (mantem dados)
-
-Para NAO PERDER os dados do filesystem, escolha SEMPRE "Somente firmware
-(preservar dados)" quando ja existir configuracao gravada (WiFi, receitas,
-sensores). O modo completo apaga o LittleFS e devolve o controlador ao estado
-de fabrica.
-
-Versoes disponiveis (2.2.25s e 2.2.26a ficam para sempre; a mais nova - hoje
-2.2.26b - e sempre a "ultima"):
-
-  2.2.25s (estavel)   -> esp12e, esp32c3
-  2.2.26a (estavel)   -> esp12e, esp32c3, esp32c5
-  2.2.26b (ultima)    -> esp12e, esp32c3, esp32c5
-
-As partes SEPARADAS (bootloader, partitions, boot_app0, app, filesystem) para
-gravacao manual ficam na pasta binaries (uma nivel acima), identificadas por
-modelo e versao, ex: BrewBOSS_v2.2.26b_esp32c3_bootloader.bin.
-
-FLASH MODE POR CONTROLADOR (importante ao gravar manualmente com esptool):
-  ESP12E / ESP8266:  DIO (usar --flash_mode dio)
-  ESP32-C3:          DIO (usar --flash_mode dio)  <- OBRIGATORIO: muitos modulos
-                     C3 usam flash XMC que NAO suporta QIO; gravar em QIO deixa
-                     o controlador em boot loop (porta USB piscando).
-  ESP32-C5:          QIO (usar --flash_mode qio)
-  O Web Flasher ja aplica o modo correto automaticamente por placa.
+As partes SEPARADAS (bootloader, partitions, boot_app0, firmware, filesystem)
+para gravacao manual ficam na pasta binarios (uma nivel acima), identificadas
+por modelo, ex: BrewBOSS_v<ver>_esp32c3_bootloader.bin.
 
 ================================================================================
-1. IMAGENS COMPLETAS (_full.bin - gravar em 0x000000, uma unica operacao)
+1. IMAGENS MERGEADAS (gravar em 0x000000, uma unica operacao)
 ================================================================================
 
-  BrewBOSS_v<ver>_esp12e_full.bin   -> Wemos D1 Mini / ESP8266 (ESP12E)
-  BrewBOSS_v<ver>_esp32c3_full.bin  -> ESP32-C3 Super Mini
-  BrewBOSS_v<ver>_esp32c5_full.bin  -> ESP32-C5 MINI V1.0
-
-  Layout dentro da imagem (todos os offsets juntos no arquivo):
+  BrewBOSS_v2.2.26c_esp12e_full.bin   -> Wemos D1 Mini / ESP8266 (ESP12E)
+  BrewBOSS_v2.2.26c_esp32c3_full.bin  -> ESP32-C3 Super Mini
+  BrewBOSS_v2.2.26c_esp32c5_full.bin  -> ESP32-C5 MINI V1.0
 
   ESP12E  (ESP8266):  firmware (incl. bootloader) @ 0x000000
                       filesystem (LittleFS)        @ 0x200000
@@ -63,41 +31,42 @@ FLASH MODE POR CONTROLADOR (importante ao gravar manualmente com esptool):
   ESP32-C5:           bootloader                    @ 0x002000
                       partitions                    @ 0x008000
                       boot_app0 / otadata           @ 0x00E000
-                      firmware (slot ota_0)         @ 0x010000
-                      filesystem (LittleFS)         @ 0x310000
+                      firmware (factory image)      @ 0x010000
+                      (sem filesystem: a UI e os configs padrao sao criados
+                       no primeiro boot pelo proprio firmware)
 
   Observacoes:
-  - A imagem _full ja inclui TODAS as partes posicionadas nos offsets corretos.
-  - Use _full na 1a gravacao ou quando quiser apagar tudo e comecar do zero.
-  - Ela APAGA a flash inteira antes de gravar (o filesystem volta ao padrao).
+  - A imagem mergeada ja inclui TODAS as partes; NAO grave outro binario por cima.
+  - Apos gravar, o controlador reinicia sozinho no BrewBOSS.
+  - C5: interface web embutida no firmware; configs criados automaticamente.
 
 ================================================================================
-2. IMAGENS SOMENTE FIRMWARE (_fw.bin - PRESERVAM os dados do filesystem)
+2. PARTES SEPARADAS (pasta binaries/, gravacao manual com esptool.py)
 ================================================================================
 
-  BrewBOSS_v<ver>_esp12e_fw.bin     -> app do ESP8266,  gravar em 0x000000
-  BrewBOSS_v<ver>_esp32c3_fw.bin    -> app do ESP32-C3, gravar em 0x010000
-  BrewBOSS_v<ver>_esp32c5_fw.bin    -> app do ESP32-C5, gravar em 0x00E000
-                                       (arquivo = otadata + app do slot ota_0;
-                                        grava por cima e NAO apaga o resto)
+  ESP12E:
+    esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_v2.2.26c_esp12e.bin
+    esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_v2.2.26c_esp12e_fs.bin
 
-  Use este modo para ATUALIZAR a versao mantendo configs, receitas e redes
-  WiFi gravadas no LittleFS. Equivale ao OTA de firmware do painel (rota
-  /rest/ota), que tambem preserva o filesystem.
+  ESP32-C3:
+    esptool.py --chip esp32c3 --port COMx write_flash 0x0 BrewBOSS_v2.2.26c_esp32c3_bootloader.bin
+    esptool.py --chip esp32c3 --port COMx write_flash 0x8000 BrewBOSS_v2.2.26c_esp32c3_partitions.bin
+    esptool.py --chip esp32c3 --port COMx write_flash 0xe000 BrewBOSS_v2.2.26c_esp32c3_boot_app0.bin
+    esptool.py --chip esp32c3 --port COMx write_flash 0x10000 BrewBOSS_v2.2.26c_esp32c3.bin
+    esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_v2.2.26c_esp32c3_fs.bin
 
-  IMPORTANTE - como preservar os dados do filesystem:
-  1. No Web Flasher, escolha "Somente firmware (preservar dados)".
-  2. Nunca escolha "Completo" em cima de um controlador ja configurado: o modo
-     completo apaga o LittleFS (WiFi, receitas e sensores voltam ao padrao).
-  3. Se preferir OTA pela rede (sem USB): painel -> firmware update -> envie o
-     *_fw.bin correspondente; o filesystem nao e tocado.
+  ESP32-C5 (equivalente ao mergeado, porem em partes):
+    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x2000 BrewBOSS_v2.2.26c_esp32c5_bootloader.bin
+    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x8000 BrewBOSS_v2.2.26c_esp32c5_partitions.bin
+    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0xe000 BrewBOSS_v2.2.26c_esp32c5_boot_app0.bin
+    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_v2.2.26c_esp32c5_app.bin
+    (sem arquivo _fs: configs e UI sao criados/embutidos no boot)
 
 ================================================================================
-3. VERIFICACAO (apos gravar, opcional)
+3. VERIFICACAO (apos gravar o mergeado, opcional)
 ================================================================================
 
-  O log do esptool mostra progresso e "Hash of data verified". Abra a serial
-  em 115200: deve aparecer o boot do BrewBOSS. No modo "somente firmware",
-  confirme que suas configs/receitas continuam (rede WiFi salva, sensores etc).
+  O log do esptool mostra progresso e "Hash of data verified".
+  Abra a serial em 115200: deve aparecer o boot do BrewBOSS.
 
 Referencias: GUIA_RAPIDO.txt / QUICK_GUIDE.txt em binaries/.
