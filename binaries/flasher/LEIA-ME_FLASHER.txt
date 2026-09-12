@@ -17,9 +17,9 @@ por modelo, ex: BrewBOSS_v<ver>_esp32c3_bootloader.bin.
 1. IMAGENS MERGEADAS (gravar em 0x000000, uma unica operacao)
 ================================================================================
 
-  BrewBOSS_v2.2.26c_esp12e_full.bin   -> Wemos D1 Mini / ESP8266 (ESP12E)
-  BrewBOSS_v2.2.26c_esp32c3_full.bin  -> ESP32-C3 Super Mini
-  BrewBOSS_v2.2.26c_esp32c5_full.bin  -> ESP32-C5 MINI V1.0
+  BrewBOSS_v2.2.26e_esp12e_full.bin   -> Wemos D1 Mini / ESP8266 (ESP12E)
+  BrewBOSS_v2.2.26e_esp32c3_full.bin  -> ESP32-C3 Super Mini
+  BrewBOSS_v2.2.26e_esp32c5_full.bin  -> ESP32-C5 MINI V1.0
 
   ESP12E  (ESP8266):  firmware (incl. bootloader) @ 0x000000
                       filesystem (LittleFS)        @ 0x200000
@@ -45,21 +45,21 @@ por modelo, ex: BrewBOSS_v<ver>_esp32c3_bootloader.bin.
 ================================================================================
 
   ESP12E:
-    esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_v2.2.26c_esp12e.bin
-    esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_v2.2.26c_esp12e_fs.bin
+    esptool.py --chip esp8266 --port COMx write_flash 0x0 BrewBOSS_v2.2.26e_esp12e.bin
+    esptool.py --chip esp8266 --port COMx write_flash 0x200000 BrewBOSS_v2.2.26e_esp12e_fs.bin
 
   ESP32-C3:
-    esptool.py --chip esp32c3 --port COMx write_flash 0x0 BrewBOSS_v2.2.26c_esp32c3_bootloader.bin
-    esptool.py --chip esp32c3 --port COMx write_flash 0x8000 BrewBOSS_v2.2.26c_esp32c3_partitions.bin
-    esptool.py --chip esp32c3 --port COMx write_flash 0xe000 BrewBOSS_v2.2.26c_esp32c3_boot_app0.bin
-    esptool.py --chip esp32c3 --port COMx write_flash 0x10000 BrewBOSS_v2.2.26c_esp32c3.bin
-    esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_v2.2.26c_esp32c3_fs.bin
+    esptool.py --chip esp32c3 --port COMx write_flash 0x0 BrewBOSS_v2.2.26e_esp32c3_bootloader.bin
+    esptool.py --chip esp32c3 --port COMx write_flash 0x8000 BrewBOSS_v2.2.26e_esp32c3_partitions.bin
+    esptool.py --chip esp32c3 --port COMx write_flash 0xe000 BrewBOSS_v2.2.26e_esp32c3_boot_app0.bin
+    esptool.py --chip esp32c3 --port COMx write_flash 0x10000 BrewBOSS_v2.2.26e_esp32c3.bin
+    esptool.py --chip esp32c3 --port COMx write_flash 0x290000 BrewBOSS_v2.2.26e_esp32c3_fs.bin
 
   ESP32-C5 (equivalente ao mergeado, porem em partes):
-    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x2000 BrewBOSS_v2.2.26c_esp32c5_bootloader.bin
-    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x8000 BrewBOSS_v2.2.26c_esp32c5_partitions.bin
-    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0xe000 BrewBOSS_v2.2.26c_esp32c5_boot_app0.bin
-    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_v2.2.26c_esp32c5_app.bin
+    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x2000 BrewBOSS_v2.2.26e_esp32c5_bootloader.bin
+    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x8000 BrewBOSS_v2.2.26e_esp32c5_partitions.bin
+    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0xe000 BrewBOSS_v2.2.26e_esp32c5_boot_app0.bin
+    esptool.py --chip esp32c5 --port COMx --baud 460800 write_flash 0x10000 BrewBOSS_v2.2.26e_esp32c5_app.bin
     (sem arquivo _fs: configs e UI sao criados/embutidos no boot)
 
 ================================================================================

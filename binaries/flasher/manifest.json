@@ -1,6 +1,6 @@
 {
   "home": "https://github.com/rampanelli/BrewBOSS",
-  "latest": "2.2.26c",
+  "latest": "2.2.26e",
   "stable": [
     "2.2.25s",
     "2.2.26a"
@@ -174,7 +174,7 @@
       ]
     },
     {
-      "version": "2.2.26c",
+      "version": "2.2.26e",
       "boards": [
         {
           "id": "esp12e",
@@ -186,11 +186,11 @@
             "size": "4MB"
           },
           "full": {
-            "file": "BrewBOSS_v2.2.26c_esp12e_full.bin",
+            "file": "BrewBOSS_v2.2.26e_esp12e_full.bin",
             "offset": 0
           },
           "fw": {
-            "file": "BrewBOSS_v2.2.26c_esp12e_fw.bin",
+            "file": "BrewBOSS_v2.2.26e_esp12e_fw.bin",
             "offset": 0
           },
           "single": false
@@ -205,11 +205,11 @@
             "size": "4MB"
           },
           "full": {
-            "file": "BrewBOSS_v2.2.26c_esp32c3_full.bin",
+            "file": "BrewBOSS_v2.2.26e_esp32c3_full.bin",
             "offset": 0
           },
           "fw": {
-            "file": "BrewBOSS_v2.2.26c_esp32c3_fw.bin",
+            "file": "BrewBOSS_v2.2.26e_esp32c3_fw.bin",
             "offset": 65536
           },
           "single": false
@@ -224,11 +224,11 @@
             "size": "4MB"
           },
           "full": {
-            "file": "BrewBOSS_v2.2.26c_esp32c5_full.bin",
+            "file": "BrewBOSS_v2.2.26e_esp32c5_full.bin",
             "offset": 0
           },
           "fw": {
-            "file": "BrewBOSS_v2.2.26c_esp32c5_fw.bin",
+            "file": "BrewBOSS_v2.2.26e_esp32c5_fw.bin",
             "offset": 57344
           },
           "single": false
