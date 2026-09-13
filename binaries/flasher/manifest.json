@@ -2,7 +2,8 @@
   "home": "https://github.com/rampanelli/BrewBOSS",
   "latest": "2.2.26i",
   "stable": [
-    "2.2.25s"
+    "2.2.25s",
+    "2.2.26i"
   ],
   "versions": [
     {

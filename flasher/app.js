@@ -129,7 +129,7 @@ const CATALOG_CANDIDATES = [
 const CATALOG_DEFAULT = {
   home: "https://github.com/rampanelli/BrewBOSS",
   latest: "2.2.26i",
-  stable: ["2.2.25s"],
+  stable: ["2.2.25s", "2.2.26i"],
   versions: [
     {
       version: "2.2.25s",
@@ -304,8 +304,8 @@ function availableVersions() {
 
 function versionLabel(v) {
   const dict = I18N[currentLang] || I18N["pt-BR"];
-  const tag = v === catalog.latest ? " " + dict["fl.verLatest"]
-            : (catalog.stable || []).indexOf(v) >= 0 ? " " + dict["fl.verStable"] : "";
+  const tag = (catalog.stable || []).indexOf(v) >= 0 ? " " + dict["fl.verStable"]
+            : v === catalog.latest ? " " + dict["fl.verLatest"] : "";
   return v + tag;
 }
 
