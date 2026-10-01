@@ -36,6 +36,7 @@ const I18N = {
     "fl.modeFw": "Somente firmware (preservar dados)",
     "fl.verLatest": "(última)",
     "fl.verStable": "(estável)",
+    "fl.verTesting": "(testing)",
     "hw.esp12e": "1× Xtensa LX106 32-bit @ 160 MHz\nSRAM 160 KB · Flash 4 MB SPI\nWiFi 802.11 b/g/n · 2,4 GHz\n11 GPIO · 1× ADC 10-bit\nI²C / SPI / UART / OneWire / PWM\nmicro-USB (CH340) · alimentação 5V/3,3V",
     "hw.esp32c3": "1× RISC-V 32-bit @ 160 MHz\nSRAM 400 KB · Flash 4 MB\nWiFi b/g/n + Bluetooth 5 LE\n~22 GPIO · 2× ADC 12-bit\nI²C / SPI / UART / OneWire / PWM / RMT\nUSB-C nativo (USB-Serial/JTAG)",
     "hw.esp32c5": "1× RISC-V 32-bit @ 240 MHz + LP core\nSRAM 400+ KB · Flash 4 MB\nWiFi 6 (802.11ax) dual-band 2,4/5 GHz\nBluetooth 5 LE · IEEE 802.15.4\nGPIO · ADC 12-bit · I²C/SPI/UART/PWM\nUSB-C nativo (USB-Serial/JTAG)",
@@ -94,6 +95,7 @@ const I18N = {
     "fl.modeFw": "Firmware only (keep data)",
     "fl.verLatest": "(latest)",
     "fl.verStable": "(stable)",
+    "fl.verTesting": "(testing)",
     "hw.esp12e": "1× Xtensa LX106 32-bit @ 160 MHz\nSRAM 160 KB · Flash 4 MB SPI\nWiFi 802.11 b/g/n · 2.4 GHz\n11 GPIO · 1× ADC 10-bit\nI²C / SPI / UART / OneWire / PWM\nmicro-USB (CH340) · 5V/3.3V power",
     "hw.esp32c3": "1× RISC-V 32-bit @ 160 MHz\nSRAM 400 KB · Flash 4 MB\nWiFi b/g/n + Bluetooth 5 LE\n~22 GPIO · 2× ADC 12-bit\nI²C / SPI / UART / OneWire / PWM / RMT\nnative USB-C (USB-Serial/JTAG)",
     "hw.esp32c5": "1× RISC-V 32-bit @ 240 MHz + LP core\nSRAM 400+ KB · Flash 4 MB\nWiFi 6 (802.11ax) dual-band 2.4/5 GHz\nBluetooth 5 LE · IEEE 802.15.4\nGPIO · ADC 12-bit · I²C/SPI/UART/PWM\nnative USB-C (USB-Serial/JTAG)",
@@ -128,7 +130,8 @@ const CATALOG_CANDIDATES = [
 // Catalogo fallback (mesma estrutura do manifest.json publicado).
 const CATALOG_DEFAULT = {
   home: "https://github.com/rampanelli/BrewBOSS",
-  latest: "2.2.26o",
+  latest: "2.2.26s",
+  testing: ["2.2.26s"],
   stable: ["2.2.25s", "2.2.26i"],
   versions: [
     {
@@ -193,6 +196,23 @@ const CATALOG_DEFAULT = {
           flash: { mode: "qio", freq: "80m", size: "4MB" },
           full: { file: "BrewBOSS_v2.2.26o_esp32c5_full.bin", offset: 0 },
           fw: { file: "BrewBOSS_v2.2.26o_esp32c5_fw.bin", offset: 0xE000 }, single: false }
+      ]
+    },
+    {
+      version: "2.2.26s",
+      boards: [
+        { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266",
+          flash: { mode: "dio", freq: "40m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.26s_esp12e_full.bin", offset: 0 },
+          fw: { file: "BrewBOSS_v2.2.26s_esp12e_fw.bin", offset: 0 }, single: false },
+        { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
+          flash: { mode: "dio", freq: "80m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.26s_esp32c3_full.bin", offset: 0 },
+          fw: { file: "BrewBOSS_v2.2.26s_esp32c3_fw.bin", offset: 0x10000 }, single: false },
+        { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
+          flash: { mode: "qio", freq: "80m", size: "4MB" },
+          full: { file: "BrewBOSS_v2.2.26s_esp32c5_full.bin", offset: 0 },
+          fw: { file: "BrewBOSS_v2.2.26s_esp32c5_fw.bin", offset: 0xE000 }, single: false }
       ]
     }
   ]
@@ -339,6 +359,7 @@ function availableVersions() {
 function versionLabel(v) {
   const dict = I18N[currentLang] || I18N["pt-BR"];
   const tag = (catalog.stable || []).indexOf(v) >= 0 ? " " + dict["fl.verStable"]
+            : (catalog.testing || []).indexOf(v) >= 0 ? " " + dict["fl.verTesting"]
             : v === catalog.latest ? " " + dict["fl.verLatest"] : "";
   return v + tag;
 }
