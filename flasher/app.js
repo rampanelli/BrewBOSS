@@ -516,17 +516,14 @@ async function flashFlow() {
   let transport = null;
   let loader = null;
   try {
-    // 1) Conexao: SEMPRE pede a porta no modal (escolha explicita do usuario).
-    // Se o usuario ja autorizou portas antes, elas aparecem listadas no modal e
-    // podem ser selecionadas num clique; "Escolher porta USB..." abre o seletor
-    // nativo. Nunca auto-selecionamos porta (evita gravar no controlador errado
-    // quando ha mais de um conectado).
+    // First click opens the native port picker directly. Reconnection failures
+    // use the custom modal to let the user explicitly choose again.
     const terminal = {
       clean() {},
       write(data) { logLine(data); },
       writeLine(data) { logLine(data); }
     };
-    port = await acquirePort();
+    port = await acquirePort(true);
     if (!port) { log("seleção de porta cancelada.", "warn"); return; }
     portOpen = port;
     transport = new Transport(port, true);
@@ -711,9 +708,16 @@ function cancelPortPick() {
   if (pendingPortResolve) { const r = pendingPortResolve; pendingPortResolve = null; r(null); }
 }
 
-// Sempre abre o modal para o USUARIO escolher a porta (nunca auto-seleciona):
-// assim, quando ha mais de um controlador conectado, grava-se no certo.
-function acquirePort() {
+// The user explicitly chooses a port, either natively or in the retry modal.
+function acquirePort(nativePicker = false) {
+  // Called synchronously by the flash-button click, before any await, so the
+  // browser's user activation is preserved even on the first authorization.
+  if (nativePicker) {
+    return navigator.serial.requestPort().catch(e => {
+      if (e.name === "NotFoundError" || e.name === "AbortError") return null;
+      throw e;
+    });
+  }
   return new Promise((resolve) => {
     pendingPortResolve = resolve;
     openPortModal();
