@@ -128,95 +128,7 @@ const CATALOG_CANDIDATES = [
 ];
 
 // Catalogo fallback (mesma estrutura do manifest.json publicado).
-const CATALOG_DEFAULT = {
-  home: "https://github.com/rampanelli/BrewBOSS",
-  latest: "2.2.26u2",
-  testing: ["2.2.26u2"],
-  stable: ["2.2.25s", "2.2.26i"],
-  versions: [
-    {
-      version: "2.2.25s",
-      boards: [
-        { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266",
-          flash: { mode: "dio", freq: "40m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.25s_esp12e_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.25s_esp12e_fw.bin", offset: 0 }, single: false },
-        { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
-          flash: { mode: "dio", freq: "80m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.25s_esp32c3_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.25s_esp32c3_fw.bin", offset: 0x10000 }, single: false }
-      ]
-    },
-    {
-      version: "2.2.26i",
-      boards: [
-        { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266",
-          flash: { mode: "dio", freq: "40m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26i_esp12e_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26i_esp12e_fw.bin", offset: 0 }, single: false },
-        { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
-          flash: { mode: "dio", freq: "80m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26i_esp32c3_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26i_esp32c3_fw.bin", offset: 0x10000 }, single: false },
-        { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
-          flash: { mode: "qio", freq: "80m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26i_esp32c5_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26i_esp32c5_fw.bin", offset: 0xE000 }, single: false }
-      ]
-    },
-    {
-      version: "2.2.26k",
-      boards: [
-        { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266",
-          flash: { mode: "dio", freq: "40m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26k_esp12e_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26k_esp12e_fw.bin", offset: 0 }, single: false },
-        { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
-          flash: { mode: "dio", freq: "80m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26k_esp32c3_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26k_esp32c3_fw.bin", offset: 0x10000 }, single: false },
-        { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
-          flash: { mode: "qio", freq: "80m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26k_esp32c5_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26k_esp32c5_fw.bin", offset: 0xE000 }, single: false }
-      ]
-    },
-    {
-      version: "2.2.26o",
-      boards: [
-        { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266",
-          flash: { mode: "dio", freq: "40m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26o_esp12e_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26o_esp12e_fw.bin", offset: 0 }, single: false },
-        { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
-          flash: { mode: "dio", freq: "80m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26o_esp32c3_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26o_esp32c3_fw.bin", offset: 0x10000 }, single: false },
-        { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
-          flash: { mode: "qio", freq: "80m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26o_esp32c5_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26o_esp32c5_fw.bin", offset: 0xE000 }, single: false }
-      ]
-    },
-    {
-      version: "2.2.26u2",
-      boards: [
-        { id: "esp12e", name: "ESP8266 / Wemos D1 Mini (ESP12E)", chip: "esp8266",
-          flash: { mode: "dio", freq: "40m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26u2_esp12e_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26u2_esp12e_fw.bin", offset: 0 }, single: false },
-        { id: "esp32c3", name: "ESP32-C3 Super Mini", chip: "esp32c3",
-          flash: { mode: "dio", freq: "80m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26u2_esp32c3_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26u2_esp32c3_fw.bin", offset: 0x10000 }, single: false },
-        { id: "esp32c5", name: "ESP32-C5 MINI V1.0", chip: "esp32c5",
-          flash: { mode: "qio", freq: "80m", size: "4MB" },
-          full: { file: "BrewBOSS_v2.2.26u2_esp32c5_full.bin", offset: 0 },
-          fw: { file: "BrewBOSS_v2.2.26u2_esp32c5_fw.bin", offset: 0xE000 }, single: false }
-      ]
-    }
-  ]
-};
+const CATALOG_DEFAULT = {"home":"https://github.com/rampanelli/BrewBOSS","latest":"2.2.26v","testing":["2.2.26v"],"stable":["2.2.25s","2.2.26i"],"versions":[{"version":"2.2.25s","boards":[{"id":"esp12e","name":"ESP8266 / Wemos D1 Mini (ESP12E)","chip":"esp8266","flash":{"mode":"dio","freq":"40m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.25s_esp12e_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.25s_esp12e_fw.bin","offset":0},"single":false},{"id":"esp32c3","name":"ESP32-C3 Super Mini","chip":"esp32c3","flash":{"mode":"dio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.25s_esp32c3_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.25s_esp32c3_fw.bin","offset":65536},"single":false}]},{"version":"2.2.26i","boards":[{"id":"esp12e","name":"ESP8266 / Wemos D1 Mini (ESP12E)","chip":"esp8266","flash":{"mode":"dio","freq":"40m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26i_esp12e_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26i_esp12e_fw.bin","offset":0},"single":false},{"id":"esp32c3","name":"ESP32-C3 Super Mini","chip":"esp32c3","flash":{"mode":"dio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26i_esp32c3_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26i_esp32c3_fw.bin","offset":65536},"single":false},{"id":"esp32c5","name":"ESP32-C5 MINI V1.0","chip":"esp32c5","flash":{"mode":"qio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26i_esp32c5_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26i_esp32c5_fw.bin","offset":57344},"single":false}]},{"version":"2.2.26k","boards":[{"id":"esp12e","name":"ESP8266 / Wemos D1 Mini (ESP12E)","chip":"esp8266","flash":{"mode":"dio","freq":"40m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26k_esp12e_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26k_esp12e_fw.bin","offset":0},"single":false},{"id":"esp32c3","name":"ESP32-C3 Super Mini","chip":"esp32c3","flash":{"mode":"dio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26k_esp32c3_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26k_esp32c3_fw.bin","offset":65536},"single":false},{"id":"esp32c5","name":"ESP32-C5 MINI V1.0","chip":"esp32c5","flash":{"mode":"qio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26k_esp32c5_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26k_esp32c5_fw.bin","offset":57344},"single":false}]},{"version":"2.2.26o","boards":[{"id":"esp12e","name":"ESP8266 / Wemos D1 Mini (ESP12E)","chip":"esp8266","flash":{"mode":"dio","freq":"40m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26o_esp12e_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26o_esp12e_fw.bin","offset":0},"single":false},{"id":"esp32c3","name":"ESP32-C3 Super Mini","chip":"esp32c3","flash":{"mode":"dio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26o_esp32c3_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26o_esp32c3_fw.bin","offset":65536},"single":false},{"id":"esp32c5","name":"ESP32-C5 MINI V1.0","chip":"esp32c5","flash":{"mode":"qio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26o_esp32c5_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26o_esp32c5_fw.bin","offset":57344},"single":false}]},{"version":"2.2.26u2","boards":[{"id":"esp12e","name":"ESP8266 / Wemos D1 Mini (ESP12E)","chip":"esp8266","flash":{"mode":"dio","freq":"40m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26u2_esp12e_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26u2_esp12e_fw.bin","offset":0},"single":false},{"id":"esp32c3","name":"ESP32-C3 Super Mini","chip":"esp32c3","flash":{"mode":"dio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26u2_esp32c3_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26u2_esp32c3_fw.bin","offset":65536},"single":false},{"id":"esp32c5","name":"ESP32-C5 MINI V1.0","chip":"esp32c5","flash":{"mode":"qio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26u2_esp32c5_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26u2_esp32c5_fw.bin","offset":57344},"single":false}]},{"version":"2.2.26v","boards":[{"id":"esp12e","name":"ESP8266 / Wemos D1 Mini (ESP12E)","chip":"esp8266","flash":{"mode":"dio","freq":"40m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26v_esp12e_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26v_esp12e_fw.bin","offset":0},"single":false},{"id":"esp32c3","name":"ESP32-C3 Super Mini","chip":"esp32c3","flash":{"mode":"dio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26v_esp32c3_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26v_esp32c3_fw.bin","offset":65536},"single":false},{"id":"esp32c5","name":"ESP32-C5 MINI V1.0","chip":"esp32c5","flash":{"mode":"qio","freq":"80m","size":"4MB"},"full":{"file":"BrewBOSS_v2.2.26v_esp32c5_full.bin","offset":0},"fw":{"file":"BrewBOSS_v2.2.26v_esp32c5_fw.bin","offset":57344},"single":false}],"releaseLabel":"RC1"}]};
 
 const boardIcons = {
   // ESP-12E / Wemos D1 Mini: modulo com shield metalico e antena serrilhada exposta.
@@ -358,6 +270,8 @@ function availableVersions() {
 
 function versionLabel(v) {
   const dict = I18N[currentLang] || I18N["pt-BR"];
+  const entry = (catalog.versions || []).find(item => item.version === v);
+  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
   const tag = (catalog.stable || []).indexOf(v) >= 0 ? " " + dict["fl.verStable"]
             : (catalog.testing || []).indexOf(v) >= 0 ? " " + dict["fl.verTesting"]
             : v === catalog.latest ? " " + dict["fl.verLatest"] : "";
@@ -416,6 +330,8 @@ function renderBoards() {
   const wrap = $("boards");
   wrap.innerHTML = "";
   const dict = I18N[currentLang] || I18N["pt-BR"];
+  const entry = (catalog.versions || []).find(item => item.version === v);
+  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
   boardIds().forEach((bid) => {
     const b = boardIndex[bid];
     const label = document.createElement("button");
@@ -461,6 +377,8 @@ function renderHint() {
   const hint = $("versionHint");
   if (!hint) return;
   const dict = I18N[currentLang] || I18N["pt-BR"];
+  const entry = (catalog.versions || []).find(item => item.version === v);
+  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
   const board = selectedBoard();
   const need = board && !isSingleImage(board) && !mode;
   hint.innerHTML = '<span class="ver-tag">BrewBOSS v' + (currentVersion || "—") + "</span>" +
@@ -507,6 +425,8 @@ function renderMode() {
   const alert = $("modeAlert");
   const radios = Array.from(document.querySelectorAll('input[name="flashMode"]'));
   const dict = I18N[currentLang] || I18N["pt-BR"];
+  const entry = (catalog.versions || []).find(item => item.version === v);
+  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
   const note = wrap && wrap.querySelector(".mode-note");
 
   if (isSingleImage(board)) {
@@ -741,6 +661,8 @@ function showPortMsg(keyOrText, asText) {
   if (asText) { el.textContent = keyOrText; }
   else {
     const dict = I18N[currentLang] || I18N["pt-BR"];
+  const entry = (catalog.versions || []).find(item => item.version === v);
+  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
     el.textContent = dict[keyOrText] || keyOrText;
   }
   el.hidden = false;
@@ -751,6 +673,8 @@ function renderPortList(ports) {
   if (!list) return;
   list.innerHTML = "";
   const dict = I18N[currentLang] || I18N["pt-BR"];
+  const entry = (catalog.versions || []).find(item => item.version === v);
+  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
   if (!ports || !ports.length) {
     const empty = document.createElement("div");
     empty.className = "port-empty";
