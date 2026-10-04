@@ -330,8 +330,6 @@ function renderBoards() {
   const wrap = $("boards");
   wrap.innerHTML = "";
   const dict = I18N[currentLang] || I18N["pt-BR"];
-  const entry = (catalog.versions || []).find(item => item.version === v);
-  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
   boardIds().forEach((bid) => {
     const b = boardIndex[bid];
     const label = document.createElement("button");
@@ -377,8 +375,6 @@ function renderHint() {
   const hint = $("versionHint");
   if (!hint) return;
   const dict = I18N[currentLang] || I18N["pt-BR"];
-  const entry = (catalog.versions || []).find(item => item.version === v);
-  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
   const board = selectedBoard();
   const need = board && !isSingleImage(board) && !mode;
   hint.innerHTML = '<span class="ver-tag">BrewBOSS v' + (currentVersion || "—") + "</span>" +
@@ -425,8 +421,6 @@ function renderMode() {
   const alert = $("modeAlert");
   const radios = Array.from(document.querySelectorAll('input[name="flashMode"]'));
   const dict = I18N[currentLang] || I18N["pt-BR"];
-  const entry = (catalog.versions || []).find(item => item.version === v);
-  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
   const note = wrap && wrap.querySelector(".mode-note");
 
   if (isSingleImage(board)) {
@@ -661,8 +655,6 @@ function showPortMsg(keyOrText, asText) {
   if (asText) { el.textContent = keyOrText; }
   else {
     const dict = I18N[currentLang] || I18N["pt-BR"];
-  const entry = (catalog.versions || []).find(item => item.version === v);
-  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
     el.textContent = dict[keyOrText] || keyOrText;
   }
   el.hidden = false;
@@ -673,8 +665,6 @@ function renderPortList(ports) {
   if (!list) return;
   list.innerHTML = "";
   const dict = I18N[currentLang] || I18N["pt-BR"];
-  const entry = (catalog.versions || []).find(item => item.version === v);
-  if (entry && entry.releaseLabel) return v + "(" + entry.releaseLabel + ")";
   if (!ports || !ports.length) {
     const empty = document.createElement("div");
     empty.className = "port-empty";
